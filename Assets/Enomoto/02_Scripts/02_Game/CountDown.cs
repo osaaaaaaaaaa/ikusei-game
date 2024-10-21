@@ -14,14 +14,19 @@ public class CountDown : MonoBehaviour
     public float initScale;
 #endif
 
+    public bool isAnimEnd { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
+        isAnimEnd = false;
         InitUI();
         CoutDownAnim();
-        Debug.Log(imgNumberList[0].name);
     }
 
+    /// <summary>
+    /// 初期化
+    /// </summary>
     public void InitUI()
     {
         foreach (var img in imgNumberList)
@@ -38,6 +43,9 @@ public class CountDown : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// アニメーション開始
+    /// </summary>
     public void CoutDownAnim()
     {
         var _tween = DOTween.Sequence();
@@ -79,6 +87,7 @@ public class CountDown : MonoBehaviour
             _tween.Join(sequence);
         }
 
+        _tween.OnComplete(() => { isAnimEnd = true; });
         _tween.Play();
     }
 
