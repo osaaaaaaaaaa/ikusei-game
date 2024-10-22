@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MealManager : MonoBehaviour
 {
-    [SerializeField] GameObject throwFoodPrefab;
+    [SerializeField] List<GameObject> throwFoodPrefabs;
     public bool isPause { get; private set; }
 
     // Update is called once per frame
@@ -15,7 +15,8 @@ public class MealManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Instantiate(throwFoodPrefab, GetTapPosition(), Quaternion.identity);
+            int rndPoint = Random.Range(0, throwFoodPrefabs.Count);
+            Instantiate(throwFoodPrefabs[rndPoint], GetTapPosition(), Quaternion.identity);
         }
     }
 

@@ -57,13 +57,18 @@ public class MiniGameManager2 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// モンスター生成処理
+    /// </summary>
     void GenerateMonster()
     {
-        // モンスターを生成する
         monster = Instantiate(monsterPrefabs[0]);
         jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
     }
 
+    /// <summary>
+    /// 障害物生成処理
+    /// </summary>
     void GenerateObstract()
     {
         int index = Random.Range(0, obstractPrefabs.Count + 1);
@@ -78,6 +83,9 @@ public class MiniGameManager2 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// モンスターが障害物にヒットしたときの処理
+    /// </summary>
     public void HitMonster()
     {
         if (isGameEnd || isInvincible) return;
@@ -95,6 +103,9 @@ public class MiniGameManager2 : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// モンスターが倒れるアニメーション
+    /// </summary>
     void PlayDeathAnimMonster()
     {
         monster.GetComponent<BoxCollider2D>().enabled = false;

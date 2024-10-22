@@ -50,6 +50,7 @@ public class MiniGameManager1 : MonoBehaviour
         }
         if (isTap) return;
 
+        // ゲージのアニメーションを開始する
         switch (state)
         {
             case MINIGAME1_STATE.Opening:

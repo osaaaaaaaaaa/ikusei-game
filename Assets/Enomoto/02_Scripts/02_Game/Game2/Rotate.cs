@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class RotateRock : MonoBehaviour
+public class Rotate : MonoBehaviour
 {
     public float addAngle;
     void Update()

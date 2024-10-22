@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class ThrowFood : MonoBehaviour
 {
-    const float dragSpeed = 100;
+    [SerializeField] GameObject eatingEffect;
+    [SerializeField] string colorString;
+    Color createColor;
     bool isThrow;
+    const float dragSpeed = 100;
 
     private void Awake()
     {
         isThrow = false;
+
+        // êFÇçÏê¨
+        ColorUtility.TryParseHtmlString(colorString, out createColor);
     }
 
     // Update is called once per frame
@@ -41,6 +47,10 @@ public class ThrowFood : MonoBehaviour
         if (isThrow && collision.tag == "Monster")
         {
             Debug.Log("ÇΩÇ÷ÇΩ");
+            var effect = Instantiate(eatingEffect);
+            effect.transform.position = this.transform.position;
+            effect.GetComponent<ParticleSystem>().startColor = createColor;
+            effect.GetComponent<ParticleSystem>().Play();
             Destroy(this.gameObject);
         }
     }
