@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
+    [SerializeField] GameObject breakingEffect;
+    [SerializeField] string colorString;
+    Color createColor;
+
     MiniGameManager2 manager;
     bool isInit = false;
+    bool isMonsterHit = false;
     float speed;
+
+    private void Start()
+    {
+        // êFÇçÏê¨
+        ColorUtility.TryParseHtmlString(colorString, out createColor);
+    }
 
     private void Update()
     {
         if (!isInit) return;
         if(manager.isGameEnd)
         {
-            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<PolygonCollider2D>().enabled = false;
             return;
         }
 
@@ -24,13 +35,19 @@ public class Obstacle : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (manager.IsInvincible) return;
-
-        if (collision.transform.tag == "Monster")
+        if (!isMonsterHit && !manager.IsInvincible && collision.transform.tag == "Monster")
         {
+            isMonsterHit = true;
             collision.transform.position += Vector3.left * 0.5f;
-            GetComponent<BoxCollider2D>().enabled = false;
             manager.HitMonster();
+        }
+        if(collision.transform.tag == "Rock")
+        {
+            var effect = Instantiate(breakingEffect);
+            effect.transform.position = this.transform.position;
+            effect.GetComponent<ParticleSystem>().startColor = createColor;
+            effect.GetComponent<ParticleSystem>().Play();
+            Destroy(this.gameObject);
         }
     }
 

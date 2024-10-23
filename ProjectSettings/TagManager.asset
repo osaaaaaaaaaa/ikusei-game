@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DeathZone
   - Monster
+  - Rock
   layers:
   - Default
   - TransparentFX
