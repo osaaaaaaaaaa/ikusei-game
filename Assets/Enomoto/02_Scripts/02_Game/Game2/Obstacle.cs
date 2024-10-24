@@ -9,9 +9,9 @@ public class Obstacle : MonoBehaviour
     Color createColor;
 
     MiniGameManager2 manager;
+    float speed;
     bool isInit = false;
     bool isMonsterHit = false;
-    float speed;
 
     private void Start()
     {
@@ -22,10 +22,9 @@ public class Obstacle : MonoBehaviour
     private void Update()
     {
         if (!isInit) return;
-        if(manager.isGameOver)
+        if(manager.isGameOver || manager.isGameClear)
         {
             GetComponent<PolygonCollider2D>().enabled = false;
-            return;
         }
 
         transform.Translate(new Vector2(-1 * speed, 0f) * Time.deltaTime, Space.Self);
@@ -39,7 +38,7 @@ public class Obstacle : MonoBehaviour
         {
             isMonsterHit = true;
             collision.transform.position += Vector3.left * 0.5f;
-            manager.HitMonster();
+            manager.HitMonster(1);
         }
         if(collision.transform.tag == "Rock")
         {

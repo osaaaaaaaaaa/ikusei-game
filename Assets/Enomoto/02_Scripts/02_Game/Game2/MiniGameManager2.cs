@@ -21,6 +21,7 @@ public class MiniGameManager2 : MonoBehaviour
     #endregion
 
     #region ステージ関係
+    [SerializeField] GameObject rock;
     [SerializeField] Transform stageParent;
     [SerializeField] List<GameObject> obstractPrefabs;
     float addSpeed;
@@ -28,13 +29,26 @@ public class MiniGameManager2 : MonoBehaviour
     float triggerTimeObstracle;
     #endregion
 
+    #region 地面と背景関係
+    [SerializeField] LoopScrollImage woodBG;
+    [SerializeField] GameObject groundBG;
+    [SerializeField] GameObject groundBGCollider;
+    [SerializeField] GameObject endGround;
+    const float groundSpeed = 4;
+    #endregion
+
+    #region UI関係
+    [SerializeField] Flashing warningUI;
     [SerializeField] GameObject resultUI;
+    [SerializeField] Slider slider;
+    #endregion
 
     public bool isGameOver { get; private set; }
-    bool isGameClear;
+    public bool isGameClear { get; private set; }
 
     // ゲーム時間
-    const float timeMax = 60;
+    float currentTime;
+    const float timeMax = 40;
 
     void Start()
     {
@@ -42,6 +56,7 @@ public class MiniGameManager2 : MonoBehaviour
         addSpeed = 0;
         currentTimeObstracle = 0;
         triggerTimeObstracle = 3;
+        currentTime = 0;
         isGameOver = false;
         isGameClear = false;
 
@@ -61,12 +76,39 @@ public class MiniGameManager2 : MonoBehaviour
         }
 
         currentTimeObstracle += Time.deltaTime;
-        if (currentTimeObstracle >= triggerTimeObstracle)
+        currentTime += Time.deltaTime;
+        if (!isGameClear && currentTime >= timeMax)
+        {
+            if(monster.transform.localPosition.y <= -6f) 
+            {
+                // 岩を止める
+                rock.transform.GetComponent<Rotate>().enabled = false;
+                rock.transform.GetComponent<CircleCollider2D>().enabled = false;
+                rock.transform.GetComponent<Rigidbody2D>().gravityScale = 0;
+                rock.transform.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                rock.transform.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+
+                // 画面外に行くと死亡
+                monster.GetComponent<PolygonCollider2D>().enabled = false;
+                monster.transform.localPosition = new Vector2(0, -6f);
+                StopScrollBG();
+                HitMonster(3);
+            }
+            else
+            {
+                // 経過時間が制限時間以上の場合
+                MoveGrounds();
+            }
+        }
+        else if (currentTimeObstracle >= triggerTimeObstracle)
         {
             // 一定間隔で障害物を生成する
             currentTimeObstracle = 0;
             GenerateObstract();
         }
+
+        // スライダーを更新する
+        slider.value = currentTime / timeMax;
     }
 
     /// <summary>
@@ -93,17 +135,20 @@ public class MiniGameManager2 : MonoBehaviour
             addSpeed += 0.1f;
             if (triggerTimeObstracle > 1f) triggerTimeObstracle -= addSpeed;
             if (triggerTimeObstracle <= 1f) triggerTimeObstracle = 1f;
+
+            // 警告マークを点滅させる
+            warningUI.PlayFlashing();
         }
     }
 
     /// <summary>
     /// モンスターが障害物にヒットしたときの処理
     /// </summary>
-    public void HitMonster()
+    public void HitMonster(int damageAmount)
     {
         if (isGameOver || isInvincible) return;
 
-        monsterHitCnt++;
+        monsterHitCnt+= damageAmount;
         if(monsterHitCnt >= 3)
         {
             isGameOver = true;
@@ -125,6 +170,32 @@ public class MiniGameManager2 : MonoBehaviour
         jumpController.Jump();
     }
 
+    /// <summary>
+    /// 地面を動かす処理
+    /// </summary>
+    void MoveGrounds()
+    {
+        groundBG.transform.Translate(new Vector2(-1 * groundSpeed, 0f) * Time.deltaTime, Space.Self);
+        groundBGCollider.transform.Translate(new Vector2(-1 * groundSpeed, 0f) * Time.deltaTime, Space.Self);
+        endGround.transform.Translate(new Vector2(-1 * groundSpeed, 0f) * Time.deltaTime, Space.Self);
+
+        if(endGround.transform.position.x <= -2f)
+        {
+            isGameClear = true;
+            Invoke("GameClear", 2f);
+            StopScrollBG();
+        }
+    }
+
+    /// <summary>
+    /// 背景を停止する
+    /// </summary>
+    void StopScrollBG()
+    {
+        woodBG.enabled = false;
+        groundBG.GetComponent<LoopScrollImage>().enabled = false;
+    }
+
     void ShowResult()
     {
         resultUI.SetActive(true);
@@ -133,6 +204,7 @@ public class MiniGameManager2 : MonoBehaviour
     void GameClear()
     {
         isGameClear = true;
+        ShowResult();
     }
 
     public void OnBackButton()

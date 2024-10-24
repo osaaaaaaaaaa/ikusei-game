@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InvincibleController : MonoBehaviour
+public class Flashing : MonoBehaviour
 {
-    [SerializeField] MiniGameManager2 gameManager;
-    SpriteRenderer spriteRenderer;
     int invincibleCnt;
     int invincibleCntMax;
     float currentTimeInvincible;
     float triggerTimeInvincible;
+    bool isPlayFlashing;
 
     // Start is called before the first frame update
     void Start()
     {
         invincibleCnt = 0;
-        invincibleCntMax = 10;
+        invincibleCntMax = 4;
         currentTimeInvincible = 0;
         triggerTimeInvincible = 0.2f;
+        isPlayFlashing = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.IsInvincible) return;
+        if (!isPlayFlashing) return;
 
         currentTimeInvincible += Time.deltaTime;
         if (currentTimeInvincible >= triggerTimeInvincible)
@@ -32,22 +32,21 @@ public class InvincibleController : MonoBehaviour
             // àÍíËä‘äuÇ≈ì_ñ≈Ç≥ÇπÇÈ
             currentTimeInvincible = 0;
             invincibleCnt++;
-            spriteRenderer.enabled = !spriteRenderer.enabled;
+            GetComponent<Image>().enabled = !GetComponent<Image>().enabled;
         }
 
-        if(invincibleCnt >= invincibleCntMax)
+        if (invincibleCnt >= invincibleCntMax)
         {
             // è„å¿êîì_ñ≈ÇµÇΩÇÁå≥Ç…ñﬂÇ∑
             currentTimeInvincible = 0;
             invincibleCnt = 0;
-            gameManager.IsInvincible = false;
-            spriteRenderer.enabled = true;
+            GetComponent<Image>().enabled = false;
+            isPlayFlashing = false;
         }
     }
 
-    public void PlayInvincibleAnim(SpriteRenderer _spriteRenderer)
+    public void PlayFlashing()
     {
-        gameManager.IsInvincible = true;
-        spriteRenderer = _spriteRenderer;
+        isPlayFlashing = true;
     }
 }

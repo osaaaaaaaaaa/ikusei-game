@@ -12,6 +12,9 @@ public class MiniGameManager1 : MonoBehaviour
     [SerializeField] Text hungerText;
     #endregion
 
+    [SerializeField] List<GameObject> monsterPrefabs;
+    GameObject monster;
+
     [SerializeField] CountDown countDown;
 
     [SerializeField] GameObject gage1;
@@ -41,6 +44,8 @@ public class MiniGameManager1 : MonoBehaviour
         isGameStart = false;
         isGameEnd = false;
         state = MINIGAME1_STATE.Opening;
+
+        GenerateMonster();
     }
 
     // Update is called once per frame
@@ -154,6 +159,16 @@ public class MiniGameManager1 : MonoBehaviour
         if (state < MINIGAME1_STATE.Result) state++;
         isTap = false;
         isPlayTween = false;
+    }
+
+    /// <summary>
+    /// ÉÇÉìÉXÉ^Å[ê∂ê¨èàóù
+    /// </summary>
+    void GenerateMonster()
+    {
+        monster = Instantiate(monsterPrefabs[0]);
+        monster.GetComponent<Rigidbody2D>().gravityScale = 0;
+        monster.transform.position = new Vector2(0, -4f);
     }
 
     void ShowResult()

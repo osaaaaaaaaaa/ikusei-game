@@ -23,12 +23,13 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] List<GameObject> monsterPrefabs;
     GameObject monster;
 
+    [SerializeField] PolygonCollider2D touchTrigger;
+    bool isTouchMonster;
+
     // Start is called before the first frame update
     void Start()
     {
-        titleSet.SetActive(true);
-        menuSet.SetActive(false);
-        topSet.SetActive(false);
+        isTouchMonster = false;
 
         GenerateMonster();
     }
@@ -41,6 +42,30 @@ public class TopSceneManager : MonoBehaviour
             titleSet.SetActive(false);
             ToggleTopVisibility(true);
         }
+
+        // モンスター(TouchTrigger)をタップしたらジャンプさせる
+        if (!isTouchMonster && Input.GetMouseButtonUp(0))
+        {
+            Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
+
+            if (hit2d)
+            {
+                GameObject targetObj = hit2d.collider.gameObject;
+                if(targetObj.tag == "Trigger")
+                {
+                    isTouchMonster = true;
+                    monster.GetComponent<Animator>().Play("MonsterJump");
+                    Invoke("ResetTriggerFrag", 1f);
+                }
+            }
+        }
+
+    }
+
+    void ResetTriggerFrag()
+    {
+        isTouchMonster = false;
     }
 
     /// <summary>
@@ -48,9 +73,15 @@ public class TopSceneManager : MonoBehaviour
     /// </summary>
     void GenerateMonster()
     {
-        monster = Instantiate(monsterPrefabs[0]);
+        monster = Instantiate(monsterPrefabs[1]);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
-        monster.transform.position = new Vector2(0f, -1f);
+        monster.transform.position = new Vector2(0f, -1.5f);
+
+        // 待機モーション作成
+        monster.transform.GetComponent<Animator>().enabled = true;
+
+        // TouchTriggerのコライダーを設定
+        touchTrigger.points = monster.GetComponent<PolygonCollider2D>().points;
     }
 
     /// <summary>

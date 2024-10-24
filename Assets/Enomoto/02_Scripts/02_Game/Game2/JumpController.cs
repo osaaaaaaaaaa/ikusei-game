@@ -21,8 +21,8 @@ public class JumpController : MonoBehaviour
 
     void Update()
     {
-        if (!isInit || gameManager.isGameOver) return;
-        if (IsGround()) currrentJumpCnt = 0; 
+        if (!isInit || gameManager.isGameOver || gameManager.isGameClear) return;
+        if (IsGround()) currrentJumpCnt = 0;
 
         if (Input.GetMouseButtonDown(0)
             && currrentJumpCnt < jumpCntMax)
@@ -48,7 +48,7 @@ public class JumpController : MonoBehaviour
 
     bool IsGround()
     {
-        Vector3 basePosition = playerObj.transform.position - Vector3.up * 0.5f;    // モンスターのピボットが中心にあるため調整する
+        Vector3 basePosition = playerObj.transform.position;    // モンスターのピボットが中心にあるため調整する
         Vector3 leftStartPosition = basePosition - Vector3.right * 0.4f;      // 左側の始点
         Vector3 rightStartPosition = basePosition + Vector3.right * 0.4f;     // 右側の始点
         Vector3 endPosition = basePosition - Vector3.up * 0.1f;               // 終点(下)
