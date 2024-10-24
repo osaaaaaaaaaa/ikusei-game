@@ -12,27 +12,29 @@ public class Constant : MonoBehaviour
     const int itemMaxCnt = 999;
     public int ItemMaxCnt { get { return itemMaxCnt; } }
 
+    public const int hungerMaxAmount = 100;     // –• “x‚ÌãŒÀ
+
     /// <summary>
     /// EXP‚ÌŠl“¾—Ê‚ğ•Ô‚·
     /// </summary>
     public static int GetExp()
     {
-        return baseExp;
+        return baseExp /*+ {İƒŒƒxƒ‹*/;
     }
 
     /// <summary>
-    /// –• “x‘‰Á—Ê‚ÌŠl“¾—Ê‚ğ•Ô‚·
+    /// –• “x‘‰Á—Ê‚ğ•Ô‚·
     /// </summary>
     public static int GetHungerIncrease()
     {
-        return baseHungerIncrease;
+        return baseHungerIncrease /*+ {İƒŒƒxƒ‹*/;
     }
 
     /// <summary>
-    /// –• “xŒ¸­—Ê‚ÌŠl“¾—Ê‚ğ•Ô‚·
+    /// –• “xŒ¸­—Ê‚ğ•Ô‚·
     /// </summary>
     public static int GetHungerDecrease()
     {
-        return baseHungerDecrease;
+        return baseHungerDecrease /*+ {İƒŒƒxƒ‹*/;
     }
 }

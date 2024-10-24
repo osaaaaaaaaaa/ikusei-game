@@ -20,12 +20,17 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] GameObject topSet;
     #endregion
 
+    [SerializeField] List<GameObject> monsterPrefabs;
+    GameObject monster;
+
     // Start is called before the first frame update
     void Start()
     {
         titleSet.SetActive(true);
         menuSet.SetActive(false);
         topSet.SetActive(false);
+
+        GenerateMonster();
     }
 
     // Update is called once per frame
@@ -34,18 +39,60 @@ public class TopSceneManager : MonoBehaviour
         if (titleSet.activeSelf && Input.GetMouseButtonDown(0))
         {
             titleSet.SetActive(false);
-            OnToggleTopVisibility(true);
+            ToggleTopVisibility(true);
         }
     }
 
-    public void OnToggleMenuVisibility(bool isVisibility)
+    /// <summary>
+    /// モンスター生成処理
+    /// </summary>
+    void GenerateMonster()
+    {
+        monster = Instantiate(monsterPrefabs[0]);
+        monster.GetComponent<Rigidbody2D>().gravityScale = 0;
+        monster.transform.position = new Vector2(0f, -1f);
+    }
+
+    /// <summary>
+    /// モンスターの死亡処理
+    /// </summary>
+    void KillMonster()
+    {
+
+    }
+
+    /// <summary>
+    /// メニューUIの表示・非表示
+    /// </summary>
+    /// <param name="isVisibility"></param>
+    public void ToggleMenuVisibility(bool isVisibility)
     {
         menuSet.SetActive(isVisibility);
     }
 
-    public void OnToggleTopVisibility(bool isVisibility)
+    /// <summary>
+    /// トップ画面の表示・非表示
+    /// </summary>
+    /// <param name="isVisibility"></param>
+    public void ToggleTopVisibility(bool isVisibility)
     {
         topSet.SetActive(isVisibility);
+    }
+
+    public void OnTrainingButton()
+    {
+        switch(Random.Range(1, 4))
+        {
+            case 1:
+                Initiate.Fade("GameScene1", Color.black, 1.0f);
+                break;
+            case 2:
+                Initiate.Fade("GameScene2", Color.black, 1.0f);
+                break;
+            case 3:
+                Initiate.Fade("GameScene3", Color.black, 1.0f);
+                break;
+        }
     }
 
     public void OnSupplyButton()

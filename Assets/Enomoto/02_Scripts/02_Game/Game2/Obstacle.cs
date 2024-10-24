@@ -22,7 +22,7 @@ public class Obstacle : MonoBehaviour
     private void Update()
     {
         if (!isInit) return;
-        if(manager.isGameEnd)
+        if(manager.isGameOver)
         {
             GetComponent<PolygonCollider2D>().enabled = false;
             return;

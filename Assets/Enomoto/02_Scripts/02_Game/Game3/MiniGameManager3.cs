@@ -242,7 +242,7 @@ public class MiniGameManager3 : MonoBehaviour
     void InitMonster()
     {
         sequenceMonster.Kill();
-        monster.transform.localPosition = new Vector3(0f, -4.5f, 0f);
+        monster.transform.localPosition = new Vector3(0f, -5f, 0f);
         monster.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
     }
 

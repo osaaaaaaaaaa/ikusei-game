@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/Enomoto/00_Scenes/GameScene1.unity
     guid: 00f5cd7c80de031449a4fcc10e697afd
   - enabled: 1
+    path: Assets/Enomoto/00_Scenes/GameScene2.unity
+    guid: 1a8b6041a1bb69c43940e1a4d6812baa
+  - enabled: 1
+    path: Assets/Enomoto/00_Scenes/GameScene3.unity
+    guid: 7b5030f77b13a3b47a50a321e05f2cbc
+  - enabled: 1
     path: Assets/Enomoto/00_Scenes/CombinationScene.unity
     guid: a49c270e4617bce498a89bfd5a04633a
   - enabled: 1

@@ -6,6 +6,14 @@ using DG.Tweening;
 
 public class MiniGameManager1 : MonoBehaviour
 {
+    #region リザルト関係
+    [SerializeField] GameObject resultUI;
+    [SerializeField] Text expText;
+    [SerializeField] Text hungerText;
+    #endregion
+
+    [SerializeField] CountDown countDown;
+
     [SerializeField] GameObject gage1;
     [SerializeField] List<GameObject> gage2List;
     [SerializeField] GameObject gage3;
@@ -13,6 +21,8 @@ public class MiniGameManager1 : MonoBehaviour
     public float endTime;
     bool isTap;
     bool isPlayTween;
+    bool isGameStart;
+    bool isGameEnd;
 
     enum MINIGAME1_STATE
     {
@@ -28,13 +38,25 @@ public class MiniGameManager1 : MonoBehaviour
     {
         isTap = false;
         isPlayTween = false;
+        isGameStart = false;
+        isGameEnd = false;
         state = MINIGAME1_STATE.Opening;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !isTap)
+        if (isGameEnd || !countDown.isAnimEnd) return;
+
+        // ゲーム開始時のみ処理
+        if(countDown.isAnimEnd && !isGameStart)
+        {
+            isGameStart = true;
+            Invoke("UpdateGameState", 0.5f);
+            return;
+        }
+
+        if (isGameStart && !isTap && Input.GetMouseButtonDown(0))
         {
             isTap = true;
             if (state == MINIGAME1_STATE.Gage2)
@@ -102,10 +124,10 @@ public class MiniGameManager1 : MonoBehaviour
 
                 break;
             case MINIGAME1_STATE.Result:
+                ShowResult();
                 break;
         }
     }
-
 
     void UpdateGameState()
     {
@@ -132,5 +154,16 @@ public class MiniGameManager1 : MonoBehaviour
         if (state < MINIGAME1_STATE.Result) state++;
         isTap = false;
         isPlayTween = false;
+    }
+
+    void ShowResult()
+    {
+        isGameEnd = true;
+        resultUI.SetActive(true);
+    }
+
+    public void OnBackButton()
+    {
+        Initiate.Fade("TopScene", Color.black, 1.0f);
     }
 }

@@ -12,18 +12,29 @@ public class MiniGameManager2 : MonoBehaviour
     [SerializeField] InvincibleController invincibleController;
     #endregion
 
-    [SerializeField] Transform stageParent;
-    [SerializeField] List<GameObject> obstractPrefabs;
+    #region モンスター関係
     [SerializeField] List<GameObject> monsterPrefabs;
-    [SerializeField] GameObject resultUI;
     GameObject monster;
     int monsterHitCnt;
+    bool isInvincible;
+    public bool IsInvincible { get { return isInvincible; } set { isInvincible = value; } }
+    #endregion
+
+    #region ステージ関係
+    [SerializeField] Transform stageParent;
+    [SerializeField] List<GameObject> obstractPrefabs;
     float addSpeed;
     float currentTimeObstracle;
     float triggerTimeObstracle;
-    public bool isGameEnd { get; private set; }
-    bool isInvincible;
-    public bool IsInvincible { get { return isInvincible; }set { isInvincible = value; } }
+    #endregion
+
+    [SerializeField] GameObject resultUI;
+
+    public bool isGameOver { get; private set; }
+    bool isGameClear;
+
+    // ゲーム時間
+    const float timeMax = 60;
 
     void Start()
     {
@@ -31,18 +42,19 @@ public class MiniGameManager2 : MonoBehaviour
         addSpeed = 0;
         currentTimeObstracle = 0;
         triggerTimeObstracle = 3;
-        isGameEnd = false;
+        isGameOver = false;
+        isGameClear = false;
 
         GenerateMonster();
     }
 
     private void Update()
     {
-        if(!countDown.isAnimEnd)
+        if(!countDown.isAnimEnd || isGameClear)
         {
             return;
         }
-        if (isGameEnd)
+        if (isGameOver)
         {
             monster.transform.Rotate(new Vector3(0f, 0f, -300f) * Time.deltaTime);
             return;
@@ -63,6 +75,7 @@ public class MiniGameManager2 : MonoBehaviour
     void GenerateMonster()
     {
         monster = Instantiate(monsterPrefabs[0]);
+        monster.transform.position = new Vector2(0, -1.8f);
         jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
     }
 
@@ -88,12 +101,12 @@ public class MiniGameManager2 : MonoBehaviour
     /// </summary>
     public void HitMonster()
     {
-        if (isGameEnd || isInvincible) return;
+        if (isGameOver || isInvincible) return;
 
         monsterHitCnt++;
         if(monsterHitCnt >= 3)
         {
-            isGameEnd = true;
+            isGameOver = true;
             PlayDeathAnimMonster();
             Invoke("ShowResult", 2f);
         }
@@ -108,13 +121,18 @@ public class MiniGameManager2 : MonoBehaviour
     /// </summary>
     void PlayDeathAnimMonster()
     {
-        monster.GetComponent<BoxCollider2D>().enabled = false;
+        monster.GetComponent<PolygonCollider2D>().enabled = false;
         jumpController.Jump();
     }
 
     void ShowResult()
     {
         resultUI.SetActive(true);
+    }
+
+    void GameClear()
+    {
+        isGameClear = true;
     }
 
     public void OnBackButton()

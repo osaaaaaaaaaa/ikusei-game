@@ -15,15 +15,7 @@ public class ExpGage : MonoBehaviour
     public int currentLevel;
 #endif
 
-    // Start is called before the first frame update
-    void Start()
-    {
-#if UNITY_EDITOR
-        Init(currentExp, maxExp, currentLevel);
-#endif
-    }
-
-    public void Init(int currentExp,int maxExp,int currentLevel)
+    public void UpdateGage(int currentExp,int maxExp,int currentLevel)
     {
         imgGage.fillAmount = (float)currentExp / (float)maxExp;
         textLevel.text = "ƒŒƒxƒ‹\n" + currentLevel;

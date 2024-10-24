@@ -21,7 +21,7 @@ public class JumpController : MonoBehaviour
 
     void Update()
     {
-        if (!isInit || gameManager.isGameEnd) return;
+        if (!isInit || gameManager.isGameOver) return;
         if (IsGround()) currrentJumpCnt = 0; 
 
         if (Input.GetMouseButtonDown(0)
