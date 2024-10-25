@@ -1864,6 +1864,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68457dfab22fbc640a2cb209a9899533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rainFallingParticle: {fileID: 1127212143856516793, guid: bd17aa0fc1e8dd94db739eab618b1867, type: 3}
+  evolutionEffectPrefab: {fileID: 252775378678360045, guid: 129f39fcd7d4c4a4fb47fc965ed25639, type: 3}
   typeMonsterImagePrefab: {fileID: 3606109508912590639, guid: b0bfdf10fbbbf394cb017d9789a66739, type: 3}
   monsterPrefabs:
   - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
@@ -2046,7 +2048,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.62352943, g: 1, b: 0.6975134, a: 0}
+  m_BackGroundColor: {r: 0.62352943, g: 1, b: 0.69803923, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2064,9 +2066,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.00024986267
+    y: 0.08925751
     width: 1
-    height: 0.9995003
+    height: 0.821485
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
