@@ -736,9 +736,6 @@ MonoBehaviour:
   resultUI: {fileID: 1143467285}
   expText: {fileID: 93913887}
   hungerText: {fileID: 1668718615}
-  monsterPrefabs:
-  - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
-  - {fileID: 7588736321683117593, guid: 3ba0848cee5314147911af26552ae292, type: 3}
   countDown: {fileID: 3684062}
   gage1: {fileID: 399625939}
   gage2List:

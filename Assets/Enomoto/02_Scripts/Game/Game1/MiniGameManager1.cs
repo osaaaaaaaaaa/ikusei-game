@@ -12,9 +12,6 @@ public class MiniGameManager1 : MonoBehaviour
     [SerializeField] Text hungerText;
     #endregion
 
-    [SerializeField] List<GameObject> monsterPrefabs;
-    GameObject monster;
-
     [SerializeField] CountDown countDown;
 
     [SerializeField] GameObject gage1;
@@ -45,7 +42,8 @@ public class MiniGameManager1 : MonoBehaviour
         isGameEnd = false;
         state = MINIGAME1_STATE.Opening;
 
-        GenerateMonster();
+        // モンスター生成処理
+        MonsterController.Instance.GenerateMonster(new Vector2(0, -4f)).GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 
     // Update is called once per frame
@@ -161,16 +159,6 @@ public class MiniGameManager1 : MonoBehaviour
         isPlayTween = false;
     }
 
-    /// <summary>
-    /// モンスター生成処理
-    /// </summary>
-    void GenerateMonster()
-    {
-        monster = Instantiate(monsterPrefabs[0]);
-        monster.GetComponent<Rigidbody2D>().gravityScale = 0;
-        monster.transform.position = new Vector2(0, -4f);
-    }
-
     void ShowResult()
     {
         isGameEnd = true;
@@ -179,6 +167,6 @@ public class MiniGameManager1 : MonoBehaviour
 
     public void OnBackButton()
     {
-        Initiate.Fade("TopScene", Color.black, 1.0f);
+        Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }

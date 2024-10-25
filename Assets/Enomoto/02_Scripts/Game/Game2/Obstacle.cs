@@ -37,7 +37,7 @@ public class Obstacle : MonoBehaviour
         if (!isMonsterHit && !manager.IsInvincible && collision.transform.tag == "Monster")
         {
             isMonsterHit = true;
-            collision.transform.position += Vector3.left * 0.5f;
+            collision.transform.position += Vector3.left * 0.2f;
             manager.HitMonster(1);
         }
         if(collision.transform.tag == "Rock")

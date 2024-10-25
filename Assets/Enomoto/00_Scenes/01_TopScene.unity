@@ -1835,6 +1835,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080936987}
   m_CullTransparentMesh: 1
+--- !u!1 &1149896777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1149896779}
+  - component: {fileID: 1149896778}
+  m_Layer: 0
+  m_Name: MonsterController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1149896778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149896777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68457dfab22fbc640a2cb209a9899533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeMonsterImagePrefab: {fileID: 3606109508912590639, guid: b0bfdf10fbbbf394cb017d9789a66739, type: 3}
+  monsterPrefabs:
+  - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
+  - {fileID: 7588736321683117593, guid: 3ba0848cee5314147911af26552ae292, type: 3}
+--- !u!4 &1149896779
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149896777}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1281828602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1848,7 +1896,7 @@ GameObject:
   - component: {fileID: 1281828605}
   - component: {fileID: 1281828604}
   m_Layer: 5
-  m_Name: ButtonItem
+  m_Name: ButtonInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1917,7 +1965,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1281828605}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1554837373}
+        m_TargetAssemblyTypeName: TopSceneManager, Assembly-CSharp
+        m_MethodName: OnInventoryButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1281828605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,9 +2350,6 @@ MonoBehaviour:
   titleSet: {fileID: 1556755885}
   menuSet: {fileID: 1943406730}
   topSet: {fileID: 33083887}
-  monsterPrefabs:
-  - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
-  - {fileID: 7588736321683117593, guid: 3ba0848cee5314147911af26552ae292, type: 3}
   touchTrigger: {fileID: 1731644913}
 --- !u!4 &1554837374
 Transform:
@@ -2762,7 +2819,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1804247950}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1554837373}
+        m_TargetAssemblyTypeName: TopSceneManager, Assembly-CSharp
+        m_MethodName: OnPictureBookButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1804247950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3725,3 +3794,4 @@ SceneRoots:
   - {fileID: 551597252}
   - {fileID: 1554837374}
   - {fileID: 1731644912}
+  - {fileID: 1149896779}

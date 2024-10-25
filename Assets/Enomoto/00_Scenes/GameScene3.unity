@@ -2337,8 +2337,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wireController: {fileID: 528949741}
   particleExplosionPrefab: {fileID: 1234406923563777425, guid: 6a4926bd5d0c2d44b932e6f725bd82da, type: 3}
-  monsterPrefabs:
-  - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
   bombObjs:
   - {fileID: 1987205482}
   - {fileID: 1768574423}

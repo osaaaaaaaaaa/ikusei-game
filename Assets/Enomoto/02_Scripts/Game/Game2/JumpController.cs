@@ -43,15 +43,15 @@ public class JumpController : MonoBehaviour
     {
         rb2D.velocity = new Vector2(rb2D.velocity.x, 0f);
         rb2D.AddForce(Vector2.up * jumpPower,ForceMode2D.Impulse);
-        playerObj.transform.localPosition += new Vector3(0.0f, 0.1f);
+        playerObj.transform.localPosition += new Vector3(0.0f, 0.2f);
     }
 
     bool IsGround()
     {
         Vector3 basePosition = playerObj.transform.position;    // モンスターのピボットが中心にあるため調整する
-        Vector3 leftStartPosition = basePosition - Vector3.right * 0.4f;      // 左側の始点
-        Vector3 rightStartPosition = basePosition + Vector3.right * 0.4f;     // 右側の始点
-        Vector3 endPosition = basePosition - Vector3.up * 0.1f;               // 終点(下)
+        Vector3 leftStartPosition = basePosition - Vector3.right * 0.5f;      // 左側の始点
+        Vector3 rightStartPosition = basePosition + Vector3.right * 0.5f;     // 右側の始点
+        Vector3 endPosition = basePosition - Vector3.up * 0.2f;               // 終点(下)
 
         Debug.DrawLine(leftStartPosition, endPosition,Color.red); 
         Debug.DrawLine(rightStartPosition, endPosition, Color.red);

@@ -9,7 +9,6 @@ public class MiniGameManager3 : MonoBehaviour
     [SerializeField] WireController wireController;
 
     [SerializeField] GameObject particleExplosionPrefab;
-    [SerializeField] List<GameObject> monsterPrefabs;
     [SerializeField] List<GameObject> bombObjs;
 
     [SerializeField] GameObject wiresParent;
@@ -17,9 +16,8 @@ public class MiniGameManager3 : MonoBehaviour
     [SerializeField] List<GameObject> hintList;
     [SerializeField] GameObject hintArrowUI;
     [SerializeField] GameObject resultUI;
-
-    GameObject monster;
     Sequence sequenceMonster;
+    GameObject monster;
 
     Vector3 wireParentStartPoint;
     public List<int> colorIndexOrders { get; private set; }  // ワイヤーの色を基準とした、正しい切る順番
@@ -37,7 +35,7 @@ public class MiniGameManager3 : MonoBehaviour
     {
         // モンスターを生成し、モンスター情報を初期化、アニメ再生
         sequenceMonster = DOTween.Sequence();
-        monster = Instantiate(monsterPrefabs[0]);
+        monster = MonsterController.Instance.GenerateMonster(Vector2.zero);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         InitMonster();
 
@@ -226,17 +224,6 @@ public class MiniGameManager3 : MonoBehaviour
     }
 
     /// <summary>
-    /// モンスターが倒れるアニメーション
-    /// </summary>
-    void PlayDeathAnimMonster()
-    {
-        var rb2D = monster.GetComponent<Rigidbody2D>();
-        rb2D.gravityScale = 3;
-        rb2D.velocity = new Vector2(rb2D.velocity.x, 0f);
-        rb2D.AddForce(Vector2.up * 14, ForceMode2D.Impulse);
-    }
-
-    /// <summary>
     /// モンスターの情報を初期化
     /// </summary>
     void InitMonster()
@@ -273,7 +260,7 @@ public class MiniGameManager3 : MonoBehaviour
         wiresParent.SetActive(false);
         Instantiate(particleExplosionPrefab);
         InitMonster();
-        PlayDeathAnimMonster();
+        MonsterController.Instance.PlayDeathAnimMonster();
 
         // 現在ある全ての爆弾を破棄する
         foreach(var bomb in bombObjs)
@@ -286,6 +273,6 @@ public class MiniGameManager3 : MonoBehaviour
 
     public void OnBackButton()
     {
-        Initiate.Fade("TopScene", Color.black, 1.0f);
+        Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }

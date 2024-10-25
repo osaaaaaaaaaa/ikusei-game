@@ -13,7 +13,6 @@ public class MiniGameManager2 : MonoBehaviour
     #endregion
 
     #region モンスター関係
-    [SerializeField] List<GameObject> monsterPrefabs;
     GameObject monster;
     int monsterHitCnt;
     bool isInvincible;
@@ -60,7 +59,10 @@ public class MiniGameManager2 : MonoBehaviour
         isGameOver = false;
         isGameClear = false;
 
-        GenerateMonster();
+        // モンスター生成処理
+        monster = MonsterController.Instance.GenerateMonster(new Vector2(0, -1.8f));
+        // ジャンプコントローラーの初期化処理
+        jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
     }
 
     private void Update()
@@ -112,16 +114,6 @@ public class MiniGameManager2 : MonoBehaviour
     }
 
     /// <summary>
-    /// モンスター生成処理
-    /// </summary>
-    void GenerateMonster()
-    {
-        monster = Instantiate(monsterPrefabs[0]);
-        monster.transform.position = new Vector2(0, -1.8f);
-        jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
-    }
-
-    /// <summary>
     /// 障害物生成処理
     /// </summary>
     void GenerateObstract()
@@ -152,22 +144,13 @@ public class MiniGameManager2 : MonoBehaviour
         if(monsterHitCnt >= 3)
         {
             isGameOver = true;
-            PlayDeathAnimMonster();
+            MonsterController.Instance.PlayDeathAnimMonster();
             Invoke("ShowResult", 2f);
         }
         else
         {
             invincibleController.PlayInvincibleAnim(monster.GetComponent<SpriteRenderer>());
         }
-    }
-
-    /// <summary>
-    /// モンスターが倒れるアニメーション
-    /// </summary>
-    void PlayDeathAnimMonster()
-    {
-        monster.GetComponent<PolygonCollider2D>().enabled = false;
-        jumpController.Jump();
     }
 
     /// <summary>
@@ -209,6 +192,6 @@ public class MiniGameManager2 : MonoBehaviour
 
     public void OnBackButton()
     {
-        Initiate.Fade("TopScene", Color.black, 1.0f);
+        Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }

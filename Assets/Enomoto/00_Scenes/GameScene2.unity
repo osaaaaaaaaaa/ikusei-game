@@ -752,7 +752,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!224 &404070826
 RectTransform:
@@ -1296,7 +1296,7 @@ GameObject:
   - component: {fileID: 852902005}
   - component: {fileID: 852902007}
   - component: {fileID: 852902008}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rock
   m_TagString: Rock
   m_Icon: {fileID: 0}
@@ -1371,7 +1371,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 5baf68d82d91ef048b6c4387bf234118, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1528,8 +1528,6 @@ MonoBehaviour:
   jumpController: {fileID: 1783420746}
   countDown: {fileID: 3684062}
   invincibleController: {fileID: 1046316750}
-  monsterPrefabs:
-  - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
   rock: {fileID: 852902003}
   stageParent: {fileID: 2094877171}
   obstractPrefabs:

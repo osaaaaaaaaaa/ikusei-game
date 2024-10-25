@@ -20,9 +20,6 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] GameObject topSet;
     #endregion
 
-    [SerializeField] List<GameObject> monsterPrefabs;
-    GameObject monster;
-
     [SerializeField] PolygonCollider2D touchTrigger;
     bool isTouchMonster;
 
@@ -31,7 +28,12 @@ public class TopSceneManager : MonoBehaviour
     {
         isTouchMonster = false;
 
-        GenerateMonster();
+        // モンスター生成処理
+        MonsterController.Instance.GenerateMonster(new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        // TouchTriggerのコライダーを設定
+        touchTrigger.points = MonsterController.Instance.GetCollider().points;
+        // モンスターのアニメーション再生開始
+        MonsterController.Instance.PlayStartAnim();
     }
 
     // Update is called once per frame
@@ -55,7 +57,7 @@ public class TopSceneManager : MonoBehaviour
                 if(targetObj.tag == "Trigger")
                 {
                     isTouchMonster = true;
-                    monster.GetComponent<Animator>().Play("MonsterJump");
+                    MonsterController.Instance.PlayJumpAnim();
                     Invoke("ResetTriggerFrag", 1f);
                 }
             }
@@ -66,30 +68,6 @@ public class TopSceneManager : MonoBehaviour
     void ResetTriggerFrag()
     {
         isTouchMonster = false;
-    }
-
-    /// <summary>
-    /// モンスター生成処理
-    /// </summary>
-    void GenerateMonster()
-    {
-        monster = Instantiate(monsterPrefabs[1]);
-        monster.GetComponent<Rigidbody2D>().gravityScale = 0;
-        monster.transform.position = new Vector2(0f, -1.5f);
-
-        // 待機モーション作成
-        monster.transform.GetComponent<Animator>().enabled = true;
-
-        // TouchTriggerのコライダーを設定
-        touchTrigger.points = monster.GetComponent<PolygonCollider2D>().points;
-    }
-
-    /// <summary>
-    /// モンスターの死亡処理
-    /// </summary>
-    void KillMonster()
-    {
-
     }
 
     /// <summary>
@@ -112,7 +90,9 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnTrainingButton()
     {
-        switch(Random.Range(1, 4))
+        int rnd = Random.Range(1, 4);
+        rnd = 2;
+        switch (rnd)
         {
             case 1:
                 Initiate.Fade("GameScene1", Color.black, 1.0f);
@@ -128,11 +108,21 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnSupplyButton()
     {
-        SceneManager.LoadScene("SupplyScene");
+        SceneManager.LoadScene("03_SupplyScene");
     }
 
     public void OnMealButton()
     {
-        Initiate.Fade("MealScene", Color.white, 1.0f);
+        Initiate.Fade("02_MealScene", Color.white, 1.0f);
+    }
+
+    public void OnPictureBookButton()
+    {
+        SceneManager.LoadScene("04_PictureBookScene");
+    }
+
+    public void OnInventoryButton()
+    {
+        SceneManager.LoadScene("05_Inventory");
     }
 }
