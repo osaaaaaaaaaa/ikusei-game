@@ -15,8 +15,11 @@ public class TopSceneManager : MonoBehaviour
     #region トップ画面関係
     [SerializeField] GameObject topSet;
     [SerializeField] GameObject menuBtn;
+    [SerializeField] GameObject levelNum;
     [SerializeField] GameObject ExpGage;
     [SerializeField] GameObject hungerGage;
+    [SerializeField] Text userNameText;
+    [SerializeField] Text monsterNameText;
     #endregion
 
     #region poop関係
@@ -26,6 +29,10 @@ public class TopSceneManager : MonoBehaviour
     const float poopMinPos_X = -0.75f;
     const float poopMaxPos_Y = 1f;
     const float poopMinPos_Y = -0.35f;
+    #endregion
+
+    #region network関係
+    NetworkManager networkManager;
     #endregion
 
     bool isTouchMonster;
@@ -38,14 +45,23 @@ public class TopSceneManager : MonoBehaviour
     int testParam_CurrentLevel = 30;
 #endif
 
+    private void Awake()
+    {
+        networkManager = NetworkManager.Instance;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         isTouchMonster = false;
 
+        // ユーザー設定
+        userNameText.text = networkManager.userInfo.Name;
+        monsterNameText.text = networkManager.nurtureInfo.Name;
+
         // ゲージ関係のパラメータ設定
-        hungerGage.GetComponent<HungerGageController>().UpdateGage(testParam_Huger);
-        ExpGage.GetComponent<ExpGage>().UpdateGage(testParam_ExpCurrent, testParam_ExpMax, testParam_CurrentLevel);
+        hungerGage.GetComponent<HungerGageController>().UpdateGage(NetworkManager.Instance.nurtureInfo.StomachVol);
+        ExpGage.GetComponent<ExpGage>().UpdateGage(NetworkManager.Instance.nurtureInfo.Exp, testParam_ExpMax, NetworkManager.Instance.nurtureInfo.Level);
 
         // モンスター生成処理
         MonsterController.Instance.GenerateMonster(new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;

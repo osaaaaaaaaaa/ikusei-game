@@ -22,36 +22,15 @@ public class TestManager : MonoBehaviour
                 Guid.NewGuid().ToString(),  // ユーザー名
                 result =>
                 {
-                    if(result)
-                    {
-                        Debug.Log("ユーザー登録完了");
-                        // ユーザー情報の取得
-                        StartCoroutine(NetworkManager.Instance.GetUserInfo(
-                            result =>
-                            {
-                                Debug.Log("ユーザー情報取得");
-                            }));
-                    }
-                    else
-                    {
-                        Debug.Log("ユーザー登録完失敗");
-                    }
 
                 }));
         }
         else
         {
-            // ユーザー情報の取得
-            StartCoroutine(NetworkManager.Instance.GetUserInfo(
+            StartCoroutine(NetworkManager.Instance.GetPlayData(
                 result =>
                 {
-                    Debug.Log("ユーザー情報取得");
-                }));
-
-            StartCoroutine(NetworkManager.Instance.GetNurturing(
-                result =>
-                {
-                    Debug.Log("育成情報取得");
+                    Debug.Log("プレイデータ取得");
                 }));
         }
     }

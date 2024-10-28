@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +8,14 @@ public class ExpGage : MonoBehaviour
 {
     [SerializeField] Image imgGage;
     [SerializeField] Text textLevel;
-    [SerializeField] Text textExp;
+    [SerializeField] Text textMaxExp;
+    [SerializeField] Text textCurrentExp;
 
     public void UpdateGage(int currentExp,int maxExp,int currentLevel)
     {
         imgGage.fillAmount = (float)currentExp / (float)maxExp;
-        textLevel.text = "ƒŒƒxƒ‹\n" + currentLevel;
-        textExp.text = currentExp + "/" + maxExp;
+        textLevel.text = "ƒŒƒxƒ‹\n<size=78>" + currentLevel + "</size>";
+        textMaxExp.text = Math.Pow(NetworkManager.Instance.nurtureInfo.Level,3).ToString();
+        textCurrentExp.text = NetworkManager.Instance.nurtureInfo.Exp.ToString();
     }
 }

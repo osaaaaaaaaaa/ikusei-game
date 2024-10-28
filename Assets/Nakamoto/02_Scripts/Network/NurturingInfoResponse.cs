@@ -39,9 +39,9 @@ public class NurturingInfoResponse
 
     /// ŒoŒ±’l
     [JsonProperty("exp")]
-    public string Exp { get; set; }
+    public int Exp { get; set; }
 
     /// –ž• “x
     [JsonProperty("stomach_vol")]
-    public string StomachVol { get; set; }
+    public int StomachVol { get; set; }
 }
