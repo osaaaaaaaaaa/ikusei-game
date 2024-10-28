@@ -11,7 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoreUserRequest
+public class NameRequest
 {
     [JsonProperty("name")]
     public string Name { get; set; }

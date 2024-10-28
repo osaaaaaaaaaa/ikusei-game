@@ -31,6 +31,9 @@ public class NetworkManager : MonoBehaviour
     /// </summary>
     private static NetworkManager instance;
 
+    //----------------------------------------------------------------------------------
+    // ユーザー情報
+
     /// <summary>
     /// プレイ中のユーザー名
     /// </summary>
@@ -40,6 +43,8 @@ public class NetworkManager : MonoBehaviour
     /// API認証トークン
     /// </summary>
     private string authToken = "";
+
+
 
     /// <summary>
     /// NetworkManagerプロパティ
@@ -121,22 +126,49 @@ public class NetworkManager : MonoBehaviour
     /// </summary>
     /// <param name="result"></param>
     /// <returns></returns>
-    public IEnumerator GetUserInfo(Action<List<UserInfoResponse>> result)
+    public IEnumerator GetUserInfo(Action<UserInfoResponse> result)
     {
         // リクエスト送信処理
         UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/show");
-        request.SetRequestHeader("Authorization", "Bearer" + authToken);
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
         yield return request.SendWebRequest();  // 結果を受信するまで待機
 
         // 受信情報格納用
-        List<UserInfoResponse> response = new List<UserInfoResponse>();
+        UserInfoResponse response = new UserInfoResponse();
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {   // 通信が成功した時
 
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
-            response = JsonConvert.DeserializeObject<List<UserInfoResponse>>(resultJson);  // JSONデシリアライズ
+            response = JsonConvert.DeserializeObject<UserInfoResponse>(resultJson);  // JSONデシリアライズ
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
+    /// <summary>
+    /// 育成情報取得処理
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetNurturing(Action<List<NurturingInfoResponse>> result)
+    {
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "monsters/nurturing");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        List<NurturingInfoResponse> response = new List<NurturingInfoResponse>();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {   // 通信が成功した時
+
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<List<NurturingInfoResponse>>(resultJson);  // JSONデシリアライズ
         }
 
         // 呼び出し元のresult処理を呼び出す
@@ -155,7 +187,7 @@ public class NetworkManager : MonoBehaviour
     public IEnumerator StoreUser(string name, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
-        StoreUserRequest repuestData = new StoreUserRequest();
+        NameRequest repuestData = new NameRequest();
         repuestData.Name = name;    // 名前を代入
 
         // サーバーに送信するオブジェクトをJSONに変換
@@ -178,6 +210,74 @@ public class NetworkManager : MonoBehaviour
             this.userName = name;
             this.authToken = response.Token;
             SaveUserData();
+            isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// モンスターの初回登録
+    /// </summary>
+    /// <param name="name">ユーザー名</param>
+    /// <param name="result">通信完了辞に呼び出す関数</param>
+    /// <returns></returns>
+    public IEnumerator InitMonsterStore(string name, Action<NurturingInfoResponse> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        NameRequest repuestData = new NameRequest();
+        repuestData.Name = name;    // 名前を代入
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/init-store", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        NurturingInfoResponse response = new NurturingInfoResponse();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<NurturingInfoResponse>(resultJson);  // JSONデシリアライズ
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
+    /// <summary>
+    /// 名前変更処理
+    /// </summary>
+    /// <param name="name">ユーザー名</param>
+    /// <param name="result">通信完了辞に呼び出す関数</param>
+    /// <returns></returns>
+    public IEnumerator ChangeName(string name, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        NameRequest repuestData = new NameRequest();
+        repuestData.Name = name;    // 名前を代入
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        bool isSuccess = false; // 受信結果
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信成功
             isSuccess = true;
         }
 
