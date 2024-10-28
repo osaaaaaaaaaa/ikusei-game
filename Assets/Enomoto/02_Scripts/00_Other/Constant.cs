@@ -5,7 +5,7 @@ using UnityEngine;
 public class Constant : MonoBehaviour
 {
     const int baseExp = 8;              // ベースとなる経験値獲得量
-    const int baseHungerIncrease = 10;  // ベースとなる満腹度増加量
+    const int baseHungerIncrease = 20;  // ベースとなる満腹度増加量
     const int baseHungerDecrease = 20;  // ベースとなる満腹度減少量
 
     // アイテムの最大所持数

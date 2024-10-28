@@ -9,6 +9,8 @@ public class Food : MonoBehaviour
 
     [SerializeField] float speed;
     Rigidbody2D rb2d;
+    SupplyManager manager;
+    public SupplyManager Manager { set { manager = value; } }
 
     public enum FOOD_ID
     {
@@ -39,7 +41,7 @@ public class Food : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        else if(collision.tag == "Trigger")
+        else if(!manager.isFever && collision.tag == "Trigger")
         {
             int rnd = Random.Range(1, 11);
             if (rnd < 3) ObjectToPoop();
@@ -76,5 +78,10 @@ public class Food : MonoBehaviour
         }
 
         foodID = 10;
+    }
+
+    public void AddSpeed()
+    {
+        speed += 2f;
     }
 }

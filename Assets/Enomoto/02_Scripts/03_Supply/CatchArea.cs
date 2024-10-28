@@ -1,14 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CatchArea : MonoBehaviour
 {
     [SerializeField] SupplyManager manager;
     [SerializeField] LayerMask targetLayer;
+    [SerializeField] Transform hand;
+    Vector2 defaultHandPos;
+
+    private void Start()
+    {
+        defaultHandPos = hand.localPosition;
+    }
+
+    void PlayCatchAnim()
+    {
+        DOTween.Kill(hand);
+        hand.localPosition = defaultHandPos;
+        hand.DOMoveY(-1.5f, 0.2f).SetEase(Ease.Linear).SetLoops(2, LoopType.Yoyo);
+    }
 
     public void OnFoodButton(int index)
     {
+        PlayCatchAnim();
+
         GameObject target = GetFoodObj();
         if(target != null)
         {
@@ -19,7 +36,7 @@ public class CatchArea : MonoBehaviour
             }
             else if(target.GetComponent<Food>().FoodID == (int)Food.FOOD_ID.Poop)
             {
-                Debug.Log("‚«‚Á‚½‚È");
+                manager.SubFoodCnt();
                 Destroy(target);
             }
         }

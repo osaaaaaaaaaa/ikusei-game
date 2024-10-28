@@ -10,6 +10,7 @@ TagManager:
   - Trigger
   - FxTemporaire
   - Poop
+  - Food
   layers:
   - Default
   - TransparentFX
