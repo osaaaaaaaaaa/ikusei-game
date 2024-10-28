@@ -10,7 +10,7 @@ public class Constant : MonoBehaviour
 
     // アイテムの最大所持数
     const int itemMaxCnt = 999;
-    public int ItemMaxCnt { get { return itemMaxCnt; } }
+    public static int ItemMaxCnt { get { return itemMaxCnt; } }
 
     public const int hungerMaxAmount = 100;     // 満腹度の上限
 
