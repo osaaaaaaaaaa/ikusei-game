@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Nakamoto/00_Scenes/LoadScene.unity
+    guid: 71ee41b5eede6684abafb8341b82de9a
+  - enabled: 1
     path: Assets/Enomoto/00_Scenes/01_TopScene.unity
     guid: 0cee6fdc0a2682048b946ff9fa993ec3
   - enabled: 1

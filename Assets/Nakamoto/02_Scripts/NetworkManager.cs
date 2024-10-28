@@ -3,7 +3,7 @@
 // ネットワークマネージャー [ NetWorkManager.cs ]
 // Author:Kenta Nakamoto
 // Data:2024/10/24
-// Update:2024/10/24
+// Update:2024/10/28
 //
 //---------------------------------------------------------------
 using Newtonsoft.Json;
@@ -47,17 +47,17 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// モンスターマスターデータ
     /// </summary>
-    public List<MonsterListResponse> monsterList {  get; private set; }
+    public List<MonsterListResponse> monsterList { get; private set; } = new List<MonsterListResponse>();
 
     /// <summary>
     /// ユーザー情報
     /// </summary>
-    public UserInfoResponse userInfo {  get; set; }
+    public UserInfoResponse userInfo { get; set; } = new UserInfoResponse();
 
     /// <summary>
     /// 育成モンスター情報
     /// </summary>
-    public NurturingInfoResponse nurtureInfo {  get; set; }
+    public NurturingInfoResponse nurtureInfo { get; set; } = new NurturingInfoResponse();
 
     /// <summary>
     /// NetworkManagerプロパティ
@@ -158,6 +158,10 @@ public class NetworkManager : MonoBehaviour
 
             userInfo = response;
         }
+        else
+        {   // 通信失敗時はnull
+            response = null;
+        }
 
         // 呼び出し元のresult処理を呼び出す
         result?.Invoke(response);
@@ -187,6 +191,10 @@ public class NetworkManager : MonoBehaviour
 
             nurtureInfo = response[0];  // 取得情報を保存
         }
+        else
+        {   // 通信失敗時はnull
+            response = null;
+        }
 
         // 呼び出し元のresult処理を呼び出す
         result?.Invoke(response);
@@ -215,6 +223,44 @@ public class NetworkManager : MonoBehaviour
             response = JsonConvert.DeserializeObject<List<MonsterListResponse>>(resultJson);  // JSONデシリアライズ
 
             monsterList = response;
+        }
+        else
+        {   // 通信失敗時はnull
+            response = null;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
+    /// プレイデータ取得
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetPlayData(Action<PlayDataResponse> result)
+    {
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "users/play-data");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        PlayDataResponse response = new PlayDataResponse();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {   // 通信が成功した時
+
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<PlayDataResponse>(resultJson);  // JSONデシリアライズ
+
+            userInfo = response.UserInfo;
+            nurtureInfo = response.NurtureInfo[0];
+            monsterList = response.MonsterList;
+        }
+        else
+        {   // 通信失敗時はnull
+            response = null;
         }
 
         // 呼び出し元のresult処理を呼び出す
