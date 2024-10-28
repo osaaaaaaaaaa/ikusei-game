@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class TestManager : MonoBehaviour
 {
+    private NetworkManager networkManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        networkManager = NetworkManager.Instance;
+
         // ユーザーデータの読込処理・結果を取得
         bool isSuccess = NetworkManager.Instance.LoadUserData();
 
@@ -77,6 +81,58 @@ public class TestManager : MonoBehaviour
                 result =>
                 {
                         Debug.Log("初回モンスター完了");
+                }));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Debug.Log(networkManager.nurtureInfo.Name);
+            Debug.Log(networkManager.nurtureInfo.Level);
+            Debug.Log(networkManager.nurtureInfo.StomachVol);
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            StartCoroutine(NetworkManager.Instance.ExeExercise(
+                80,
+                600,
+                result =>
+                {
+                    Debug.Log(result.Level);
+                    Debug.Log(result.Exp);
+                }));
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            StartCoroutine(NetworkManager.Instance.ExeMeal(
+                500,
+                1500,
+                result =>
+                {
+                    Debug.Log(result.Level);
+                    Debug.Log(result.Exp);
+                }));
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            StartCoroutine(NetworkManager.Instance.GetMonsterInfo(
+                result =>
+                {
+                    Debug.Log(NetworkManager.Instance.monsterList[0].Name);
+                }));
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            StartCoroutine(NetworkManager.Instance.MixMiracle(
+                result =>
+                {
+                    if(result)
+                    {
+                        Debug.Log(NetworkManager.Instance.nurtureInfo.MonsterID);
+                    }
                 }));
         }
     }
