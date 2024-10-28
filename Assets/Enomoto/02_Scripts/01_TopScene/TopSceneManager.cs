@@ -18,47 +18,121 @@ public class TopSceneManager : MonoBehaviour
 
     #region トップ画面関係
     [SerializeField] GameObject topSet;
+    [SerializeField] GameObject menuBtn;
+    [SerializeField] GameObject mealBtn;
+    [SerializeField] GameObject ExpGage;
+    [SerializeField] GameObject hungerGage;
     #endregion
 
-    [SerializeField] List<GameObject> monsterPrefabs;
-    GameObject monster;
+    #region poop関係
+    [SerializeField] GameObject poop;
+    int poopCnt;
+    const float poopMaxPos_X = 0.75f;
+    const float poopMinPos_X = -0.75f;
+    const float poopMaxPos_Y = 1f;
+    const float poopMinPos_Y = -0.35f;
+    #endregion
+
+    bool isTouchMonster;
+
+#if UNITY_EDITOR
+    int testParam_Huger = 40;
+
+    int testParam_ExpCurrent = 100;
+    int testParam_ExpMax = 200;
+    int testParam_CurrentLevel = 30;
+#endif
 
     // Start is called before the first frame update
     void Start()
     {
-        titleSet.SetActive(true);
-        menuSet.SetActive(false);
-        topSet.SetActive(false);
+        isTouchMonster = false;
 
-        GenerateMonster();
+        // ゲージ関係のパラメータ設定
+        hungerGage.GetComponent<HungerGageController>().UpdateGage(testParam_Huger);
+        ExpGage.GetComponent<ExpGage>().UpdateGage(testParam_ExpCurrent, testParam_ExpMax, testParam_CurrentLevel);
+
+        // モンスター生成処理
+        MonsterController.Instance.GenerateMonster(new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        MonsterController.Instance.PlayStartAnim();
+
+        // モンスターの死亡チェック
+        if (MonsterController.Instance.IsMonsterKill || testParam_Huger <= 0)
+        {
+            menuBtn.SetActive(false);
+            mealBtn.SetActive(false);
+            MonsterController.Instance.PlayKillAnim();
+        }
+        else
+        {
+            // 確率でpoopを生成する
+            GeneratePoop();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (MonsterController.Instance.isSpecialAnim) return;
+
         if (titleSet.activeSelf && Input.GetMouseButtonDown(0))
         {
             titleSet.SetActive(false);
             ToggleTopVisibility(true);
         }
+
+        if (!isTouchMonster && Input.GetMouseButtonUp(0))
+        {
+            Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
+
+            if (hit2d)
+            {
+                GameObject targetObj = hit2d.collider.gameObject;
+
+                // モンスターをタップした場合
+                if (!isTouchMonster && targetObj.tag == "Monster")
+                {
+                    isTouchMonster = true;
+                    MonsterController.Instance.PlayJumpAnim();
+                    Invoke("ResetTriggerFrag", 1f);
+                }
+                // poopをタップした場合
+                else if (targetObj.tag == "Poop")
+                {
+                    poopCnt--;
+                    targetObj.GetComponent<Poop>().Destroy();
+                }
+            }
+        }
+
     }
 
     /// <summary>
-    /// モンスター生成処理
+    /// poopを生成する
     /// </summary>
-    void GenerateMonster()
+    void GeneratePoop()
     {
-        monster = Instantiate(monsterPrefabs[0]);
-        monster.GetComponent<Rigidbody2D>().gravityScale = 0;
-        monster.transform.position = new Vector2(0f, -1f);
+        var rndPoint = Random.Range(1, 4);
+        if (rndPoint == 1)
+        {
+            poopCnt = Random.Range(1, 4);
+            for (int i = 0; i < poopCnt; i++)
+            {
+                float x = (float)Random.Range(poopMinPos_X, poopMaxPos_X);
+                float y = (float)Random.Range(poopMinPos_Y, poopMaxPos_Y);
+                Instantiate(poop, new Vector2(x, y), Quaternion.identity);
+            }
+        }
+        else
+        {
+            poopCnt = 0;
+        }
     }
 
-    /// <summary>
-    /// モンスターの死亡処理
-    /// </summary>
-    void KillMonster()
+    void ResetTriggerFrag()
     {
-
+        isTouchMonster = false;
     }
 
     /// <summary>
@@ -67,6 +141,7 @@ public class TopSceneManager : MonoBehaviour
     /// <param name="isVisibility"></param>
     public void ToggleMenuVisibility(bool isVisibility)
     {
+        if (MonsterController.Instance.isSpecialAnim) return;
         menuSet.SetActive(isVisibility);
     }
 
@@ -76,12 +151,17 @@ public class TopSceneManager : MonoBehaviour
     /// <param name="isVisibility"></param>
     public void ToggleTopVisibility(bool isVisibility)
     {
+        if (MonsterController.Instance.isSpecialAnim) return;
         topSet.SetActive(isVisibility);
     }
 
     public void OnTrainingButton()
     {
-        switch(Random.Range(1, 4))
+        if (MonsterController.Instance.isSpecialAnim) return;
+
+        int rnd = Random.Range(1, 4);
+        rnd = 2;
+        switch (rnd)
         {
             case 1:
                 Initiate.Fade("GameScene1", Color.black, 1.0f);
@@ -97,11 +177,29 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnSupplyButton()
     {
-        SceneManager.LoadScene("SupplyScene");
+        if (MonsterController.Instance.isSpecialAnim) return;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        SceneManager.LoadScene("03_SupplyScene");
     }
 
     public void OnMealButton()
     {
-        Initiate.Fade("MealScene", Color.white, 1.0f);
+        if (MonsterController.Instance.isSpecialAnim) return;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        Initiate.Fade("02_MealScene", Color.white, 1.0f);
+    }
+
+    public void OnPictureBookButton()
+    {
+        if (MonsterController.Instance.isSpecialAnim) return;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        SceneManager.LoadScene("04_PictureBookScene");
+    }
+
+    public void OnInventoryButton()
+    {
+        if (MonsterController.Instance.isSpecialAnim) return;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        SceneManager.LoadScene("05_Inventory");
     }
 }
