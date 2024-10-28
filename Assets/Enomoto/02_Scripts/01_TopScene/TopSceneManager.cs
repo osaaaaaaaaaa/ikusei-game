@@ -12,14 +12,9 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] GameObject titleSet;
     #endregion
 
-    #region メニュー画面関係
-    [SerializeField] GameObject menuSet;
-    #endregion
-
     #region トップ画面関係
     [SerializeField] GameObject topSet;
     [SerializeField] GameObject menuBtn;
-    [SerializeField] GameObject mealBtn;
     [SerializeField] GameObject ExpGage;
     [SerializeField] GameObject hungerGage;
     #endregion
@@ -60,7 +55,6 @@ public class TopSceneManager : MonoBehaviour
         if (MonsterController.Instance.IsMonsterKill || testParam_Huger <= 0)
         {
             menuBtn.SetActive(false);
-            mealBtn.SetActive(false);
             MonsterController.Instance.PlayKillAnim();
         }
         else
@@ -136,16 +130,6 @@ public class TopSceneManager : MonoBehaviour
     }
 
     /// <summary>
-    /// メニューUIの表示・非表示
-    /// </summary>
-    /// <param name="isVisibility"></param>
-    public void ToggleMenuVisibility(bool isVisibility)
-    {
-        if (MonsterController.Instance.isSpecialAnim) return;
-        menuSet.SetActive(isVisibility);
-    }
-
-    /// <summary>
     /// トップ画面の表示・非表示
     /// </summary>
     /// <param name="isVisibility"></param>
@@ -182,7 +166,7 @@ public class TopSceneManager : MonoBehaviour
         SceneManager.LoadScene("03_SupplyScene");
     }
 
-    public void OnMealButton()
+    public void OnGrowButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
@@ -194,6 +178,13 @@ public class TopSceneManager : MonoBehaviour
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
         SceneManager.LoadScene("04_PictureBookScene");
+    }
+
+    public void OnMixButton()
+    {
+        if (MonsterController.Instance.isSpecialAnim) return;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        SceneManager.LoadScene("05_MixScene");
     }
 
     public void OnInventoryButton()
