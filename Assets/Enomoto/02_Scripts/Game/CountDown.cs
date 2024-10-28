@@ -8,11 +8,8 @@ public class CountDown : MonoBehaviour
 {
     [SerializeField] List<GameObject> imgNumberList;
     [SerializeField] List<GameObject> imgTextList;
-
-#if UNITY_EDITOR
     public float animTime;
     public float initScale;
-#endif
 
     public bool isAnimEnd { get; private set; }
 

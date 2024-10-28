@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class CatchArea : MonoBehaviour
 {
+    [SerializeField] SupplyManager manager;
     [SerializeField] LayerMask targetLayer;
 
-    private void Update()
+    public void OnFoodButton(int index)
     {
         GameObject target = GetFoodObj();
-        if (Input.GetMouseButtonDown(0) && target != null)
+        if(target != null)
         {
-            Destroy(target);
+            if(target.GetComponent<Food>().FoodID == index)
+            {
+                manager.AddFoodCnt();
+                Destroy(target);
+            }
+            else if(target.GetComponent<Food>().FoodID == (int)Food.FOOD_ID.Poop)
+            {
+                Debug.Log("きったな");
+                Destroy(target);
+            }
         }
     }
 
@@ -20,8 +30,6 @@ public class CatchArea : MonoBehaviour
         // 始点と終点
         Vector2 startPoint = transform.position - Vector3.right * 0.5f;
         Vector2 endPoint = transform.position + Vector3.right * 0.5f;
-
-        //Debug.DrawLine(startPoint, endPoint); // 線を見えるようにする、デバック用
 
         // Rayを始点から飛ばす向きと距離
         Vector2 dir = (endPoint - startPoint).normalized;

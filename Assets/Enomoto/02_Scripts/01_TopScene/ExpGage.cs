@@ -9,12 +9,6 @@ public class ExpGage : MonoBehaviour
     [SerializeField] Text textLevel;
     [SerializeField] Text textExp;
 
-#if UNITY_EDITOR
-    public int currentExp;
-    public int maxExp;
-    public int currentLevel;
-#endif
-
     public void UpdateGage(int currentExp,int maxExp,int currentLevel)
     {
         imgGage.fillAmount = (float)currentExp / (float)maxExp;

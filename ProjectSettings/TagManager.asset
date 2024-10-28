@@ -8,6 +8,8 @@ TagManager:
   - Monster
   - Rock
   - Trigger
+  - FxTemporaire
+  - Poop
   layers:
   - Default
   - TransparentFX
