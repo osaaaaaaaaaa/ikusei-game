@@ -7,10 +7,7 @@ public class SupplyManager : MonoBehaviour
 {
     [SerializeField] GameObject generatePoint;
     [SerializeField] List<GameObject> foodPrefabs;
-
-#if UNITY_EDITOR
     public float foodSpeed;
-#endif
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +25,6 @@ public class SupplyManager : MonoBehaviour
     public void OnCancelButton()
     {
         //Initiate.Fade("TopScene", Color.black, 1.0f);
-        SceneManager.LoadScene("TopScene");
+        SceneManager.LoadScene("01_TopScene");
     }
 }

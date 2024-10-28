@@ -283,9 +283,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SupplyManager, Assembly-CSharp
-        m_MethodName: OnCancelButton
+      - m_Target: {fileID: 2103597678}
+        m_TargetAssemblyTypeName: PictureBookManager, Assembly-CSharp
+        m_MethodName: OnBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -739,9 +739,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.00024986267
+    y: 0.08925751
     width: 1
-    height: 0.9995003
+    height: 0.821485
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

@@ -12,8 +12,13 @@ public class MonsterController : MonoBehaviour
     [SerializeField] GameObject typeMonsterImagePrefab;
     [SerializeField] List<GameObject> monsterPrefabs;
     GameObject monster;
-    bool isPlayEvolutionAnim;
-    bool isPlayKillAnim;
+
+    // モンスターが破棄されるかどうか
+    bool isMonsterKill;
+    public bool IsMonsterKill { get { return isMonsterKill; } set { isMonsterKill = value; } }
+
+    // 特殊アニメーションを再生中かどうか
+    public bool isSpecialAnim { get; private set; }
 
     // インスタンス作成
     static MonsterController instance;
@@ -21,26 +26,18 @@ public class MonsterController : MonoBehaviour
 
     private void Awake()
     {
-        isPlayEvolutionAnim = false;
-        isPlayKillAnim = false;
+        isSpecialAnim = false;
 
         if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
+            IsMonsterKill = false;
         }
         else
         {
             Destroy(this.gameObject);
         }
-    }
-
-    private void Update()
-    {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    PlayKillAnim();
-        //}
     }
 
     /// <summary>
@@ -100,8 +97,8 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     public void PlayEvolutionAnim()
     {
-        if (isPlayEvolutionAnim) return;
-        isPlayEvolutionAnim = true;
+        if (isSpecialAnim) return;
+        isSpecialAnim = true;
         bool isPlaingAnim = monster.GetComponent<Animator>().enabled;
         monster.GetComponent<Animator>().enabled = false;
 
@@ -123,6 +120,8 @@ public class MonsterController : MonoBehaviour
                 monster.GetComponent<Animator>().enabled = isPlaingAnim;
                 Destroy(effect1.gameObject);
                 Destroy(effect2.gameObject);
+
+                isSpecialAnim = false;
             }));
     }
 
@@ -131,8 +130,8 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     public void PlayKillAnim()
     {
-        if (isPlayKillAnim) return;
-        isPlayKillAnim = true;
+        if (isSpecialAnim) return;
+        isSpecialAnim = true;
         monster.GetComponent<Animator>().enabled = false;
 
         // カラー作成
@@ -164,6 +163,9 @@ public class MonsterController : MonoBehaviour
             {
                 Destroy(effect.gameObject);
                 Instantiate(rainFallingParticle);
+
+                IsMonsterKill = false;
+                isSpecialAnim = false;
             }));
         sequence.Play();
     }
