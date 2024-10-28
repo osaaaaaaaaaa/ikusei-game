@@ -44,7 +44,20 @@ public class NetworkManager : MonoBehaviour
     /// </summary>
     private string authToken = "";
 
+    /// <summary>
+    /// モンスターマスターデータ
+    /// </summary>
+    public List<MonsterListResponse> monsterList {  get; private set; }
 
+    /// <summary>
+    /// ユーザー情報
+    /// </summary>
+    public UserInfoResponse userInfo {  get; set; }
+
+    /// <summary>
+    /// 育成モンスター情報
+    /// </summary>
+    public NurturingInfoResponse nurtureInfo {  get; set; }
 
     /// <summary>
     /// NetworkManagerプロパティ
@@ -142,6 +155,8 @@ public class NetworkManager : MonoBehaviour
 
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
             response = JsonConvert.DeserializeObject<UserInfoResponse>(resultJson);  // JSONデシリアライズ
+
+            userInfo = response;
         }
 
         // 呼び出し元のresult処理を呼び出す
@@ -169,6 +184,37 @@ public class NetworkManager : MonoBehaviour
 
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
             response = JsonConvert.DeserializeObject<List<NurturingInfoResponse>>(resultJson);  // JSONデシリアライズ
+
+            nurtureInfo = response[0];  // 取得情報を保存
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
+    /// <summary>
+    /// モンスターのマスター情報取得
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetMonsterInfo(Action<List<MonsterListResponse>> result)
+    {
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "monsters");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        List<MonsterListResponse> response = new List<MonsterListResponse>();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {   // 通信が成功した時
+
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<List<MonsterListResponse>>(resultJson);  // JSONデシリアライズ
+
+            monsterList = response;
         }
 
         // 呼び出し元のresult処理を呼び出す
@@ -246,6 +292,8 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
             response = JsonConvert.DeserializeObject<NurturingInfoResponse>(resultJson);  // JSONデシリアライズ
+
+            nurtureInfo = response;
         }
 
         // 呼び出し元のresult処理を呼び出す
@@ -279,6 +327,119 @@ public class NetworkManager : MonoBehaviour
         {
             // 通信成功
             isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// 食事処理
+    /// </summary>
+    /// <param name="usedVol">食事後の残量</param>
+    /// <param name="getExp"> 獲得経験値</param>
+    /// <param name="result"> レベル・経験値</param>
+    /// <returns></returns>
+    public IEnumerator ExeMeal(int usedVol,int getExp, Action<ActionResponse> result) 
+    {
+        // サーバーに送信するオブジェクトを作成
+        ActionRequest repuestData = new ActionRequest();
+        repuestData.NurtureID = nurtureInfo.ID;
+        repuestData.UsedVol = usedVol;
+        repuestData.Exp = getExp;
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/meal", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        ActionResponse response = new ActionResponse();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<ActionResponse>(resultJson);  // JSONデシリアライズ
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
+    /// <summary>
+    /// 運動処理
+    /// </summary>
+    /// <param name="usedVol">運動後の満腹値</param>
+    /// <param name="getExp"> 獲得経験値</param>
+    /// <param name="result"> レベル・経験値</param>
+    /// <returns></returns>
+    public IEnumerator ExeExercise(int usedVol, int getExp, Action<ActionResponse> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        ActionRequest repuestData = new ActionRequest();
+        repuestData.NurtureID = nurtureInfo.ID;
+        repuestData.UsedVol = usedVol;
+        repuestData.Exp = getExp;
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/exercise", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        ActionResponse response = new ActionResponse();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<ActionResponse>(resultJson);  // JSONデシリアライズ
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
+    /// <summary>
+    /// ミラクル配合
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator MixMiracle(Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        MixMiracleRequest repuestData = new MixMiracleRequest();
+        repuestData.NurtureID = nurtureInfo.ID;    // 名前を代入
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/mix/miracle", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        bool isSuccess = false;
+        NurturingInfoResponse response = new NurturingInfoResponse();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信成功
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<NurturingInfoResponse>(resultJson);  // JSONデシリアライズ
+            isSuccess = true;
+
+            nurtureInfo = response; // 世代交代
         }
 
         // 呼び出し元のresult処理を呼び出す
