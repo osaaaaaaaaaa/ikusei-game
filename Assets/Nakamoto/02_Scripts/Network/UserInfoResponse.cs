@@ -15,7 +15,7 @@ public class UserInfoResponse
 {
     /// ユーザー名
     [JsonProperty("name")]
-    public int Name { get; set; }
+    public string Name { get; set; }
 
     /// 食料残量
     [JsonProperty("food_vol")]
@@ -23,13 +23,13 @@ public class UserInfoResponse
 
     /// 施設レベル
     [JsonProperty("facility_lv")]
-    public string FacilityLv { get; set; }
+    public int FacilityLv { get; set; }
 
     /// リロール回数
     [JsonProperty("reroll_num")]
-    public string RerollNum { get; set; }
+    public int RerollNum { get; set; }
 
     /// 所持金
     [JsonProperty("money")]
-    public string Money { get; set; }
+    public int Money { get; set; }
 }

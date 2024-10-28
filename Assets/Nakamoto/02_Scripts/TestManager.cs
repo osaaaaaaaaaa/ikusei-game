@@ -43,12 +43,41 @@ public class TestManager : MonoBehaviour
                 {
                     Debug.Log("ユーザー情報取得");
                 }));
+
+            StartCoroutine(NetworkManager.Instance.GetNurturing(
+                result =>
+                {
+                    Debug.Log("育成情報取得");
+                }));
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            // ユーザー情報の取得
+            StartCoroutine(NetworkManager.Instance.ChangeName(
+                "name",
+                result =>
+                {
+                    if(result)
+                    {
+                        Debug.Log("名前変更完了");
+                    }
+                }));
+        }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            // ユーザー情報の取得
+            StartCoroutine(NetworkManager.Instance.InitMonsterStore(
+                "hoge",
+                result =>
+                {
+                        Debug.Log("初回モンスター完了");
+                }));
+        }
     }
 }
