@@ -60,7 +60,7 @@ public class MiniGameManager2 : MonoBehaviour
         isGameClear = false;
 
         // モンスター生成処理
-        monster = MonsterController.Instance.GenerateMonster(new Vector2(0, -1.8f));
+        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, new Vector2(0, -1.8f));
         // ジャンプコントローラーの初期化処理
         jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
     }

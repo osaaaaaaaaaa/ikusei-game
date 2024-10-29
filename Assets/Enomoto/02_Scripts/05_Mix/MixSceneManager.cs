@@ -11,7 +11,7 @@ public class MixSceneManager : MonoBehaviour
     void Start()
     {
         // ƒ‚ƒ“ƒXƒ^[¶¬ˆ—
-        monster = MonsterController.Instance.GenerateMonster(new Vector2(0f, -2f));
+        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, new Vector2(0f, -2f));
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
     }

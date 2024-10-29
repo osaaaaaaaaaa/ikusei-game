@@ -34,7 +34,7 @@ public class GrowManager : MonoBehaviour
         gageHunger.UpdateGage(hungerAmount);
 
         // ÉÇÉìÉXÉ^Å[ê∂ê¨èàóù
-        var monster = MonsterController.Instance.GenerateMonster(new Vector2(0f, -1f));
+        var monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, new Vector2(0f, -1f));
         spriteRendererMonster = monster.GetComponent<SpriteRenderer>();
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
@@ -75,7 +75,7 @@ public class GrowManager : MonoBehaviour
     {
         if (hungerAmount < Constant.hungerMaxAmount)
         {
-            var tmp = hungerAmount + Constant.GetHungerIncrease();
+            var tmp = hungerAmount + Constant.baseHungerIncrease;
             hungerAmount = tmp < Constant.hungerMaxAmount ? tmp : Constant.hungerMaxAmount;
             gageHunger.UpdateGage(hungerAmount);
 

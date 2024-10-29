@@ -4,29 +4,37 @@ using UnityEngine;
 
 public class Constant : MonoBehaviour
 {
-    const int baseHungerIncrease = 20;  // ベースとなる満腹度増加量
-    const int baseHungerDecrease = 20;  // ベースとなる満腹度減少量
-    const int itemMaxCnt = 999;         // アイテムの最大所持数
+    public const int hungerMaxAmount = 100;      // 満腹度の上限
+    public const int baseHungerIncrease = 20;    // ベースとなる満腹度増加量
+    public const int baseHungerDecrease = 10;    // ベースとなる満腹度減少量
+    public const int itemMaxCnt = 999;           // アイテムの最大所持数
 
-    public static int BaseHungerIncrease { get { return baseHungerIncrease; } }
-    public static int BaseHungerDecrease { get { return baseHungerDecrease; } }
-    public static int ItemMaxCnt { get { return itemMaxCnt; } }
-
-    public const int hungerMaxAmount = 100;     // 満腹度の上限
-
-    /// <summary>
-    /// 満腹度増加量を返す
-    /// </summary>
-    public static int GetHungerIncrease()
+    enum EGG_HACHING_TIME_RARITY
     {
-        return baseHungerIncrease /*+ 施設レベル*/;
+        SSR = 4200,
+        SR = 600,
+        R = 30,
+        N = 10
     }
 
     /// <summary>
-    /// 満腹度減少量を返す
+    /// 孵化する時間を取得
     /// </summary>
-    public static int GetHungerDecrease()
+    /// <returns></returns>
+    public static int GetEggHachingTimer(string rarity)
     {
-        return baseHungerDecrease /*+ 施設レベル*/;
+        switch (rarity)
+        {
+            case "SSR":
+                return (int)EGG_HACHING_TIME_RARITY.SSR;
+            case "SR":
+                return (int)EGG_HACHING_TIME_RARITY.SR;
+            case "R":
+                return (int)EGG_HACHING_TIME_RARITY.R;
+            case "N":
+                return (int)EGG_HACHING_TIME_RARITY.N;
+            default:
+                return 0;
+        }
     }
 }
