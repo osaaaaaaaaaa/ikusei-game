@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 
 public class TopSceneManager : MonoBehaviour
@@ -20,6 +22,7 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] GameObject hungerGage;
     [SerializeField] Text userNameText;
     [SerializeField] Text monsterNameText;
+    [SerializeField] Text foodsCurrentText;
     #endregion
 
     #region poop関係
@@ -39,10 +42,6 @@ public class TopSceneManager : MonoBehaviour
 
 #if UNITY_EDITOR
     int testParam_Huger = 40;
-
-    int testParam_ExpCurrent = 100;
-    int testParam_ExpMax = 200;
-    int testParam_CurrentLevel = 30;
 #endif
 
     private void Awake()
@@ -58,10 +57,13 @@ public class TopSceneManager : MonoBehaviour
         // ユーザー設定
         userNameText.text = networkManager.userInfo.Name;
         monsterNameText.text = networkManager.nurtureInfo.Name;
+        foodsCurrentText.text = networkManager.userInfo.FoodVol.ToString();
 
         // ゲージ関係のパラメータ設定
         hungerGage.GetComponent<HungerGageController>().UpdateGage(NetworkManager.Instance.nurtureInfo.StomachVol);
-        ExpGage.GetComponent<ExpGage>().UpdateGage(NetworkManager.Instance.nurtureInfo.Exp, testParam_ExpMax, NetworkManager.Instance.nurtureInfo.Level);
+        ExpGage.GetComponent<ExpGage>().UpdateGage(NetworkManager.Instance.nurtureInfo.Exp,
+                                                   (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)), 
+                                                   NetworkManager.Instance.nurtureInfo.Level);
 
         // モンスター生成処理
         MonsterController.Instance.GenerateMonster(new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
@@ -159,7 +161,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = Random.Range(1, 4);
+        int rnd = 1; //Random.Range(1, 4);
         switch (rnd)
         {
             case 1:

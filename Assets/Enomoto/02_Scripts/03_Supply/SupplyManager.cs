@@ -20,9 +20,7 @@ public class SupplyManager : MonoBehaviour
     float feverAmount = 0;
     public bool isFever { get; private set; }
 
-#if UNITY_EDITOR
-    int testParam_FoodCnt = 0;
-#endif
+    private int foodCnt = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +28,7 @@ public class SupplyManager : MonoBehaviour
         isFever = false;
 
         colorGageDefault = feverGage.color;
-        textFoodCnt.text = "×" + testParam_FoodCnt;
+        textFoodCnt.text = "×" + foodCnt;
         InvokeRepeating("GenerateFood", 1f, 2f);
     }
 
@@ -48,10 +46,10 @@ public class SupplyManager : MonoBehaviour
 
     public void AddFoodCnt()
     {
-        if (testParam_FoodCnt < Constant.ItemMaxCnt)
+        if (foodCnt < Constant.ItemMaxCnt)
         {
-            testParam_FoodCnt++;
-            textFoodCnt.text = "×" + testParam_FoodCnt;
+            foodCnt++;
+            textFoodCnt.text = "×" + foodCnt;
         }
 
         if (!isFever)
@@ -84,11 +82,11 @@ public class SupplyManager : MonoBehaviour
     {
         if (isFever) return;
 
-        if (testParam_FoodCnt < Constant.ItemMaxCnt)
+        if (foodCnt < Constant.ItemMaxCnt)
         {
-            var tmp1 = testParam_FoodCnt - 5;
-            testParam_FoodCnt = tmp1 <= 0 ? 0 : tmp1;
-            textFoodCnt.text = "×" + testParam_FoodCnt;
+            var tmp1 = foodCnt - 5;
+            foodCnt = tmp1 <= 0 ? 0 : tmp1;
+            textFoodCnt.text = "×" + foodCnt;
 
             var tmp2 = feverAmount - feverAddAmount * 5;
             feverAmount = tmp2 <= 0 ? 0 : tmp2;
@@ -99,7 +97,28 @@ public class SupplyManager : MonoBehaviour
 
     public void OnCancelButton()
     {
-        //Initiate.Fade("TopScene", Color.black, 1.0f);
-        SceneManager.LoadScene("01_TopScene");
+        // 現在の食料値を更新
+        int foodVol = NetworkManager.Instance.userInfo.FoodVol + foodCnt;
+
+        if (foodVol > Constant.ItemMaxCnt)
+        {   // 上限値を超えないようにする
+            foodVol = Constant.ItemMaxCnt;
+        }
+
+        StartCoroutine(NetworkManager.Instance.SupplyFoods(
+                foodVol,
+                result =>
+                {
+                    if (result)
+                    {
+                        Debug.Log("食料値更新完了");
+                        SceneManager.LoadScene("01_TopScene");
+                    }
+                    else
+                    {
+                        Debug.Log("食料値更新失敗");
+                        SceneManager.LoadScene("01_TopScene");
+                    }
+                }));
     }
 }

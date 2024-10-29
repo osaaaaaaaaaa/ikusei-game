@@ -411,6 +411,7 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
             response = JsonConvert.DeserializeObject<ActionResponse>(resultJson);  // JSONデシリアライズ
+            userInfo.FoodVol = usedVol;
         }
 
         // 呼び出し元のresult処理を呼び出す
@@ -449,10 +450,49 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
             response = JsonConvert.DeserializeObject<ActionResponse>(resultJson);  // JSONデシリアライズ
+            nurtureInfo.StomachVol = usedVol;
+        }
+        else
+        {
+            response = null;
         }
 
         // 呼び出し元のresult処理を呼び出す
         result?.Invoke(response);
+    }
+
+    /// <summary>
+    /// 食料数変更処理
+    /// </summary>
+    /// <param name="foodVol"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator SupplyFoods(int foodVol,Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        SupplyRequest repuestData = new SupplyRequest();
+        repuestData.FoodVol = foodVol;    // 名前を代入
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "users/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        bool isSuccess = false; // 受信結果
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信成功
+            userInfo.FoodVol = foodVol;
+            isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
     }
 
     /// <summary>

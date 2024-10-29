@@ -15,7 +15,7 @@ public class ExpGage : MonoBehaviour
     {
         imgGage.fillAmount = (float)currentExp / (float)maxExp;
         textLevel.text = "ƒŒƒxƒ‹\n<size=78>" + currentLevel + "</size>";
-        textMaxExp.text = Math.Pow(NetworkManager.Instance.nurtureInfo.Level,3).ToString();
+        textMaxExp.text = maxExp.ToString();
         textCurrentExp.text = NetworkManager.Instance.nurtureInfo.Exp.ToString();
     }
 }

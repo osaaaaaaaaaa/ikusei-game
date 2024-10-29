@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
+using UnityEngine.SceneManagement;
 
 public class MiniGameManager1 : MonoBehaviour
 {
@@ -19,6 +21,8 @@ public class MiniGameManager1 : MonoBehaviour
     [SerializeField] GameObject gage3;
     [SerializeField] GameObject gage3StartPoint;
     public float endTime;
+    float[] results = new float[3];
+    int baseExp;
     bool isTap;
     bool isPlayTween;
     bool isGameStart;
@@ -40,6 +44,7 @@ public class MiniGameManager1 : MonoBehaviour
         isPlayTween = false;
         isGameStart = false;
         isGameEnd = false;
+        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
         state = MINIGAME1_STATE.Opening;
 
         // モンスター生成処理
@@ -138,19 +143,22 @@ public class MiniGameManager1 : MonoBehaviour
         {
             case MINIGAME1_STATE.Gage1:
                 gage1.SetActive(false);
-                Debug.Log("ゲージ１(Min0,Max1)：" + gage1.GetComponent<Slider>().value);
+                results[0] = gage1.GetComponent<Slider>().value;
+                Debug.Log("ゲージ１(Min0,Max1)：" + results[0]);
                 break;
             case MINIGAME1_STATE.Gage2:
                 for (int i = 0; i < gage2List.Count; i++)
                 {
                     gage2List[i].SetActive(false);
                 }
-                Debug.Log("ゲージ２(距離Min0,距離Maxわかんない)：" + Mathf.Abs(Vector3.Distance(gage2List[0].transform.localPosition, gage2List[1].transform.localPosition)));
+                results[1] = Mathf.Abs(1 - Vector3.Distance(gage2List[0].transform.localPosition, gage2List[1].transform.localPosition));
+                Debug.Log("ゲージ２(距離Min0,距離Maxわかんない)：" + results[1]);
                 break;
             case MINIGAME1_STATE.Gage3:
                 gage3.SetActive(false);
                 gage3StartPoint.SetActive(false);
-                Debug.Log("ゲージ３(距離Min0,距離Maxわかんない)：" + Mathf.Abs(Vector3.Distance(gage3StartPoint.transform.position,gage3.transform.position)));
+                results[2] = Mathf.Abs(1 - Vector3.Distance(gage3StartPoint.transform.position, gage3.transform.position));
+                Debug.Log("ゲージ３(距離Min0,距離Maxわかんない)：" + results[2]);
                 break;
         }
 
@@ -167,6 +175,32 @@ public class MiniGameManager1 : MonoBehaviour
 
     public void OnBackButton()
     {
+        // 経験値取得
+        int bonusExp = baseExp;
+        for (int i= 0; i < results.Length; i++)
+        {
+            bonusExp = (int)(bonusExp * results[i]);
+        }
+        int exp =  baseExp + bonusExp;
+
+        StartCoroutine(NetworkManager.Instance.ExeExercise(
+            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.BaseHungerDecrease,
+            NetworkManager.Instance.nurtureInfo.Exp + exp,
+            result =>
+            {
+                if (result != null)
+                {
+                    NetworkManager.Instance.nurtureInfo.Level = result.Level;
+                    NetworkManager.Instance.nurtureInfo.Exp = result.Exp;
+                    Debug.Log("経験値更新成功");
+                }
+                else
+                {
+                    Debug.Log("経験値更新失敗");
+                }
+            }));
+
+        Debug.Log("経験値：" + exp);
         Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }
