@@ -203,7 +203,7 @@ public class MiniGameManager2 : MonoBehaviour
 
         // ŒoŒ±’lŽæ“¾
         StartCoroutine(NetworkManager.Instance.ExeExercise(
-            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.BaseHungerDecrease,
+            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.baseHungerDecrease,
             NetworkManager.Instance.nurtureInfo.Exp + exp,
             result =>
             {
