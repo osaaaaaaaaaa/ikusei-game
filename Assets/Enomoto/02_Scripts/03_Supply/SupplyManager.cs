@@ -16,7 +16,7 @@ public class SupplyManager : MonoBehaviour
     [SerializeField] GameObject generatePoint;
     [SerializeField] List<GameObject> foodPrefabs;
 
-    const float feverAddAmount = 0.05f;
+    const float feverAddAmount = 0.1f;
     float feverAmount = 0;
     public bool isFever { get; private set; }
 
@@ -65,7 +65,7 @@ public class SupplyManager : MonoBehaviour
                 // フィーバー状態のアニメーション再生
                 CancelInvoke("GenerateFood");
                 InvokeRepeating("GenerateFood", 1f, 1f);
-                feverGage.DOGradientColor(gradientGage, 1f).SetLoops(20, LoopType.Incremental)
+                feverGage.DOGradientColor(gradientGage, 1f).SetLoops(10, LoopType.Incremental)
                     .OnComplete(() =>
                     {
                         isFever = false;

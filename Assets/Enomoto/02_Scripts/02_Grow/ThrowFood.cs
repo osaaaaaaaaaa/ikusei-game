@@ -51,8 +51,9 @@ public class ThrowFood : MonoBehaviour
         {
             // 食べるエフェクトを発生させる
             var effect = Instantiate(eatingEffect);
+            ParticleSystem.MainModule psmain = effect.GetComponent<ParticleSystem>().main;
             effect.transform.position = new Vector3(transform.position.x,transform.position.y,-8f);
-            effect.GetComponent<ParticleSystem>().startColor = createColor;
+            psmain.startColor = createColor;
             effect.GetComponent<ParticleSystem>().Play();
 
             mealManager.AddHungerAmount();
