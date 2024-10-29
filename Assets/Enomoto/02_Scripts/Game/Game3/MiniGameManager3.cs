@@ -277,7 +277,8 @@ public class MiniGameManager3 : MonoBehaviour
 
     public void OnBackButton()
     {
-        int exp = baseExp / roundMaxCnt;
+        int exp = baseExp;
+        if (baseExp >= roundMaxCnt) { exp = baseExp / roundMaxCnt; }
         exp = exp * roundCnt;
 
         // ŒoŒ±’læ“¾

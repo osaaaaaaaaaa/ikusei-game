@@ -38,7 +38,8 @@ public class LoadSceneManager : MonoBehaviour
                             result =>
                             {
                                 Debug.Log("ユーザー情報取得");
-                                StartCoroutine(NetworkManager.Instance.GetMonsterInfo(
+                                StartCoroutine(NetworkManager.Instance.InitMonsterStore(
+                                    "おためし",
                                     result =>
                                     {
                                         Debug.Log("モンスター情報取得");
