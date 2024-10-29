@@ -37,7 +37,7 @@ public class GrowManager : MonoBehaviour
         var monster = MonsterController.Instance.GenerateMonster(new Vector2(0f, -1f));
         spriteRendererMonster = monster.GetComponent<SpriteRenderer>();
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
-        MonsterController.Instance.PlayStartAnim();
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
 
         GenerateFood();
     }
@@ -90,7 +90,7 @@ public class GrowManager : MonoBehaviour
             Color color = new Color(1 - r, 1 - g, 1 - b);
             spriteRendererMonster.color = color;
             extraCnt++;
-            if(extraCnt >= extraMaxCnt) MonsterController.Instance.IsMonsterKill = true;
+            if(extraCnt >= extraMaxCnt) MonsterController.Instance.IsMonsterDie = true;
         }
     }
 

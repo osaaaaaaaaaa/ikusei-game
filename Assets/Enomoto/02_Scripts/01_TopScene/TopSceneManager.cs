@@ -67,19 +67,23 @@ public class TopSceneManager : MonoBehaviour
 
         // モンスター生成処理
         MonsterController.Instance.GenerateMonster(new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
-        MonsterController.Instance.PlayStartAnim();
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
 
         // モンスターの死亡チェック
-        if (MonsterController.Instance.IsMonsterKill || testParam_Huger <= 0)
+        if (MonsterController.Instance.IsMonsterDie || testParam_Huger <= 0)
         {
             menuBtn.SetActive(false);
-            MonsterController.Instance.PlayKillAnim();
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Die);
         }
         else
         {
             // 確率でpoopを生成する
             GeneratePoop();
         }
+
+        //// 進化待機アニメーション ============================================================================================
+        //MonsterController.Instance.IsMonsterEvolution = true;
+        //MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
     }
 
     // Update is called once per frame
@@ -105,9 +109,18 @@ public class TopSceneManager : MonoBehaviour
                 // モンスターをタップした場合
                 if (!isTouchMonster && targetObj.tag == "Monster")
                 {
+                    if (MonsterController.Instance.IsMonsterEvolution)
+                    {
+                        // 進化アニメーション
+                        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Evolutioin);
+                    }
+                    else
+                    {
                     isTouchMonster = true;
-                    MonsterController.Instance.PlayJumpAnim();
+                    MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Jump);
                     Invoke("ResetTriggerFrag", 1f);
+
+                    }
                 }
                 // poopをタップした場合
                 else if (targetObj.tag == "Poop")
@@ -161,7 +174,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 1; //Random.Range(1, 4);
+        int rnd = Random.Range(1, 4);
         switch (rnd)
         {
             case 1:
@@ -179,35 +192,35 @@ public class TopSceneManager : MonoBehaviour
     public void OnGrowButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
-        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         Initiate.Fade("02_GrowScene", Color.white, 1.0f);
     }
 
     public void OnSupplyButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
-        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("03_SupplyScene");
     }
 
     public void OnLibraryButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
-        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("04_LibraryScene");
     }
 
     public void OnMixButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
-        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("05_MixScene");
     }
 
     public void OnInventoryButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
-        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("05_Inventory");
     }
 }

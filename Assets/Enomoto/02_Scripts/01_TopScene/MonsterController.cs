@@ -31,8 +31,8 @@ public class MonsterController : MonoBehaviour
     public bool IsMonsterEvolution { get { return isMonsterEvolution; } set { isMonsterEvolution = value; } }
 
     // モンスターが破棄されるかどうか
-    bool isMonsterKill;
-    public bool IsMonsterKill { get { return isMonsterKill; } set { isMonsterKill = value; } }
+    bool isMonsterDie;
+    public bool IsMonsterDie { get { return isMonsterDie; } set { isMonsterDie = value; } }
 
     // 特殊アニメーションを再生中かどうか
     public bool isSpecialAnim { get; private set; }
@@ -61,7 +61,7 @@ public class MonsterController : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            IsMonsterKill = false;
+            IsMonsterDie = false;
         }
         else
         {
@@ -117,7 +117,7 @@ public class MonsterController : MonoBehaviour
                 PlayEvolutionAnim();
                 break;
             case ANIM_ID.Die:
-                PlayKillAnim();
+                PlayDieAnim();
                 break;
             case ANIM_ID.Mix:
                 StartCoroutine("PlayMixAnim");
@@ -128,7 +128,7 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// Animatorをアクティブ化
     /// </summary>
-    public void PlayStartAnim()
+    void PlayStartAnim()
     {
         monster.GetComponent<Animator>().enabled = true;
     }
@@ -136,7 +136,7 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// ジャンプアニメーション再生
     /// </summary>
-    public void PlayJumpAnim()
+    void PlayJumpAnim()
     {
         monster.GetComponent<Animator>().Play("MonsterJump");
     }
@@ -144,7 +144,7 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// モンスターが倒れるアニメーション
     /// </summary>
-    public void PlayFallAnimMonster()
+    void PlayFallAnimMonster()
     {
         monster.GetComponent<PolygonCollider2D>().enabled = false;
         var rb2D = monster.GetComponent<Rigidbody2D>();
@@ -156,30 +156,37 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// 進化待機状態のアニメーション再生
     /// </summary>
-    public void PlayWaitForEvolutionAnim()
+    void PlayWaitForEvolutionAnim()
     {
         isMonsterEvolution = true;
 
+        // モンスターのスプライトの高さを取得
+        float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
+
+        // エフェクト生成
         areaEffect = Instantiate(areaEffectPrefab);
-        areaEffect.transform.position = monster.transform.position;
+        areaEffect.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + monsterSizeY / 4, -1f);
     }
 
     /// <summary>
     /// 進化するアニメーション再生
     /// </summary>
-    public void PlayEvolutionAnim()
+    void PlayEvolutionAnim()
     {
         if (isSpecialAnim) return;
         isSpecialAnim = true;
         bool isPlaingAnim = monster.GetComponent<Animator>().enabled;
         monster.GetComponent<Animator>().enabled = false;
 
+        // モンスターのスプライトの高さを取得
+        float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
+
         // エフェクト生成
         GameObject effect1 = Instantiate(typeMonsterImagePrefab);
         GameObject effect2 = Instantiate(lightEffectPrefab);
         effect1.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y, 5);
         effect1.GetComponent<SpriteRenderer>().sprite = monster.GetComponent<SpriteRenderer>().sprite;
-        effect2.transform.position = monster.transform.position;
+        effect2.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y + monsterSizeY / 4, -1f);
 
         // アニメーション再生
         var sequence = DOTween.Sequence();
@@ -201,7 +208,7 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// 死亡するアニメーション再生
     /// </summary>
-    public void PlayKillAnim()
+    void PlayDieAnim()
     {
         if (isSpecialAnim) return;
         isSpecialAnim = true;
@@ -237,7 +244,7 @@ public class MonsterController : MonoBehaviour
                 Destroy(effect.gameObject);
                 Instantiate(rainFallingParticle);
 
-                IsMonsterKill = false;
+                IsMonsterDie = false;
                 isSpecialAnim = false;
             }));
         sequence.Play();

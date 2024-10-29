@@ -260,10 +260,10 @@ public class MiniGameManager3 : MonoBehaviour
         wiresParent.SetActive(false);
         Instantiate(particleExplosionPrefab);
         InitMonster();
-        MonsterController.Instance.PlayFallAnimMonster();
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Fall);
 
         // Œ»İ‚ ‚é‘S‚Ä‚Ì”š’e‚ğ”jŠü‚·‚é
-        foreach(var bomb in bombObjs)
+        foreach (var bomb in bombObjs)
         {
             Destroy(bomb.gameObject);
         }
