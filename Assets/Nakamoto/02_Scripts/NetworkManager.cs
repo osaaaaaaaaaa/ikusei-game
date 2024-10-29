@@ -386,16 +386,17 @@ public class NetworkManager : MonoBehaviour
     /// <param name="getExp"> 獲得経験値</param>
     /// <param name="result"> レベル・経験値</param>
     /// <returns></returns>
-    public IEnumerator ExeMeal(int usedVol,int getExp, Action<ActionResponse> result) 
+    public IEnumerator ExeMeal(int stomachVol,int usedVol,int getExp, Action<ActionResponse> result) 
     {
         // サーバーに送信するオブジェクトを作成
-        ActionRequest repuestData = new ActionRequest();
-        repuestData.NurtureID = nurtureInfo.ID;
-        repuestData.UsedVol = usedVol;
-        repuestData.Exp = getExp;
+        MealRequest requestData = new MealRequest();
+        requestData.NurtureID = nurtureInfo.ID;
+        requestData.StomachVol = stomachVol;
+        requestData.UsedVol = usedVol;
+        requestData.Exp = getExp;
 
         // サーバーに送信するオブジェクトをJSONに変換
-        string json = JsonConvert.SerializeObject(repuestData);
+        string json = JsonConvert.SerializeObject(requestData);
 
         // リクエスト送信処理
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/meal", json, "application/json");
@@ -411,6 +412,7 @@ public class NetworkManager : MonoBehaviour
             // 通信が成功した場合、帰ってきたJSONをオブジェクトに変換
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
             response = JsonConvert.DeserializeObject<ActionResponse>(resultJson);  // JSONデシリアライズ
+            nurtureInfo.StomachVol = stomachVol;
             userInfo.FoodVol = usedVol;
         }
 
@@ -428,13 +430,13 @@ public class NetworkManager : MonoBehaviour
     public IEnumerator ExeExercise(int usedVol, int getExp, Action<ActionResponse> result)
     {
         // サーバーに送信するオブジェクトを作成
-        ActionRequest repuestData = new ActionRequest();
-        repuestData.NurtureID = nurtureInfo.ID;
-        repuestData.UsedVol = usedVol;
-        repuestData.Exp = getExp;
+        ActionRequest requestData = new ActionRequest();
+        requestData.NurtureID = nurtureInfo.ID;
+        requestData.UsedVol = usedVol;
+        requestData.Exp = getExp;
 
         // サーバーに送信するオブジェクトをJSONに変換
-        string json = JsonConvert.SerializeObject(repuestData);
+        string json = JsonConvert.SerializeObject(requestData);
 
         // リクエスト送信処理
         UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/exercise", json, "application/json");
@@ -471,7 +473,7 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         SupplyRequest repuestData = new SupplyRequest();
-        repuestData.FoodVol = foodVol;    // 名前を代入
+        repuestData.FoodVol = foodVol;
 
         // サーバーに送信するオブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(repuestData);

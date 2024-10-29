@@ -48,7 +48,7 @@ public class SupplyManager : MonoBehaviour
     {
         if (foodCnt < Constant.ItemMaxCnt)
         {
-            foodCnt++;
+            foodCnt = foodCnt + 5;
             textFoodCnt.text = "~" + foodCnt;
         }
 

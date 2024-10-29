@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
+using Random = UnityEngine.Random;
 
 public class MiniGameManager3 : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class MiniGameManager3 : MonoBehaviour
     Vector3 wireParentStartPoint;
     public List<int> colorIndexOrders { get; private set; }  // ワイヤーの色を基準とした、正しい切る順番
 
+    int baseExp;
     float timer;
     int roundCnt;
     int roundMaxCnt;
@@ -46,6 +49,7 @@ public class MiniGameManager3 : MonoBehaviour
         roundMaxCnt = 5;
         isPause = true;
         isGameEnd = false;
+        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
 
         Invoke("SetupNextRound", 4f);
     }
@@ -273,6 +277,29 @@ public class MiniGameManager3 : MonoBehaviour
 
     public void OnBackButton()
     {
+        int exp = baseExp / roundMaxCnt;
+        exp = exp * roundCnt;
+
+        // 経験値取得
+        StartCoroutine(NetworkManager.Instance.ExeExercise(
+            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.BaseHungerDecrease,
+            NetworkManager.Instance.nurtureInfo.Exp + exp,
+            result =>
+            {
+                if (result != null)
+                {
+                    NetworkManager.Instance.nurtureInfo.Level = result.Level;
+                    NetworkManager.Instance.nurtureInfo.Exp = result.Exp;
+                    Debug.Log("経験値更新成功");
+                }
+                else
+                {
+                    Debug.Log("経験値更新失敗");
+                }
+            }));
+
+        Debug.Log("経験値：" + exp);
+
         Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }
