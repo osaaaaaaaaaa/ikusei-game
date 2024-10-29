@@ -25,6 +25,11 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] Text foodsCurrentText;
     #endregion
 
+    #region 卵の孵化する時間UI
+    [SerializeField] GameObject HachingTimerParent;
+    [SerializeField] Text textHachingTimer;
+    #endregion
+
     #region poop関係
     [SerializeField] GameObject poop;
     int poopCnt;
@@ -41,14 +46,22 @@ public class TopSceneManager : MonoBehaviour
     bool isTouchMonster;
 
 #if UNITY_EDITOR
+    DateTime TEST_createdTime;
     int testParam_Huger = 40;
+    int TEST_monsterState = 0;   // [1:卵]
 #endif
+
+    private void Awake()
+    {
+        string strTime = "2024/10/29 15:00:00";
+        TEST_createdTime = DateTime.Parse(strTime);
+
+        networkManager = NetworkManager.Instance;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        networkManager = NetworkManager.Instance;
-
         isTouchMonster = false;
 
         // ユーザー設定
@@ -63,11 +76,11 @@ public class TopSceneManager : MonoBehaviour
                                                    NetworkManager.Instance.nurtureInfo.Level);
 
         // モンスター生成処理
-        MonsterController.Instance.GenerateMonster(new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
 
         // モンスターの死亡チェック
-        if (MonsterController.Instance.IsMonsterDie || NetworkManager.Instance.nurtureInfo.StomachVol <= 0)
+        if (MonsterController.Instance.IsMonsterDie || testParam_Huger <= 0)
         {
             menuBtn.SetActive(false);
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Die);
@@ -78,9 +91,9 @@ public class TopSceneManager : MonoBehaviour
             GeneratePoop();
         }
 
-        //// 進化待機アニメーション ============================================================================================
-        //MonsterController.Instance.IsMonsterEvolution = true;
-        //MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
+        // 進化待機アニメーション ============================================================================================
+        MonsterController.Instance.IsMonsterEvolution = true;
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
     }
 
     // Update is called once per frame
@@ -92,6 +105,17 @@ public class TopSceneManager : MonoBehaviour
         {
             titleSet.SetActive(false);
             ToggleTopVisibility(true);
+        }
+
+        bool isEggHaching = false;
+        if (TEST_monsterState == 1)
+        {
+            // 卵の状態の場合は孵化できるかどうかチェック
+            isEggHaching = IsEggHaching();
+        }
+        else
+        {
+            HachingTimerParent.SetActive(false);
         }
 
         if (!isTouchMonster && Input.GetMouseButtonUp(0))
@@ -108,8 +132,14 @@ public class TopSceneManager : MonoBehaviour
                 {
                     if (MonsterController.Instance.IsMonsterEvolution)
                     {
-                        // 進化アニメーション
+                        // 進化できる場合は専用のアニメーション再生
                         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Evolutioin);
+                    }
+                    else if (isEggHaching)
+                    {
+                        // 孵化できる場合は専用のアニメーション再生
+                        HachingTimerParent.SetActive(false);
+                        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Hatching);
                     }
                     else
                     {
@@ -149,6 +179,27 @@ public class TopSceneManager : MonoBehaviour
         else
         {
             poopCnt = 0;
+        }
+    }
+
+    bool IsEggHaching()
+    {
+        // 卵を生成してからの孵化する残り時間を取得
+        var elapsedTime = DateTime.Now - TEST_createdTime;
+        TimeSpan hachingTime = new TimeSpan(0, 0, Constant.GetEggHachingTimer("SSR"));
+        int totalSeconds = (int)(hachingTime.TotalSeconds - elapsedTime.TotalSeconds) < 0 ? 0 : (int)(hachingTime.TotalSeconds - elapsedTime.TotalSeconds);
+
+        if (totalSeconds == 0)
+        {
+            textHachingTimer.text = "00：00";
+            return true;
+        }
+        else
+        {
+            // 残り時間を更新する
+            hachingTime = new TimeSpan(0, 0, totalSeconds);
+            textHachingTimer.text = hachingTime.Minutes + "：" + hachingTime.Seconds;
+            return false;
         }
     }
 

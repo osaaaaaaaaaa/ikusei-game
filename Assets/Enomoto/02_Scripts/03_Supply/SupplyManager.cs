@@ -46,7 +46,7 @@ public class SupplyManager : MonoBehaviour
 
     public void AddFoodCnt()
     {
-        if (foodCnt < Constant.ItemMaxCnt)
+        if (foodCnt < Constant.itemMaxCnt)
         {
             foodCnt = foodCnt + 5;
             textFoodCnt.text = "×" + foodCnt;
@@ -82,7 +82,7 @@ public class SupplyManager : MonoBehaviour
     {
         if (isFever) return;
 
-        if (foodCnt < Constant.ItemMaxCnt)
+        if (foodCnt < Constant.itemMaxCnt)
         {
             var tmp1 = foodCnt - 5;
             foodCnt = tmp1 <= 0 ? 0 : tmp1;
@@ -100,9 +100,9 @@ public class SupplyManager : MonoBehaviour
         // 現在の食料値を更新
         int foodVol = NetworkManager.Instance.userInfo.FoodVol + foodCnt;
 
-        if (foodVol > Constant.ItemMaxCnt)
+        if (foodVol > Constant.itemMaxCnt)
         {   // 上限値を超えないようにする
-            foodVol = Constant.ItemMaxCnt;
+            foodVol = Constant.itemMaxCnt;
         }
 
         StartCoroutine(NetworkManager.Instance.SupplyFoods(

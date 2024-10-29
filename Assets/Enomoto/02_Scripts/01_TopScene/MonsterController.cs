@@ -22,9 +22,15 @@ public class MonsterController : MonoBehaviour
     [SerializeField] GameObject mixDoneEffectPrefab;
     #endregion
 
+    #region 孵化関係
+    [SerializeField] GameObject hachingHitEffect;
+    [SerializeField] GameObject hachingGlowEffect;
+    [SerializeField] List<Sprite> eggSprites;
+    #endregion
+
     [SerializeField] GameObject typeMonsterImagePrefab;
     [SerializeField] List<GameObject> monsterPrefabs;
-    GameObject monster;
+    public GameObject monster { get; private set; }
 
     // モンスターが進化できるかどうか
     bool isMonsterEvolution;
@@ -50,8 +56,13 @@ public class MonsterController : MonoBehaviour
         EvolutioinWait, // 進化待機
         Evolutioin,     // 進化
         Die,            // 死ぬ
-        Mix             // 配合
+        Mix,            // 配合
+        Hatching,       // 卵から孵化(Animator)
     }
+
+#if UNITY_EDITOR
+    public int TEST_monsterID;
+#endif
 
     private void Awake()
     {
@@ -72,14 +83,14 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// モンスター生成処理
     /// </summary>
-    public GameObject GenerateMonster(Vector2 generatePoint)
+    public GameObject GenerateMonster(int monsterID,Vector2 generatePoint)
     {
         if (monster != null)
         {
             Destroy(monster.gameObject);
         }
 
-        monster = Instantiate(monsterPrefabs[0]);
+        monster = Instantiate(monsterPrefabs[monsterID]);
         monster.transform.localPosition = generatePoint;
         return monster;
     }
@@ -122,15 +133,19 @@ public class MonsterController : MonoBehaviour
             case ANIM_ID.Mix:
                 StartCoroutine("PlayMixAnim");
                 break;
+            case ANIM_ID.Hatching:
+                StartCoroutine("PlayHatchingAnim");
+                break;
         }
     }
 
     /// <summary>
-    /// Animatorをアクティブ化
+    /// アイドルアニメーション再生
     /// </summary>
     void PlayStartAnim()
     {
-        monster.GetComponent<Animator>().enabled = true;
+        if (!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
+        monster.GetComponent<Animator>().Play("MonsterIdle");
     }
 
     /// <summary>
@@ -138,6 +153,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayJumpAnim()
     {
+        if(!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("MonsterJump");
     }
 
@@ -176,10 +192,11 @@ public class MonsterController : MonoBehaviour
         if (isSpecialAnim) return;
         isSpecialAnim = true;
         bool isPlaingAnim = monster.GetComponent<Animator>().enabled;
-        monster.GetComponent<Animator>().enabled = false;
+        monster.GetComponent<Animator>().Play("MonsterNone");
 
-        // モンスターのスプライトの高さを取得
+        // モンスターのスプライトの高さなどを取得
         float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
+        Vector3 monsterPos = monster.transform.position;
 
         // エフェクト生成
         GameObject effect1 = Instantiate(typeMonsterImagePrefab);
@@ -202,6 +219,9 @@ public class MonsterController : MonoBehaviour
 
                 isMonsterEvolution = false;
                 isSpecialAnim = false;
+
+                GenerateMonster(2, monsterPos);
+                monster.GetComponent<Rigidbody2D>().gravityScale = 0;
             });
     }
 
@@ -213,6 +233,8 @@ public class MonsterController : MonoBehaviour
         if (isSpecialAnim) return;
         isSpecialAnim = true;
         monster.GetComponent<Animator>().enabled = false;
+
+        Vector3 monsterPos = monster.transform.position;
 
         // カラー作成
         string colorString = "#6967FF";
@@ -255,10 +277,12 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     IEnumerator PlayMixAnim()
     {
-        Vector3 monsterPos = monster.transform.position;
+        if (isSpecialAnim) yield break;
+        isSpecialAnim = true;
 
-        // モンスターのスプライトの高さを取得
+        // モンスターのスプライトの高さなどを取得
         float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
+        Vector3 monsterPos = monster.transform.position;
         // エフェクト生成
         Instantiate(mixEffectPrefab, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
 
@@ -266,5 +290,47 @@ public class MonsterController : MonoBehaviour
 
         // エフェクト生成
         Instantiate(mixDoneEffectPrefab, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
+
+        yield return new WaitForSeconds(5f);
+        isSpecialAnim = false;
+    }
+
+    /// <summary>
+    /// 卵から孵化するアニメーション
+    /// </summary>
+    IEnumerator PlayHatchingAnim()
+    {
+        if (isSpecialAnim) yield break;
+        isSpecialAnim = true;
+
+        // モンスターのスプライトの高さなどを取得
+        float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
+        Vector3 monsterPos = monster.transform.position;
+
+        // 静止させる
+        monster.GetComponent<Animator>().Play("MonsterNone");
+
+        // 徐々にひびが入る
+        for (int i = 0; i < eggSprites.Count; i++)
+        {
+            yield return new WaitForSeconds(2f);
+            // スプライトを変更して揺らす
+            monster.GetComponent<SpriteRenderer>().sprite = eggSprites[i];
+            monster.GetComponent<Animator>().Play("EggHaching");
+            Instantiate(hachingHitEffect, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
+        }
+
+        // 完全に孵化する
+        yield return new WaitForSeconds(2f);
+        var effect = Instantiate(hachingGlowEffect, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
+        effect.transform.DOScale(new Vector3(10f, 10f, 10f), 4f).SetEase(Ease.InBounce)
+            .OnComplete(()=> {
+                isSpecialAnim = false;
+            });
+
+        // 孵化するモンスターを新しく生成する
+        yield return new WaitForSeconds(5f);
+        GenerateMonster(1, monsterPos);
+        monster.GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 }

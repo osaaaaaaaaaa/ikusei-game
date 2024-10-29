@@ -48,7 +48,7 @@ public class MiniGameManager1 : MonoBehaviour
         state = MINIGAME1_STATE.Opening;
 
         // ƒ‚ƒ“ƒXƒ^[¶¬ˆ—
-        MonsterController.Instance.GenerateMonster(new Vector2(0, -4f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0, -4f)).GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 
     // Update is called once per frame
@@ -184,7 +184,7 @@ public class MiniGameManager1 : MonoBehaviour
         int exp =  baseExp + bonusExp;
 
         StartCoroutine(NetworkManager.Instance.ExeExercise(
-            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.BaseHungerDecrease,
+            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.baseHungerDecrease,
             NetworkManager.Instance.nurtureInfo.Exp + exp,
             result =>
             {
