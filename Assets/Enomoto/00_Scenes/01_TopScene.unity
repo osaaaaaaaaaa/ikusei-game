@@ -122,6 +122,83 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &359047897
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 359047899}
+  - component: {fileID: 359047898}
+  m_Layer: 0
+  m_Name: TapGuard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!61 &359047898
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359047897}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3, y: 5}
+  m_EdgeRadius: 0
+--- !u!4 &359047899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359047897}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &551597249
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +346,17 @@ MonoBehaviour:
   - {fileID: 1722214021813872350, guid: ccd3c2ace6bda964aa81e6a8d5256d1f, type: 3}
   - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
   - {fileID: 7588736321683117593, guid: 3ba0848cee5314147911af26552ae292, type: 3}
-  TEST_monsterID: 0
+  - {fileID: 600808878074877615, guid: 7ce957a8ca5060046830ee393e312e23, type: 3}
+  - {fileID: 1476443152052668023, guid: 5c9c16ab7bee070489f7c0962eabad68, type: 3}
+  - {fileID: 2791289233771042745, guid: 4da8b64a0b498834694ffe41f5b2cda2, type: 3}
+  - {fileID: 5085698280293614426, guid: ab644a67617236b4abb0d28a2defb12e, type: 3}
+  - {fileID: 3495560354220762, guid: 55973f267ed181f42aa80546a48691c4, type: 3}
+  - {fileID: 3617602974756053480, guid: 1b4fe01a40e165b45b0524e3b9a7afaa, type: 3}
+  - {fileID: 1202750596379107955, guid: f2851bcd54f5f1848a0685c9188f0b7c, type: 3}
+  - {fileID: 5493538824990395926, guid: 65fcb9a6936c675469e7b5d302bb5797, type: 3}
+  - {fileID: 4787518916409336280, guid: 4507ed5d1ef298b4985cf2e94ea7b2bd, type: 3}
+  - {fileID: 5900281116963884763, guid: 6f35722eb4852584aa7cef6162b74aa9, type: 3}
+  TEST_monsterID: 3
 --- !u!4 &1149896779
 Transform:
   m_ObjectHideFlags: 0
@@ -542,6 +629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   titleSet: {fileID: 1086530951}
+  tapGuard: {fileID: 359047897}
   topSet: {fileID: 8947936210222248722}
   menuBtn: {fileID: 3648268554428408672}
   levelNum: {fileID: 4725962064641780033}
@@ -1273,7 +1361,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7a9603f8afcdffd47a4d61734c025f16, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5967da957cd9561419a0e97bce75501b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2928,7 +3016,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u305B\u3063\u3066\u3044"
+  m_Text: "\u3057\u3085\u3046\u304B\u304F"
 --- !u!1 &3950893118966941227
 GameObject:
   m_ObjectHideFlags: 0
@@ -3318,8 +3406,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
-  m_SizeDelta: {x: 0, y: 300}
+  m_AnchoredPosition: {x: 0, y: -149.99994}
+  m_SizeDelta: {x: 80, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4991894363365903079
 GameObject:
@@ -4032,6 +4120,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1554837373}
+        m_TargetAssemblyTypeName: TopSceneManager, Assembly-CSharp
+        m_MethodName: ToggleTapGuardVisibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &6957238212759512179
 Transform:
   m_ObjectHideFlags: 0
@@ -4142,6 +4242,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1554837373}
+        m_TargetAssemblyTypeName: TopSceneManager, Assembly-CSharp
+        m_MethodName: ToggleTapGuardVisibility
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &7087986781781900404
 MonoBehaviour:
@@ -5119,3 +5231,4 @@ SceneRoots:
   - {fileID: 551597252}
   - {fileID: 1554837374}
   - {fileID: 1149896779}
+  - {fileID: 359047899}

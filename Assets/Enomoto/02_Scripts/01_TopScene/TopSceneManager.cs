@@ -15,6 +15,7 @@ public class TopSceneManager : MonoBehaviour
     #endregion
 
     #region トップ画面関係
+    [SerializeField] GameObject tapGuard;
     [SerializeField] GameObject topSet;
     [SerializeField] GameObject menuBtn;
     [SerializeField] GameObject levelNum;
@@ -55,13 +56,13 @@ public class TopSceneManager : MonoBehaviour
     {
         string strTime = "2024/10/29 15:00:00";
         TEST_createdTime = DateTime.Parse(strTime);
-
-        networkManager = NetworkManager.Instance;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        networkManager = NetworkManager.Instance;
+
         isTouchMonster = false;
 
         // ユーザー設定
@@ -91,15 +92,23 @@ public class TopSceneManager : MonoBehaviour
             GeneratePoop();
         }
 
-        // 進化待機アニメーション ============================================================================================
-        MonsterController.Instance.IsMonsterEvolution = true;
-        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
+       // 進化待機アニメーション ============================================================================================
+       //MonsterController.Instance.IsMonsterEvolution = true;
+       // MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (MonsterController.Instance.isSpecialAnim) return;
+        if (MonsterController.Instance.isSpecialAnim)
+        {
+            menuBtn.SetActive(false);
+            return;
+        }
+        else
+        {
+            menuBtn.SetActive(true);
+        }
 
         if (titleSet.activeSelf && Input.GetMouseButtonDown(0))
         {
@@ -222,7 +231,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = Random.Range(1, 4);
+        int rnd = 3;//Random.Range(1, 4);
         switch (rnd)
         {
             case 1:
@@ -270,5 +279,21 @@ public class TopSceneManager : MonoBehaviour
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("05_Inventory");
+    }
+
+    public void ToggleTapGuardVisibility(bool visibility)
+    {
+        if (visibility) Invoke("ShowTapGuard", 1f);
+        if (!visibility) Invoke("HideTapGuard", 1f);
+    }
+
+    void ShowTapGuard()
+    {
+        tapGuard.SetActive(true);
+    }
+
+    void HideTapGuard()
+    {
+        tapGuard.SetActive(false);
     }
 }

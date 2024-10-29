@@ -220,7 +220,7 @@ public class MonsterController : MonoBehaviour
                 isMonsterEvolution = false;
                 isSpecialAnim = false;
 
-                GenerateMonster(2, monsterPos);
+                GenerateMonster(6, monsterPos);
                 monster.GetComponent<Rigidbody2D>().gravityScale = 0;
             });
     }
