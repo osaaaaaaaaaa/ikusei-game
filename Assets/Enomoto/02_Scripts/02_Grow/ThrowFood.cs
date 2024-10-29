@@ -7,16 +7,14 @@ public class ThrowFood : MonoBehaviour
     [SerializeField] GameObject eatingEffect;
     [SerializeField] string colorString;
     Color createColor;
-    HungerGageController gageController;
-    MealManager mealManager;
-    public MealManager MealManager { set { mealManager = value; } }
+    GrowManager mealManager;
+    public GrowManager MealManager { set { mealManager = value; } }
     bool isThrow;
     const float dragSpeed = 100;
 
     private void Awake()
     {
         isThrow = false;
-        gageController = GameObject.Find("HungerGage").GetComponent<HungerGageController>();
 
         // 色を作成
         ColorUtility.TryParseHtmlString(colorString, out createColor);
@@ -51,8 +49,6 @@ public class ThrowFood : MonoBehaviour
     {
         if (isThrow && collision.tag == "Monster")
         {
-            gageController.UpdateGage(Constant.GetHungerIncrease());
-
             // 食べるエフェクトを発生させる
             var effect = Instantiate(eatingEffect);
             effect.transform.position = new Vector3(transform.position.x,transform.position.y,-8f);

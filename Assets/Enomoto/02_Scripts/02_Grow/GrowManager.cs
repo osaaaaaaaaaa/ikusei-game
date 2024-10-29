@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class MealManager : MonoBehaviour
+public class GrowManager : MonoBehaviour
 {
     [SerializeField] GameObject effect;
     const float effectMaxPos_X = 1.5f;
     const float effectMaxPos_Y = 2f;
 
-    [SerializeField] Image gageHunger;
+    [SerializeField] HungerGageController gageHunger;
     int hungerAmount;
     const float extraMaxCnt = 5;
     float extraCnt;
@@ -31,7 +31,7 @@ public class MealManager : MonoBehaviour
 
         extraCnt = 0;
         hungerAmount = 0;
-        gageHunger.fillAmount = (float)hungerAmount / (float)Constant.hungerMaxAmount;
+        gageHunger.UpdateGage(hungerAmount);
 
         // ÉÇÉìÉXÉ^Å[ê∂ê¨èàóù
         var monster = MonsterController.Instance.GenerateMonster(new Vector2(0f, -1f));
@@ -77,7 +77,7 @@ public class MealManager : MonoBehaviour
         {
             var tmp = hungerAmount + Constant.GetHungerIncrease();
             hungerAmount = tmp < Constant.hungerMaxAmount ? tmp : Constant.hungerMaxAmount;
-            gageHunger.fillAmount = (float)hungerAmount / (float)Constant.hungerMaxAmount;
+            gageHunger.UpdateGage(hungerAmount);
 
             if (hungerAmount >= Constant.hungerMaxAmount) GenerateEffects();
         }

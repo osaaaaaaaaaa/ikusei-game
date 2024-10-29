@@ -160,7 +160,6 @@ public class TopSceneManager : MonoBehaviour
         if (MonsterController.Instance.isSpecialAnim) return;
 
         int rnd = Random.Range(1, 4);
-        rnd = 2;
         switch (rnd)
         {
             case 1:
@@ -175,6 +174,13 @@ public class TopSceneManager : MonoBehaviour
         }
     }
 
+    public void OnGrowButton()
+    {
+        if (MonsterController.Instance.isSpecialAnim) return;
+        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
+        Initiate.Fade("02_GrowScene", Color.white, 1.0f);
+    }
+
     public void OnSupplyButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
@@ -182,18 +188,11 @@ public class TopSceneManager : MonoBehaviour
         SceneManager.LoadScene("03_SupplyScene");
     }
 
-    public void OnGrowButton()
+    public void OnLibraryButton()
     {
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
-        Initiate.Fade("02_MealScene", Color.white, 1.0f);
-    }
-
-    public void OnPictureBookButton()
-    {
-        if (MonsterController.Instance.isSpecialAnim) return;
-        if (poopCnt > 0) MonsterController.Instance.IsMonsterKill = true;
-        SceneManager.LoadScene("04_PictureBookScene");
+        SceneManager.LoadScene("04_LibraryScene");
     }
 
     public void OnMixButton()

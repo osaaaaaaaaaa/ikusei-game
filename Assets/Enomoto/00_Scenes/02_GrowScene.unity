@@ -1001,7 +1001,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effect: {fileID: 3975360456688631148, guid: 2a5c92bb10d60f64e8e51462a1671532, type: 3}
-  gageHunger: {fileID: 1643045474}
+  gageHunger: {fileID: 573764503}
   throwFoodPrefabs:
   - {fileID: 2491835043990333271, guid: f0de1cd112271574798e910fb961b4ab, type: 3}
   - {fileID: 4614248632619071582, guid: 1a5ac427e06b28045b27b26252be6dbe, type: 3}

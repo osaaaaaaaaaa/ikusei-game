@@ -12,13 +12,13 @@ EditorBuildSettings:
     path: Assets/Enomoto/00_Scenes/01_TopScene.unity
     guid: 0cee6fdc0a2682048b946ff9fa993ec3
   - enabled: 1
-    path: Assets/Enomoto/00_Scenes/02_MealScene.unity
+    path: Assets/Enomoto/00_Scenes/02_GrowScene.unity
     guid: 3dcd7629b52e88e40970ae85515a8d20
   - enabled: 1
     path: Assets/Enomoto/00_Scenes/03_SupplyScene.unity
     guid: fe41e6c98ca59f64e8a7ed549685dba6
   - enabled: 1
-    path: Assets/Enomoto/00_Scenes/04_PictureBookScene.unity
+    path: Assets/Enomoto/00_Scenes/04_LibraryScene.unity
     guid: fe4128a85fb46ee4c947498dc00ea3bd
   - enabled: 1
     path: Assets/Enomoto/00_Scenes/05_MixScene.unity

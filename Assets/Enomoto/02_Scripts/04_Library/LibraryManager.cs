@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PictureBookManager : MonoBehaviour
+public class LibraryManager : MonoBehaviour
 {
     #region アイコンボタン関係
     [SerializeField] GameObject menu;
