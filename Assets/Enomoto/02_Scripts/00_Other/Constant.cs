@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Constant : MonoBehaviour
 {
-    const int baseHungerIncrease = 20;  // ベースとなる満腹度増加量
-    const int baseHungerDecrease = 20;  // ベースとなる満腹度減少量
+    const int baseHungerIncrease = 10;  // ベースとなる満腹度増加量
+    const int baseHungerDecrease = 25;  // ベースとなる満腹度減少量
     const int itemMaxCnt = 999;         // アイテムの最大所持数
 
     public static int BaseHungerIncrease { get { return baseHungerIncrease; } }

@@ -85,6 +85,7 @@ public class TestManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             StartCoroutine(NetworkManager.Instance.ExeMeal(
+                50,
                 500,
                 1500,
                 result =>

@@ -44,14 +44,11 @@ public class TopSceneManager : MonoBehaviour
     int testParam_Huger = 40;
 #endif
 
-    private void Awake()
-    {
-        networkManager = NetworkManager.Instance;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
+        networkManager = NetworkManager.Instance;
+
         isTouchMonster = false;
 
         // ユーザー設定
@@ -70,7 +67,7 @@ public class TopSceneManager : MonoBehaviour
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
 
         // モンスターの死亡チェック
-        if (MonsterController.Instance.IsMonsterDie || testParam_Huger <= 0)
+        if (MonsterController.Instance.IsMonsterDie || NetworkManager.Instance.nurtureInfo.StomachVol <= 0)
         {
             menuBtn.SetActive(false);
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Die);

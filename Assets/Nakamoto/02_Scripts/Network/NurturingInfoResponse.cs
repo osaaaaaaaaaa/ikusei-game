@@ -7,6 +7,7 @@
 //
 //---------------------------------------------------------------
 using Newtonsoft.Json;
+using System;
 
 public class NurturingInfoResponse
 {
@@ -41,4 +42,12 @@ public class NurturingInfoResponse
     /// –• “x
     [JsonProperty("stomach_vol")]
     public int StomachVol { get; set; }
+
+    /// ó‘Ô
+    [JsonProperty("state")]
+    public int State { get; set; }
+
+    /// ¶‚Ü‚ê‚½“ú
+    [JsonProperty("created_at")]
+    public DateTime CreatedAt { get; set; }
 }

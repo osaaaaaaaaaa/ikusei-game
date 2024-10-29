@@ -40,7 +40,16 @@ public class ThrowFood : MonoBehaviour
     {
         if (collision.tag == "DeathZone")
         {
-            mealManager.GenerateFood();
+            // 現在の食料値によって判定
+            if (mealManager.nowFoodVol < mealManager.decreaseFoodVol)
+            {   // 食料がなくなった時
+                mealManager.isGrow = false;
+            }
+            else
+            {   // ある時
+                mealManager.GenerateFood();
+            }
+
             Destroy(this.gameObject);
         }
     }
@@ -57,7 +66,15 @@ public class ThrowFood : MonoBehaviour
             effect.GetComponent<ParticleSystem>().Play();
 
             mealManager.AddHungerAmount();
-            mealManager.GenerateFood();
+
+            if(mealManager.nowFoodVol < mealManager.decreaseFoodVol)
+            {   // 食料がなくなった時
+                mealManager.isGrow = false;
+            }
+            else
+            {   // ある時
+                mealManager.GenerateFood();
+            }
 
             Destroy(this.gameObject);
         }

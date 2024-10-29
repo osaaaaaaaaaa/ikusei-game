@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 public class MiniGameManager2 : MonoBehaviour
 {
@@ -23,9 +25,11 @@ public class MiniGameManager2 : MonoBehaviour
     [SerializeField] GameObject rock;
     [SerializeField] Transform stageParent;
     [SerializeField] List<GameObject> obstractPrefabs;
+    int baseExp;
     float addSpeed;
     float currentTimeObstracle;
     float triggerTimeObstracle;
+    const int gameOverCount = 3;
     #endregion
 
     #region 地面と背景関係
@@ -47,17 +51,18 @@ public class MiniGameManager2 : MonoBehaviour
 
     // ゲーム時間
     float currentTime;
-    const float timeMax = 40;
+    const float timeMax = 30;
 
     void Start()
     {
         monsterHitCnt = 0;
         addSpeed = 0;
         currentTimeObstracle = 0;
-        triggerTimeObstracle = 3;
+        triggerTimeObstracle = 2;
         currentTime = 0;
         isGameOver = false;
         isGameClear = false;
+        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
 
         // モンスター生成処理
         monster = MonsterController.Instance.GenerateMonster(new Vector2(0, -1.8f));
@@ -94,7 +99,7 @@ public class MiniGameManager2 : MonoBehaviour
                 monster.GetComponent<PolygonCollider2D>().enabled = false;
                 monster.transform.localPosition = new Vector2(0, -6f);
                 StopScrollBG();
-                HitMonster(3);
+                HitMonster(gameOverCount);
             }
             else
             {
@@ -124,7 +129,7 @@ public class MiniGameManager2 : MonoBehaviour
             // 障害物を生成し、徐々にスピードアップさせる
             var obstacle = Instantiate(obstractPrefabs[index - 1], stageParent);
             obstacle.GetComponent<Obstacle>().Init(this,4 + addSpeed);
-            addSpeed += 0.1f;
+            addSpeed += 0.15f;
             if (triggerTimeObstracle > 1f) triggerTimeObstracle -= addSpeed;
             if (triggerTimeObstracle <= 1f) triggerTimeObstracle = 1f;
 
@@ -141,7 +146,7 @@ public class MiniGameManager2 : MonoBehaviour
         if (isGameOver || isInvincible) return;
 
         monsterHitCnt+= damageAmount;
-        if(monsterHitCnt >= 3)
+        if(monsterHitCnt >= gameOverCount)
         {
             isGameOver = true;
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Fall);
@@ -192,6 +197,30 @@ public class MiniGameManager2 : MonoBehaviour
 
     public void OnBackButton()
     {
+        if(monsterHitCnt >= gameOverCount) { monsterHitCnt = gameOverCount; }
+        int exp = (int)(baseExp / gameOverCount);
+        exp = exp * (gameOverCount + 2 - monsterHitCnt);
+
+        // 経験値取得
+        StartCoroutine(NetworkManager.Instance.ExeExercise(
+            NetworkManager.Instance.nurtureInfo.StomachVol - Constant.BaseHungerDecrease,
+            NetworkManager.Instance.nurtureInfo.Exp + exp,
+            result =>
+            {
+                if (result != null)
+                {
+                    NetworkManager.Instance.nurtureInfo.Level = result.Level;
+                    NetworkManager.Instance.nurtureInfo.Exp = result.Exp;
+                    Debug.Log("経験値更新成功");
+                }
+                else
+                {
+                    Debug.Log("経験値更新失敗");
+                }
+            }));
+
+        Debug.Log("経験値：" + exp);
+
         Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }
