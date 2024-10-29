@@ -144,7 +144,7 @@ public class MiniGameManager2 : MonoBehaviour
         if(monsterHitCnt >= 3)
         {
             isGameOver = true;
-            MonsterController.Instance.PlayDeathAnimMonster();
+            MonsterController.Instance.PlayFallAnimMonster();
             Invoke("ShowResult", 2f);
         }
         else

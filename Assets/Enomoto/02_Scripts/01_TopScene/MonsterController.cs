@@ -7,11 +7,28 @@ using UnityEngine.Rendering;
 
 public class MonsterController : MonoBehaviour
 {
+    #region 進化関係
+    [SerializeField] GameObject lightEffectPrefab;
+    [SerializeField] GameObject areaEffectPrefab;
+    GameObject areaEffect;
+    #endregion
+
+    #region 死亡関係
     [SerializeField] GameObject rainFallingParticle;
-    [SerializeField] GameObject evolutionEffectPrefab;
+    #endregion
+
+    #region 配合関係
+    [SerializeField] GameObject mixEffectPrefab;
+    [SerializeField] GameObject mixDoneEffectPrefab;
+    #endregion
+
     [SerializeField] GameObject typeMonsterImagePrefab;
     [SerializeField] List<GameObject> monsterPrefabs;
     GameObject monster;
+
+    // モンスターが進化できるかどうか
+    bool isMonsterEvolution;
+    public bool IsMonsterEvolution { get { return isMonsterEvolution; } set { isMonsterEvolution = value; } }
 
     // モンスターが破棄されるかどうか
     bool isMonsterKill;
@@ -23,6 +40,18 @@ public class MonsterController : MonoBehaviour
     // インスタンス作成
     static MonsterController instance;
     public static MonsterController Instance { get { return instance; } }
+
+    // アニメーションID
+    public enum ANIM_ID
+    {
+        Idle = 0,       // Idle(Animator)
+        Jump ,          // ジャンプ(Animator)
+        Fall,           // 倒れる
+        EvolutioinWait, // 進化待機
+        Evolutioin,     // 進化
+        Die,            // 死ぬ
+        Mix             // 配合
+    }
 
     private void Awake()
     {
@@ -65,7 +94,39 @@ public class MonsterController : MonoBehaviour
     }
 
     /// <summary>
-    /// アニメーション再生開始
+    /// 各アニメーション再生処理
+    /// </summary>
+    /// <param name="id"></param>
+    public void PlayMonsterAnim(ANIM_ID id)
+    {
+        switch (id)
+        {
+            case ANIM_ID.Idle:
+                PlayStartAnim();
+                break;
+            case ANIM_ID.Jump:
+                PlayJumpAnim();
+                break;
+            case ANIM_ID.Fall:
+                PlayFallAnimMonster();
+                break;
+            case ANIM_ID.EvolutioinWait:
+                PlayWaitForEvolutionAnim();
+                break;
+            case ANIM_ID.Evolutioin:
+                PlayEvolutionAnim();
+                break;
+            case ANIM_ID.Die:
+                PlayKillAnim();
+                break;
+            case ANIM_ID.Mix:
+                StartCoroutine("PlayMixAnim");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Animatorをアクティブ化
     /// </summary>
     public void PlayStartAnim()
     {
@@ -83,13 +144,24 @@ public class MonsterController : MonoBehaviour
     /// <summary>
     /// モンスターが倒れるアニメーション
     /// </summary>
-    public void PlayDeathAnimMonster()
+    public void PlayFallAnimMonster()
     {
         monster.GetComponent<PolygonCollider2D>().enabled = false;
         var rb2D = monster.GetComponent<Rigidbody2D>();
         rb2D.gravityScale = 3;
         rb2D.velocity = new Vector2(rb2D.velocity.x, 0f);
         rb2D.AddForce(Vector2.up * 14, ForceMode2D.Impulse);
+    }
+
+    /// <summary>
+    /// 進化待機状態のアニメーション再生
+    /// </summary>
+    public void PlayWaitForEvolutionAnim()
+    {
+        isMonsterEvolution = true;
+
+        areaEffect = Instantiate(areaEffectPrefab);
+        areaEffect.transform.position = monster.transform.position;
     }
 
     /// <summary>
@@ -104,25 +176,26 @@ public class MonsterController : MonoBehaviour
 
         // エフェクト生成
         GameObject effect1 = Instantiate(typeMonsterImagePrefab);
-        GameObject effect2 = Instantiate(evolutionEffectPrefab);
-        effect1.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y,5);
+        GameObject effect2 = Instantiate(lightEffectPrefab);
+        effect1.transform.position = new Vector3(monster.transform.position.x, monster.transform.position.y, 5);
         effect1.GetComponent<SpriteRenderer>().sprite = monster.GetComponent<SpriteRenderer>().sprite;
+        effect2.transform.position = monster.transform.position;
 
         // アニメーション再生
         var sequence = DOTween.Sequence();
-        sequence.Append(effect1.transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 1f).SetEase(Ease.Linear).SetLoops(2,LoopType.Restart))
+        sequence.Append(effect1.transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 1f).SetEase(Ease.Linear).SetLoops(2, LoopType.Restart))
             .Join(effect1.GetComponent<SpriteRenderer>().DOFade(0f, 1f).SetEase(Ease.Linear).SetLoops(2, LoopType.Restart))
             .AppendInterval(1f)
-            .Join(effect2.GetComponent<SpriteRenderer>().DOFade(1f, 1.5f).SetEase(Ease.InFlash))
-            .AppendInterval(1f)
-            .Append(effect2.GetComponent<SpriteRenderer>().DOFade(0f, 1f).SetEase(Ease.Linear).OnComplete(()=> 
+            .Append(effect2.transform.DOScale(new Vector3(1f, 1f, 1f), 4f).SetEase(Ease.InBounce))
+            .OnComplete(() =>
             {
                 monster.GetComponent<Animator>().enabled = isPlaingAnim;
+                Destroy(areaEffect.gameObject);
                 Destroy(effect1.gameObject);
-                Destroy(effect2.gameObject);
 
+                isMonsterEvolution = false;
                 isSpecialAnim = false;
-            }));
+            });
     }
 
     /// <summary>
@@ -140,8 +213,8 @@ public class MonsterController : MonoBehaviour
         ColorUtility.TryParseHtmlString(colorString, out createColor);
 
         // モンスターの初期状態設定
-        monster.transform.localEulerAngles = new Vector3(0f,0f,90f);
-        monster.transform.position = 
+        monster.transform.localEulerAngles = new Vector3(0f, 0f, 90f);
+        monster.transform.position =
             new Vector3(monster.GetComponent<SpriteRenderer>().bounds.size.y / 4, monster.transform.position.y + monster.GetComponent<SpriteRenderer>().bounds.size.y / 4, 0);
         monster.GetComponent<SpriteRenderer>().color = createColor;
 
@@ -159,7 +232,7 @@ public class MonsterController : MonoBehaviour
             .Append(effect.GetComponent<SpriteRenderer>().DOFade(0.5f, 0.7f).SetEase(Ease.OutCirc))
             .Append(effect.transform.DOMoveY(1.5f, 3f).SetEase(Ease.OutCirc))
             .Join(effect.GetComponent<SpriteRenderer>().DOFade(0f, 3f).SetEase(Ease.OutCirc)
-            .OnComplete(()=> 
+            .OnComplete(() =>
             {
                 Destroy(effect.gameObject);
                 Instantiate(rainFallingParticle);
@@ -168,5 +241,23 @@ public class MonsterController : MonoBehaviour
                 isSpecialAnim = false;
             }));
         sequence.Play();
+    }
+
+    /// <summary>
+    /// 配合のアニメーション再生
+    /// </summary>
+    IEnumerator PlayMixAnim()
+    {
+        Vector3 monsterPos = monster.transform.position;
+
+        // モンスターのスプライトの高さを取得
+        float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
+        // エフェクト生成
+        Instantiate(mixEffectPrefab, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
+
+        yield return new WaitForSeconds(6f);
+
+        // エフェクト生成
+        Instantiate(mixDoneEffectPrefab, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
     }
 }

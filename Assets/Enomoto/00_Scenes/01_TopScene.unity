@@ -254,8 +254,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68457dfab22fbc640a2cb209a9899533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightEffectPrefab: {fileID: 1532970394955649303, guid: 357de6e3db566d04b85dbada3a514dde, type: 3}
+  areaEffectPrefab: {fileID: 7865584400739127152, guid: 8bb1d6a7032c2794db6e979b6b5a3d8d, type: 3}
   rainFallingParticle: {fileID: 1127212143856516793, guid: bd17aa0fc1e8dd94db739eab618b1867, type: 3}
-  evolutionEffectPrefab: {fileID: 252775378678360045, guid: 129f39fcd7d4c4a4fb47fc965ed25639, type: 3}
+  mixEffectPrefab: {fileID: 2641110264410917975, guid: d7a0c965d3fffc840b66f4b86d03defc, type: 3}
+  mixDoneEffectPrefab: {fileID: 7835436256238253905, guid: 419257533090b0e47a987dd5a635badb, type: 3}
   typeMonsterImagePrefab: {fileID: 3606109508912590639, guid: b0bfdf10fbbbf394cb017d9789a66739, type: 3}
   monsterPrefabs:
   - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
@@ -323,9 +326,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.06756756
+    y: 0.00024986267
     width: 1
-    height: 0.8648649
+    height: 0.9995003
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

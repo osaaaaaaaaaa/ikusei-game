@@ -43,8 +43,9 @@ public class Obstacle : MonoBehaviour
         if(collision.transform.tag == "Rock")
         {
             var effect = Instantiate(breakingEffect);
+            ParticleSystem.MainModule psmain = effect.GetComponent<ParticleSystem>().main;
             effect.transform.position = this.transform.position;
-            effect.GetComponent<ParticleSystem>().startColor = createColor;
+            psmain.startColor = createColor;
             effect.GetComponent<ParticleSystem>().Play();
             Destroy(this.gameObject);
         }
