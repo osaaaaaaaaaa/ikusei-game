@@ -68,6 +68,11 @@ public class CountDown : MonoBehaviour
             int curentIndex = new int();
             curentIndex = i;
 
+            if(i == 0)
+            {
+                sequence.AppendInterval(1f);
+            }
+
             sequence.Append(imgTextList[i].transform.DOScale(new Vector3(1f, 1f, 1f), animTime * 2).SetEase(Ease.InOutBack))
                 .Join(imgTextList[i].GetComponent<Image>().DOColor(new Color(1f, 1f, 1f, 1f), animTime * 2).SetEase(Ease.InOutBack))
                 .SetDelay(animTime / 1.5f);

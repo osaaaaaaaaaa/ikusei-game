@@ -15,9 +15,8 @@ public class TopSceneManager : MonoBehaviour
     #endregion
 
     #region トップ画面関係
-    [SerializeField] GameObject tapGuard;
     [SerializeField] GameObject topSet;
-    [SerializeField] GameObject menuBtn;
+    [SerializeField] Button menuBtn;
     [SerializeField] GameObject levelNum;
     [SerializeField] GameObject ExpGage;
     [SerializeField] GameObject hungerGage;
@@ -44,6 +43,7 @@ public class TopSceneManager : MonoBehaviour
     NetworkManager networkManager;
     #endregion
 
+    [SerializeField] Animator animatorMenuBtn;
     bool isTouchMonster;
 
 #if UNITY_EDITOR
@@ -83,7 +83,7 @@ public class TopSceneManager : MonoBehaviour
         // モンスターの死亡チェック
         if (MonsterController.Instance.IsMonsterDie || testParam_Huger <= 0)
         {
-            menuBtn.SetActive(false);
+            menuBtn.interactable = false;
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Die);
         }
         else
@@ -100,26 +100,30 @@ public class TopSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (titleSet.activeSelf && Input.GetMouseButtonDown(0))
+        //{
+        //    titleSet.SetActive(false);
+        //    ToggleTopVisibility(true);
+        //}
+
+        bool isMenuActive = animatorMenuBtn.GetBool("OnClickButton");
+        if (isMenuActive) return;
+
+        // 特殊アニメーションを再生中はメニューボタンをおせなくする
         if (MonsterController.Instance.isSpecialAnim)
         {
-            menuBtn.SetActive(false);
+            menuBtn.interactable = false;
             return;
         }
         else
         {
-            menuBtn.SetActive(true);
+            menuBtn.interactable = true;
         }
 
-        if (titleSet.activeSelf && Input.GetMouseButtonDown(0))
-        {
-            titleSet.SetActive(false);
-            ToggleTopVisibility(true);
-        }
-
+        // 卵の状態の場合は孵化できるかどうかチェック
         bool isEggHaching = false;
         if (TEST_monsterState == 1)
         {
-            // 卵の状態の場合は孵化できるかどうかチェック
             isEggHaching = IsEggHaching();
         }
         else
@@ -127,7 +131,7 @@ public class TopSceneManager : MonoBehaviour
             HachingTimerParent.SetActive(false);
         }
 
-        if (!isTouchMonster && Input.GetMouseButtonUp(0))
+        if (!isTouchMonster && Input.GetMouseButtonDown(0))
         {
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
@@ -174,7 +178,7 @@ public class TopSceneManager : MonoBehaviour
     /// </summary>
     void GeneratePoop()
     {
-        var rndPoint = Random.Range(1, 4);
+        var rndPoint = TEST_monsterState == 1 ? 0 : Random.Range(1, 4); // 卵の状態の場合は生成しない
         if (rndPoint == 1)
         {
             poopCnt = Random.Range(1, 4);
@@ -279,21 +283,5 @@ public class TopSceneManager : MonoBehaviour
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("05_Inventory");
-    }
-
-    public void ToggleTapGuardVisibility(bool visibility)
-    {
-        if (visibility) Invoke("ShowTapGuard", 1f);
-        if (!visibility) Invoke("HideTapGuard", 1f);
-    }
-
-    void ShowTapGuard()
-    {
-        tapGuard.SetActive(true);
-    }
-
-    void HideTapGuard()
-    {
-        tapGuard.SetActive(false);
     }
 }
