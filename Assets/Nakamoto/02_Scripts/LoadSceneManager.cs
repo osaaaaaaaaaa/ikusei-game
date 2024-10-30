@@ -38,12 +38,18 @@ public class LoadSceneManager : MonoBehaviour
                             result =>
                             {
                                 Debug.Log("ユーザー情報取得");
+                                // モンスター初回登録
                                 StartCoroutine(NetworkManager.Instance.InitMonsterStore(
                                     "おためし",
                                     result =>
                                     {
-                                        Debug.Log("モンスター情報取得");
-                                        TransTopScene();
+                                        Debug.Log("育成情報取得");
+                                        StartCoroutine(NetworkManager.Instance.GetMonsterInfo(
+                                            result =>
+                                            {
+                                                Debug.Log("モンスターリスト取得");
+                                                TransTopScene();
+                                            }));
                                     }));
                             }));
                     }

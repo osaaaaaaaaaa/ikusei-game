@@ -3,7 +3,7 @@
 // ネットワークマネージャー [ NetWorkManager.cs ]
 // Author:Kenta Nakamoto
 // Data:2024/10/24
-// Update:2024/10/28
+// Update:2024/10/30
 //
 //---------------------------------------------------------------
 using Newtonsoft.Json;
@@ -43,11 +43,6 @@ public class NetworkManager : MonoBehaviour
     /// API認証トークン
     /// </summary>
     private string authToken = "";
-
-    /// <summary>
-    /// 育成中モンスターID
-    /// </summary>
-    private int monsterID = 0;
 
     /// <summary>
     /// モンスターマスターデータ
@@ -195,7 +190,6 @@ public class NetworkManager : MonoBehaviour
             response = JsonConvert.DeserializeObject<List<NurturingInfoResponse>>(resultJson);  // JSONデシリアライズ
 
             nurtureInfo = response[0];  // 取得情報を保存
-            response[0].MonsterID = monsterID;
         }
         else
         {   // 通信失敗時はnull
@@ -379,6 +373,76 @@ public class NetworkManager : MonoBehaviour
         {
             // 通信成功
             isSuccess = true;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// 育成状態変更処理
+    /// </summary>
+    /// <param name="name">ユーザー名</param>
+    /// <param name="result">通信完了辞に呼び出す関数</param>
+    /// <returns></returns>
+    public IEnumerator ChangeState(int state, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        ChangeStateRequest repuestData = new ChangeStateRequest();
+        repuestData.ID = nurtureInfo.ID;
+        repuestData.State = state;
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        bool isSuccess = false; // 受信結果
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信成功
+            isSuccess = true;
+            nurtureInfo.State = 2;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(isSuccess);
+    }
+
+    /// <summary>
+    /// 育成状態変更処理
+    /// </summary>
+    /// <param name="name">ユーザー名</param>
+    /// <param name="result">通信完了辞に呼び出す関数</param>
+    /// <returns></returns>
+    public IEnumerator ChangeNurtureMonster(int id, Action<bool> result)
+    {
+        // サーバーに送信するオブジェクトを作成
+        ChangeNurtureMonsterRequest repuestData = new ChangeNurtureMonsterRequest();
+        repuestData.ID = nurtureInfo.ID;
+        repuestData.MonsterID = id;
+
+        // サーバーに送信するオブジェクトをJSONに変換
+        string json = JsonConvert.SerializeObject(repuestData);
+
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Post(API_BASE_URL + "monsters/update", json, "application/json");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        bool isSuccess = false; // 受信結果
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {
+            // 通信成功
+            isSuccess = true;
+            nurtureInfo.MonsterID = id;
         }
 
         // 呼び出し元のresult処理を呼び出す

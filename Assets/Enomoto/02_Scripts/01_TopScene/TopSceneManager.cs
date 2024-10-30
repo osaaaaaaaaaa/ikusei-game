@@ -45,6 +45,7 @@ public class TopSceneManager : MonoBehaviour
 
     [SerializeField] Animator animatorMenuBtn;
     bool isTouchMonster;
+    int needEvoLevel;
 
 #if UNITY_EDITOR
     DateTime TEST_createdTime;
@@ -54,8 +55,7 @@ public class TopSceneManager : MonoBehaviour
 
     private void Awake()
     {
-        string strTime = "2024/10/29 15:00:00";
-        TEST_createdTime = DateTime.Parse(strTime);
+        TEST_createdTime = NetworkManager.Instance.nurtureInfo.CreatedAt;
     }
 
     // Start is called before the first frame update
@@ -65,8 +65,10 @@ public class TopSceneManager : MonoBehaviour
 
         isTouchMonster = false;
 
+        needEvoLevel = networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv - networkManager.nurtureInfo.Level;
+
         // ユーザー設定
-        nextEvoLevelText.text = networkManager.userInfo.Name;
+        nextEvoLevelText.text = "進化まで" + needEvoLevel.ToString() + "レベル";
         monsterNameText.text = networkManager.nurtureInfo.Name;
         foodsCurrentText.text = networkManager.userInfo.FoodVol.ToString();
 
@@ -77,13 +79,20 @@ public class TopSceneManager : MonoBehaviour
                                                    NetworkManager.Instance.nurtureInfo.Level);
 
         // モンスター生成処理
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
-        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
+        if(networkManager.nurtureInfo.State == 1)
+        {   // 卵の時
+            MonsterController.Instance.GenerateMonster(0, new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
+        }
+        else
+        {
+            MonsterController.Instance.GenerateMonster(networkManager.nurtureInfo.MonsterID, new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
+        }
 
         // モンスターの死亡チェック
-        if (MonsterController.Instance.IsMonsterDie || testParam_Huger <= 0)
+        if (MonsterController.Instance.IsMonsterDie || networkManager.nurtureInfo.StomachVol <= 0)
         {
-            menuBtn.interactable = false;
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Die);
         }
         else
@@ -92,9 +101,12 @@ public class TopSceneManager : MonoBehaviour
             GeneratePoop();
         }
 
-       // 進化待機アニメーション ============================================================================================
-       //MonsterController.Instance.IsMonsterEvolution = true;
-       //MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
+        if (needEvoLevel <= 0)
+        {
+            // 進化待機アニメーション
+            MonsterController.Instance.IsMonsterEvolution = true;
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
+        }
     }
 
     // Update is called once per frame
@@ -109,26 +121,30 @@ public class TopSceneManager : MonoBehaviour
         bool isMenuActive = animatorMenuBtn.GetBool("OnClickButton");
         if (isMenuActive) return;
 
-        // 特殊アニメーションを再生中はメニューボタンをおせなくする
-        if (MonsterController.Instance.isSpecialAnim)
-        {
-            menuBtn.interactable = false;
-            return;
-        }
-        else
-        {
-            menuBtn.interactable = true;
-        }
-
         // 卵の状態の場合は孵化できるかどうかチェック
         bool isEggHaching = false;
-        if (TEST_monsterState == 1)
+        if (networkManager.nurtureInfo.State == 1)
         {
             isEggHaching = IsEggHaching();
         }
         else
         {
             HachingTimerParent.SetActive(false);
+        }
+
+        // 特殊アニメーションを再生中はメニューボタンをおせなくする
+        if (MonsterController.Instance.isSpecialAnim)
+        {
+            menuBtn.interactable = false;
+            return;
+        }
+        else if(networkManager.nurtureInfo.State == 1)
+        {
+            menuBtn.interactable = false;
+        }
+        else
+        {
+            menuBtn.interactable = true;
         }
 
         if (!isTouchMonster && Input.GetMouseButtonDown(0))
@@ -153,6 +169,14 @@ public class TopSceneManager : MonoBehaviour
                         // 孵化できる場合は専用のアニメーション再生
                         HachingTimerParent.SetActive(false);
                         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Hatching);
+                        // 育成モンスターの状態更新
+                        StartCoroutine(NetworkManager.Instance.ChangeState(
+                            2,
+                            result =>
+                            {
+                                if (result) { Debug.Log("孵化完了"); }
+                                else { Debug.Log("孵化失敗"); }
+                            }));
                     }
                     else
                     {
@@ -178,7 +202,7 @@ public class TopSceneManager : MonoBehaviour
     /// </summary>
     void GeneratePoop()
     {
-        var rndPoint = TEST_monsterState == 1 ? 0 : Random.Range(1, 4); // 卵の状態の場合は生成しない
+        var rndPoint = networkManager.nurtureInfo.State == 1 ? 0 : Random.Range(1, 4); // 卵の状態の場合は生成しない
         if (rndPoint == 1)
         {
             poopCnt = Random.Range(1, 4);
@@ -199,7 +223,7 @@ public class TopSceneManager : MonoBehaviour
     {
         // 卵を生成してからの孵化する残り時間を取得
         var elapsedTime = DateTime.Now - TEST_createdTime;
-        TimeSpan hachingTime = new TimeSpan(0, 0, Constant.GetEggHachingTimer("SSR"));
+        TimeSpan hachingTime = new TimeSpan(0, 0, Constant.GetEggHachingTimer(networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].Rarity));
         int totalSeconds = (int)(hachingTime.TotalSeconds - elapsedTime.TotalSeconds) < 0 ? 0 : (int)(hachingTime.TotalSeconds - elapsedTime.TotalSeconds);
 
         if (totalSeconds == 0)
@@ -235,7 +259,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 3;//Random.Range(1, 4);
+        int rnd = Random.Range(1, 4);
         switch (rnd)
         {
             case 1:

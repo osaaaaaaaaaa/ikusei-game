@@ -2704,10 +2704,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 24a1979b6409ba44ea26deb949b897d3, type: 3}
-    m_FontSize: 43
+    m_FontSize: 35
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 4
+    m_MinSize: 3
     m_MaxSize: 46
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -2715,7 +2715,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: user2535843
+  m_Text: "\u9032\u5316\u307E\u3067??\u30EC\u30D9\u30EB"
 --- !u!222 &3514060893795595665
 CanvasRenderer:
   m_ObjectHideFlags: 0

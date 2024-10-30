@@ -17,6 +17,8 @@ public class SupplyManager : MonoBehaviour
     [SerializeField] List<GameObject> foodPrefabs;
 
     const float feverAddAmount = 0.1f;
+    const int normalGetVol = 5;
+    const int feverGetVol = 15;
     float feverAmount = 0;
     public bool isFever { get; private set; }
 
@@ -29,7 +31,7 @@ public class SupplyManager : MonoBehaviour
 
         colorGageDefault = feverGage.color;
         textFoodCnt.text = "Å~" + foodCnt;
-        InvokeRepeating("GenerateFood", 1f, 2f);
+        InvokeRepeating("GenerateFood", 1f, 1.5f);
     }
 
     /// <summary>
@@ -48,7 +50,9 @@ public class SupplyManager : MonoBehaviour
     {
         if (foodCnt < Constant.itemMaxCnt)
         {
-            foodCnt = foodCnt + 5;
+            if(isFever) { foodCnt = foodCnt + feverGetVol; }
+            else { foodCnt = foodCnt + normalGetVol; }
+
             textFoodCnt.text = "Å~" + foodCnt;
         }
 
