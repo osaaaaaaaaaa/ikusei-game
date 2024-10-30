@@ -11,10 +11,11 @@ public class Constant : MonoBehaviour
 
     enum EGG_HACHING_TIME_RARITY
     {
-        SSR = 4200,
+        SSR = 1800,
         SR = 600,
-        R = 30,
-        N = 10
+        R = 300,
+        N = 60,
+        C = 15,
     }
 
     /// <summary>
@@ -33,6 +34,8 @@ public class Constant : MonoBehaviour
                 return (int)EGG_HACHING_TIME_RARITY.R;
             case "N":
                 return (int)EGG_HACHING_TIME_RARITY.N;
+            case "C":
+                return (int)EGG_HACHING_TIME_RARITY.C;
             default:
                 return 0;
         }

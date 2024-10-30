@@ -30,6 +30,7 @@ public class MiniGameManager2 : MonoBehaviour
     float currentTimeObstracle;
     float triggerTimeObstracle;
     const int gameOverCount = 3;
+    const int confExp = 3;
     #endregion
 
     #region ’n–Ê‚Æ”wŒiŠÖŒW
@@ -190,6 +191,7 @@ public class MiniGameManager2 : MonoBehaviour
 
         if (monsterHitCnt >= gameOverCount) { monsterHitCnt = gameOverCount; }
         int exp = (int)(baseExp / gameOverCount);
+        if(exp < confExp) {  exp = confExp; }
         exp = exp * (gameOverCount + 2 - monsterHitCnt);
 
         // ŒoŒ±’lŽæ“¾

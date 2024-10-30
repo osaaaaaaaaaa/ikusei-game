@@ -220,8 +220,16 @@ public class MonsterController : MonoBehaviour
                 isMonsterEvolution = false;
                 isSpecialAnim = false;
 
-                GenerateMonster(6, monsterPos);
+                GenerateMonster(NetworkManager.Instance.monsterList[NetworkManager.Instance.nurtureInfo.MonsterID - 1].EvoID, monsterPos);
                 monster.GetComponent<Rigidbody2D>().gravityScale = 0;
+
+                // 進化処理
+                StartCoroutine(NetworkManager.Instance.ChangeNurtureMonster(
+                    NetworkManager.Instance.monsterList[NetworkManager.Instance.nurtureInfo.MonsterID - 1].EvoID,
+                    result =>
+                    {
+                        Debug.Log("進化！");
+                    }));
             });
     }
 
@@ -330,7 +338,7 @@ public class MonsterController : MonoBehaviour
 
         // 孵化するモンスターを新しく生成する
         yield return new WaitForSeconds(5f);
-        GenerateMonster(1, monsterPos);
+        GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPos);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 }
