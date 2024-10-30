@@ -169,7 +169,7 @@ public class MiniGameManager3 : MonoBehaviour
     /// </summary>
     void PlaySetupAnim(bool isSkip)
     {
-        int alliePoint = 1500;
+        int alliePoint = 3000;
         float animTime = 0.5f;
 
         var sequence = DOTween.Sequence();
@@ -256,27 +256,7 @@ public class MiniGameManager3 : MonoBehaviour
     {
         sequenceMonster.Kill();
         resultUI.SetActive(true);
-    }
 
-    public void GameOver()
-    {
-        isGameEnd = true;
-        wiresParent.SetActive(false);
-        Instantiate(particleExplosionPrefab);
-        InitMonster();
-        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Fall);
-
-        // Œ»İ‚ ‚é‘S‚Ä‚Ì”š’e‚ğ”jŠü‚·‚é
-        foreach (var bomb in bombObjs)
-        {
-            Destroy(bomb.gameObject);
-        }
-
-        Invoke("ShowResult", 4f);
-    }
-
-    public void OnBackButton()
-    {
         int exp = baseExp;
         if (baseExp >= roundMaxCnt) { exp = baseExp / roundMaxCnt; }
         exp = exp * roundCnt;
@@ -300,7 +280,22 @@ public class MiniGameManager3 : MonoBehaviour
             }));
 
         Debug.Log("ŒoŒ±’lF" + exp);
+    }
 
-        Initiate.Fade("01_TopScene", Color.black, 1.0f);
+    public void GameOver()
+    {
+        isGameEnd = true;
+        wiresParent.SetActive(false);
+        Instantiate(particleExplosionPrefab);
+        InitMonster();
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Fall);
+
+        // Œ»İ‚ ‚é‘S‚Ä‚Ì”š’e‚ğ”jŠü‚·‚é
+        foreach (var bomb in bombObjs)
+        {
+            Destroy(bomb.gameObject);
+        }
+
+        Invoke("ShowResult", 4f);
     }
 }

@@ -235,7 +235,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 3;//Random.Range(1, 4);
+        int rnd = 1;//Random.Range(1, 4);
         switch (rnd)
         {
             case 1:

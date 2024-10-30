@@ -47,31 +47,28 @@ public class CountDown : MonoBehaviour
     {
         var _tween = DOTween.Sequence();
 
-        foreach (var img in imgNumberList)
+        // ナンバーのTween
+        for (int i = 0; i < imgNumberList.Count; i++)
         {
             var sequence = DOTween.Sequence();
             GameObject hideObj = new GameObject();
-            hideObj = img;
+            hideObj = imgNumberList[i];
 
-            sequence.Append(img.transform.DORotate(Vector3.zero, animTime * 2))
-                .Join(img.transform.DOScale(new Vector3(1f, 1f, 1f), animTime * 2))
-                .Join(img.GetComponent<Image>().DOColor(new Color(1f, 1f, 1f, 1f), animTime * 2))
+            sequence.Append(imgNumberList[i].transform.DORotate(Vector3.zero, animTime * 2))
+                .Join(imgNumberList[i].transform.DOScale(new Vector3(1f, 1f, 1f), animTime * 2))
+                .Join(imgNumberList[i].GetComponent<Image>().DOColor(new Color(1f, 1f, 1f, 1f), animTime * 2))
                 .OnComplete(() => { hideObj.SetActive(false); });
 
             // sequenceを繋げる
             _tween.Append(sequence);
         }
 
+        // テキストのTween
         for (int i = 0; i < imgTextList.Count; i++)
         {
             var sequence = DOTween.Sequence();
             int curentIndex = new int();
             curentIndex = i;
-
-            if(i == 0)
-            {
-                sequence.AppendInterval(1f);
-            }
 
             sequence.Append(imgTextList[i].transform.DOScale(new Vector3(1f, 1f, 1f), animTime * 2).SetEase(Ease.InOutBack))
                 .Join(imgTextList[i].GetComponent<Image>().DOColor(new Color(1f, 1f, 1f, 1f), animTime * 2).SetEase(Ease.InOutBack))

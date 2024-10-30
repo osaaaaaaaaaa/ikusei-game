@@ -187,17 +187,8 @@ public class MiniGameManager2 : MonoBehaviour
     void ShowResult()
     {
         resultUI.SetActive(true);
-    }
 
-    void GameClear()
-    {
-        isGameClear = true;
-        ShowResult();
-    }
-
-    public void OnBackButton()
-    {
-        if(monsterHitCnt >= gameOverCount) { monsterHitCnt = gameOverCount; }
+        if (monsterHitCnt >= gameOverCount) { monsterHitCnt = gameOverCount; }
         int exp = (int)(baseExp / gameOverCount);
         exp = exp * (gameOverCount + 2 - monsterHitCnt);
 
@@ -221,6 +212,11 @@ public class MiniGameManager2 : MonoBehaviour
 
         Debug.Log("åoå±ílÅF" + exp);
 
-        Initiate.Fade("01_TopScene", Color.black, 1.0f);
+    }
+
+    void GameClear()
+    {
+        isGameClear = true;
+        ShowResult();
     }
 }

@@ -23,20 +23,29 @@ public class MiniGameManager1 : MonoBehaviour
     public float endTime;
     float[] results = new float[3];
     int baseExp;
+
     bool isTap;
     bool isPlayTween;
     bool isGameStart;
     bool isGameEnd;
 
-    enum MINIGAME1_STATE
+    #region 岩を破壊するときに使う
+    public const float totalPowerMax = 3;
+    public float totalPower { get; private set; }
+    public float jumpPower;
+    public float gravity;
+    #endregion
+
+    public enum MINIGAME1_STATE
     {
         Opening,
         Gage1,
         Gage2,
         Gage3,
+        BreakAnim,
         Result
     }
-    MINIGAME1_STATE state;
+    public MINIGAME1_STATE state { get; private set; }
 
     private void Awake()
     {
@@ -48,7 +57,7 @@ public class MiniGameManager1 : MonoBehaviour
         state = MINIGAME1_STATE.Opening;
 
         // モンスター生成処理
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0, -4f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0, -1f));
     }
 
     // Update is called once per frame
@@ -64,7 +73,8 @@ public class MiniGameManager1 : MonoBehaviour
             return;
         }
 
-        if (isGameStart && !isTap && Input.GetMouseButtonDown(0))
+        // ゲージの動きを停止 && 次のモードへ移行
+        if (state != MINIGAME1_STATE.BreakAnim && isGameStart && !isTap && Input.GetMouseButtonDown(0))
         {
             isTap = true;
             if (state == MINIGAME1_STATE.Gage2)
@@ -137,51 +147,84 @@ public class MiniGameManager1 : MonoBehaviour
         }
     }
 
-    void UpdateGameState()
+    public void UpdateGameState()
     {
+        isTap = false;
+        isPlayTween = false;
+
+        float dis;
         switch (state)
         {
             case MINIGAME1_STATE.Gage1:
+
+                // ゲージを非表示
                 gage1.SetActive(false);
-                results[0] = gage1.GetComponent<Slider>().value;
-                Debug.Log("ゲージ１(Min0,Max1)：" + results[0]);
+
+                // 結果を計算
+                results[0] = gage1.GetComponent<Slider>().value > 0 ? gage1.GetComponent<Slider>().value : 0;
+                Debug.Log("ゲージ１(0~1)：" + results[0]);
+
                 break;
             case MINIGAME1_STATE.Gage2:
+
+                // ゲージを非表示
                 for (int i = 0; i < gage2List.Count; i++)
                 {
                     gage2List[i].SetActive(false);
                 }
-                results[1] = Mathf.Abs(1 - Vector3.Distance(gage2List[0].transform.localPosition, gage2List[1].transform.localPosition));
-                Debug.Log("ゲージ２(距離Min0,距離Maxわかんない)：" + results[1]);
+
+                // 結果を計算
+                dis = Mathf.Abs(Vector3.Distance(gage2List[0].transform.localPosition, gage2List[1].transform.localPosition));
+                results[1] = (1 - dis) > 0 ? (1 - dis) : 0;
+                Debug.Log("ゲージ２(0~1)：" + results[1]);
+
                 break;
             case MINIGAME1_STATE.Gage3:
+
+                // ゲージを非表示
                 gage3.SetActive(false);
                 gage3StartPoint.SetActive(false);
-                results[2] = Mathf.Abs(1 - Vector3.Distance(gage3StartPoint.transform.position, gage3.transform.position));
-                Debug.Log("ゲージ３(距離Min0,距離Maxわかんない)：" + results[2]);
+
+                // 結果を計算
+                dis = Mathf.Abs(Vector3.Distance(gage3StartPoint.transform.position, gage3.transform.position));
+                results[2] = (1 - dis) > 0 ? (1 - dis) : 0;
+                Debug.Log("ゲージ３(0~1)：" + results[2]);
+
                 break;
         }
 
         if (state < MINIGAME1_STATE.Result) state++;
-        isTap = false;
-        isPlayTween = false;
+        if(state == MINIGAME1_STATE.BreakAnim)
+        {
+            // トータル結果を代入
+            totalPower = 0;
+            for (int i = 0; i < results.Length; i++)
+            {
+                totalPower += results[i];
+            }
+
+            Invoke("JumpMonster", 1f);
+        }
+    }
+
+    void JumpMonster()
+    {
+        MonsterController.Instance.monster.GetComponent<Rigidbody2D>().gravityScale = gravity;
+        MonsterController.Instance.monster.GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
 
     void ShowResult()
     {
         isGameEnd = true;
         resultUI.SetActive(true);
-    }
 
-    public void OnBackButton()
-    {
         // 経験値取得
         int bonusExp = baseExp;
-        for (int i= 0; i < results.Length; i++)
+        for (int i = 0; i < results.Length; i++)
         {
             bonusExp = (int)(bonusExp * results[i]);
         }
-        int exp =  baseExp + bonusExp;
+        int exp = baseExp + bonusExp;
 
         StartCoroutine(NetworkManager.Instance.ExeExercise(
             NetworkManager.Instance.nurtureInfo.StomachVol - Constant.baseHungerDecrease,
@@ -201,6 +244,5 @@ public class MiniGameManager1 : MonoBehaviour
             }));
 
         Debug.Log("経験値：" + exp);
-        Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }
