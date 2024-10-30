@@ -418,9 +418,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.00024986267
+    y: 0.06756756
     width: 1
-    height: 0.9995003
+    height: 0.8648649
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -557,7 +557,7 @@ MonoBehaviour:
   levelNum: {fileID: 4725962064641780033}
   ExpGage: {fileID: 8182613734812342784}
   hungerGage: {fileID: 7950147264506680915}
-  userNameText: {fileID: 3469596207286663144}
+  nextEvoLevelText: {fileID: 3469596207286663144}
   monsterNameText: {fileID: 7950432756626721064}
   foodsCurrentText: {fileID: 1826442956}
   HachingTimerParent: {fileID: 1659735198}
@@ -4398,7 +4398,7 @@ GameObject:
   - component: {fileID: 1915989618682176926}
   - component: {fileID: 3438818644466781072}
   m_Layer: 5
-  m_Name: UserNameText
+  m_Name: NextEvoLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

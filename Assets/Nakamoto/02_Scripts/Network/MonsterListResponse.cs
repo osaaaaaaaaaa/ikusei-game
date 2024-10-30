@@ -29,6 +29,10 @@ public class MonsterListResponse
     [JsonProperty("evo_lv")]
     public int EvoLv { get; set; }
 
+    /// i‰»æID
+    [JsonProperty("evo_id")]
+    public int EvoID { get; set; }
+
     /// ƒŒƒA“x
     [JsonProperty("rarity")]
     public string Rarity { get; set; }
