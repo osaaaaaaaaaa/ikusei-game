@@ -190,41 +190,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1086530951
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1086530952}
-  m_Layer: 5
-  m_Name: TitleUISet
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1086530952
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1086530951}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1799445268}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1149896777
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,9 +383,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.06756756
+    y: 0.00024986267
     width: 1
-    height: 0.8648649
+    height: 0.9995003
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -551,7 +516,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f7f9c8c6d0c15468b1736fd08fa7d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleSet: {fileID: 1086530951}
   topSet: {fileID: 8947936210222248722}
   menuBtn: {fileID: 7083091568828107333}
   levelNum: {fileID: 4725962064641780033}
@@ -800,7 +764,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1086530952}
   - {fileID: 5889971133802501542}
   - {fileID: 1659735199}
   m_Father: {fileID: 1641312738}

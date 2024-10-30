@@ -144,6 +144,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayStartAnim()
     {
+        if (isMonsterDie) return;
         if (!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("MonsterIdle");
     }
@@ -153,6 +154,8 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayJumpAnim()
     {
+        if (isMonsterDie) return;
+
         if(!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("MonsterJump");
     }
@@ -174,6 +177,8 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayWaitForEvolutionAnim()
     {
+        if (isMonsterDie) return;
+
         isMonsterEvolution = true;
 
         // モンスターのスプライトの高さを取得
@@ -189,7 +194,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayEvolutionAnim()
     {
-        if (isSpecialAnim) return;
+        if (isSpecialAnim || isMonsterDie) return;
         isSpecialAnim = true;
         bool isPlaingAnim = monster.GetComponent<Animator>().enabled;
         monster.GetComponent<Animator>().Play("MonsterNone");
@@ -274,7 +279,6 @@ public class MonsterController : MonoBehaviour
                 Destroy(effect.gameObject);
                 Instantiate(rainFallingParticle);
 
-                IsMonsterDie = false;
                 isSpecialAnim = false;
             }));
         sequence.Play();
@@ -285,7 +289,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     IEnumerator PlayMixAnim()
     {
-        if (isSpecialAnim) yield break;
+        if (isSpecialAnim || isMonsterDie) yield break;
         isSpecialAnim = true;
 
         // モンスターのスプライトの高さなどを取得
@@ -308,7 +312,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     IEnumerator PlayHatchingAnim()
     {
-        if (isSpecialAnim) yield break;
+        if (isSpecialAnim || isMonsterDie) yield break;
         isSpecialAnim = true;
 
         // モンスターのスプライトの高さなどを取得

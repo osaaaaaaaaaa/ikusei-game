@@ -10,10 +10,6 @@ using Random = UnityEngine.Random;
 
 public class TopSceneManager : MonoBehaviour
 {
-    #region タイトル関係
-    [SerializeField] GameObject titleSet;
-    #endregion
-
     #region トップ画面関係
     [SerializeField] GameObject topSet;
     [SerializeField] Button menuBtn;
@@ -91,21 +87,11 @@ public class TopSceneManager : MonoBehaviour
             // 確率でpoopを生成する
             GeneratePoop();
         }
-
-       // 進化待機アニメーション ============================================================================================
-       //MonsterController.Instance.IsMonsterEvolution = true;
-       //MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //if (titleSet.activeSelf && Input.GetMouseButtonDown(0))
-        //{
-        //    titleSet.SetActive(false);
-        //    ToggleTopVisibility(true);
-        //}
-
         bool isMenuActive = animatorMenuBtn.GetBool("OnClickButton");
         if (isMenuActive) return;
 
