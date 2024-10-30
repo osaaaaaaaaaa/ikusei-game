@@ -21,7 +21,7 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] GameObject levelNum;
     [SerializeField] GameObject ExpGage;
     [SerializeField] GameObject hungerGage;
-    [SerializeField] Text userNameText;
+    [SerializeField] Text nextEvoLevelText;
     [SerializeField] Text monsterNameText;
     [SerializeField] Text foodsCurrentText;
     #endregion
@@ -66,7 +66,7 @@ public class TopSceneManager : MonoBehaviour
         isTouchMonster = false;
 
         // ユーザー設定
-        userNameText.text = networkManager.userInfo.Name;
+        nextEvoLevelText.text = networkManager.userInfo.Name;
         monsterNameText.text = networkManager.nurtureInfo.Name;
         foodsCurrentText.text = networkManager.userInfo.FoodVol.ToString();
 
@@ -94,7 +94,7 @@ public class TopSceneManager : MonoBehaviour
 
        // 進化待機アニメーション ============================================================================================
        //MonsterController.Instance.IsMonsterEvolution = true;
-       // MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
+       //MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
     }
 
     // Update is called once per frame

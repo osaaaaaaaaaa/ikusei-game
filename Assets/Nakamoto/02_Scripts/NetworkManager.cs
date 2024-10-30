@@ -45,6 +45,11 @@ public class NetworkManager : MonoBehaviour
     private string authToken = "";
 
     /// <summary>
+    /// 育成中モンスターID
+    /// </summary>
+    private int monsterID = 0;
+
+    /// <summary>
     /// モンスターマスターデータ
     /// </summary>
     public List<MonsterListResponse> monsterList { get; private set; } = new List<MonsterListResponse>();
@@ -190,6 +195,7 @@ public class NetworkManager : MonoBehaviour
             response = JsonConvert.DeserializeObject<List<NurturingInfoResponse>>(resultJson);  // JSONデシリアライズ
 
             nurtureInfo = response[0];  // 取得情報を保存
+            response[0].MonsterID = monsterID;
         }
         else
         {   // 通信失敗時はnull
