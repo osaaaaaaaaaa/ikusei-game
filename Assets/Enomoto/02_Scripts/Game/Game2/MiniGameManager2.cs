@@ -15,6 +15,7 @@ public class MiniGameManager2 : MonoBehaviour
     #endregion
 
     #region モンスター関係
+    [SerializeField] Transform monsterPoint;
     GameObject monster;
     int monsterHitCnt;
     bool isInvincible;
@@ -47,12 +48,13 @@ public class MiniGameManager2 : MonoBehaviour
     [SerializeField] Slider slider;
     #endregion
 
+    bool isGameEnd;
     public bool isGameOver { get; private set; }
     public bool isGameClear { get; private set; }
 
     // ゲーム時間
     float currentTime;
-    const float timeMax = 30;
+    const float timeMax = 2;
 
     void Start()
     {
@@ -61,18 +63,24 @@ public class MiniGameManager2 : MonoBehaviour
         currentTimeObstracle = 0;
         triggerTimeObstracle = 2;
         currentTime = 0;
+        isGameEnd = false;
         isGameOver = false;
         isGameClear = false;
         baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
 
         // モンスター生成処理
-        monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, new Vector2(0, -1.8f));
+        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, monsterPoint);
         // ジャンプコントローラーの初期化処理
         jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
     }
 
     private void Update()
     {
+        if(Input.GetMouseButtonDown(0) && isGameEnd && !resultUI.activeSelf)
+        {
+            // ゲームクリア時のアニメーションスキップ用
+            ShowResult();
+        }
         if(!countDown.isAnimEnd || isGameClear)
         {
             return;
@@ -104,7 +112,7 @@ public class MiniGameManager2 : MonoBehaviour
             }
             else
             {
-                // 経過時間が制限時間以上の場合
+                // 経過時間が設定した時間を超えた場合
                 MoveGrounds();
             }
         }
@@ -170,6 +178,7 @@ public class MiniGameManager2 : MonoBehaviour
 
         if(endGround.transform.position.x <= -2f)
         {
+            // ゲームクリア処理
             isGameClear = true;
             Invoke("GameClear", 2f);
             StopScrollBG();
@@ -187,6 +196,7 @@ public class MiniGameManager2 : MonoBehaviour
 
     void ShowResult()
     {
+        if (resultUI.activeSelf) return;  // 2回以上処理されるのを防ぐ
         resultUI.SetActive(true);
 
         if (monsterHitCnt >= gameOverCount) { monsterHitCnt = gameOverCount; }
@@ -218,7 +228,11 @@ public class MiniGameManager2 : MonoBehaviour
 
     void GameClear()
     {
+        isGameEnd = true;
         isGameClear = true;
-        ShowResult();
+        monsterPoint.Rotate(new Vector3(0f, 0f, -10));
+        MonsterController.Instance.ChangeCenteredPivotSprite();
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Glad);
+        Invoke("ShowResult", 4f);
     }
 }

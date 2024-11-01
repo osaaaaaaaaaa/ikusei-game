@@ -14,7 +14,7 @@ public class BreakingRock : MonoBehaviour
     [SerializeField] Image imageCrack;
     [SerializeField] Sprite spriteRock;
     float maxCrackValue;
-    bool isBreaking;
+    public bool isBreaking { get; private set; }
     bool isCollision;
     const float breakingPower = 2.5f;
 
