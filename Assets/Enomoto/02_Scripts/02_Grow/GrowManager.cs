@@ -95,7 +95,7 @@ public class GrowManager : MonoBehaviour
         isDragFood = false;
 
         int rndPoint = Random.Range(0, throwFoodPrefabs.Count);
-        var food = Instantiate(throwFoodPrefabs[rndPoint], new Vector3(0f,-2f,0f), Quaternion.identity);
+        var food = Instantiate(throwFoodPrefabs[rndPoint], new Vector3(0f,-1.3f,0f), Quaternion.identity);
         food.GetComponent<Rigidbody2D>().gravityScale = 0;
         food.GetComponent<ThrowFood>().MealManager = this;
     }

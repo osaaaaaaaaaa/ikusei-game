@@ -61,7 +61,7 @@ public class MiniGameManager1 : MonoBehaviour
         state = MINIGAME1_STATE.Opening;
 
         // ƒ‚ƒ“ƒXƒ^[¶¬ˆ—
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,monsterPoint);
+        MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID,monsterPoint);
     }
 
     // Update is called once per frame

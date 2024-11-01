@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,11 +6,11 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Random = UnityEngine.Random;
-using KanKikuchi.AudioManager;
+
 
 public class TopSceneManager : MonoBehaviour
 {
-    #region ƒgƒbƒv‰æ–ÊŠÖŒW
+    #region ãƒˆãƒƒãƒ—ç”»é¢é–¢ä¿‚
     [SerializeField] GameObject topSet;
     [SerializeField] Button menuBtn;
     [SerializeField] GameObject levelNum;
@@ -21,12 +21,12 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] Text foodsCurrentText;
     #endregion
 
-    #region —‘‚Ì›z‰»‚·‚éŠÔUI
+    #region åµã®å­µåŒ–ã™ã‚‹æ™‚é–“UI
     [SerializeField] GameObject HachingTimerParent;
     [SerializeField] Text textHachingTimer;
     #endregion
 
-    #region poopŠÖŒW
+    #region poopé–¢ä¿‚
     [SerializeField] GameObject poop;
     int poopCnt;
     const float poopMaxPos_X = 0.75f;
@@ -35,25 +35,14 @@ public class TopSceneManager : MonoBehaviour
     const float poopMinPos_Y = -0.35f;
     #endregion
 
-    #region networkŠÖŒW
+    #region networké–¢ä¿‚
     NetworkManager networkManager;
     #endregion
 
     [SerializeField] Transform monsterPoint;
     [SerializeField] Animator animatorMenuBtn;
+    int needEvoLevel;
     bool isTouchMonster;
-
-#if UNITY_EDITOR
-    DateTime TEST_createdTime;
-    int testParam_Huger = 40;
-    int TEST_monsterState = 0;   // [1:—‘]
-#endif
-
-    private void Awake()
-    {
-        string strTime = "2024/10/29 15:00:00";
-        TEST_createdTime = DateTime.Parse(strTime);
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -62,31 +51,48 @@ public class TopSceneManager : MonoBehaviour
 
         isTouchMonster = false;
 
-        // ƒ†[ƒU[İ’è
-        nextEvoLevelText.text = networkManager.userInfo.Name;
+        needEvoLevel = networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv - networkManager.nurtureInfo.Level;
+
+        // ãƒ¦ãƒ¼ã‚¶ãƒ¼è¨­å®š
+        nextEvoLevelText.text = "é€²åŒ–ã¾ã§" + needEvoLevel.ToString() + "ãƒ¬ãƒ™ãƒ«";
         monsterNameText.text = networkManager.nurtureInfo.Name;
         foodsCurrentText.text = networkManager.userInfo.FoodVol.ToString();
 
-        // ƒQ[ƒWŠÖŒW‚Ìƒpƒ‰ƒ[ƒ^İ’è
+        // ã‚²ãƒ¼ã‚¸é–¢ä¿‚ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š
         hungerGage.GetComponent<HungerGageController>().UpdateGage(NetworkManager.Instance.nurtureInfo.StomachVol);
         ExpGage.GetComponent<ExpGage>().UpdateGage(NetworkManager.Instance.nurtureInfo.Exp,
                                                    (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)), 
                                                    NetworkManager.Instance.nurtureInfo.Level);
 
-        // ƒ‚ƒ“ƒXƒ^[¶¬ˆ—
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,monsterPoint).GetComponent<Rigidbody2D>().gravityScale = 0;
-        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
+        // ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ç”Ÿæˆå‡¦ç†
+        if (networkManager.nurtureInfo.State == 1)
+        {   // åµã®æ™‚
+            MonsterController.Instance.GenerateMonster(0, monsterPoint).GetComponent<Rigidbody2D>().gravityScale = 0;
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
+        }
+        else
+        {
+            MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint).GetComponent<Rigidbody2D>().gravityScale = 0;
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
+        }
 
-        // ƒ‚ƒ“ƒXƒ^[‚Ì€–Sƒ`ƒFƒbƒN
-        if (MonsterController.Instance.IsMonsterDie || testParam_Huger <= 0)
+        // ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã®æ­»äº¡ãƒã‚§ãƒƒã‚¯
+        if (MonsterController.Instance.IsMonsterDie || networkManager.nurtureInfo.StomachVol <= 0)
         {
             menuBtn.interactable = false;
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Die);
         }
         else
         {
-            // Šm—¦‚Åpoop‚ğ¶¬‚·‚é
+            // ç¢ºç‡ã§poopã‚’ç”Ÿæˆã™ã‚‹
             GeneratePoop();
+        }
+
+        if (needEvoLevel <= 0)
+        {
+            // é€²åŒ–å‡¦ç†
+            MonsterController.Instance.IsMonsterEvolution = true;
+            MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.EvolutioinWait);
         }
     }
 
@@ -96,26 +102,30 @@ public class TopSceneManager : MonoBehaviour
         bool isMenuActive = animatorMenuBtn.GetBool("OnClickButton");
         if (isMenuActive) return;
 
-        // “ÁêƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶’†‚Íƒƒjƒ…[ƒ{ƒ^ƒ“‚ğ‚¨‚¹‚È‚­‚·‚é
-        if (MonsterController.Instance.isSpecialAnim)
-        {
-            menuBtn.interactable = false;
-            return;
-        }
-        else
-        {
-            menuBtn.interactable = true;
-        }
-
-        // —‘‚Ìó‘Ô‚Ìê‡‚Í›z‰»‚Å‚«‚é‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+        // åµã®çŠ¶æ…‹ã®å ´åˆã¯å­µåŒ–ã§ãã‚‹ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
         bool isEggHaching = false;
-        if (TEST_monsterState == 1)
+        if (networkManager.nurtureInfo.State == 1)
         {
             isEggHaching = IsEggHaching();
         }
         else
         {
             HachingTimerParent.SetActive(false);
+        }
+
+        // ç‰¹æ®Šã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿä¸­ã¯ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒœã‚¿ãƒ³ã‚’ãŠã›ãªãã™ã‚‹
+        if (MonsterController.Instance.isSpecialAnim)
+        {
+            menuBtn.interactable = false;
+            return;
+        }
+        else if(networkManager.nurtureInfo.State ==1)
+        {
+            menuBtn.interactable = false;
+        }
+        else 
+        {
+            menuBtn.interactable = true;
         }
 
         if (!isTouchMonster && Input.GetMouseButtonDown(0))
@@ -127,19 +137,26 @@ public class TopSceneManager : MonoBehaviour
             {
                 GameObject targetObj = hit2d.collider.gameObject;
 
-                // ƒ‚ƒ“ƒXƒ^[‚ğƒ^ƒbƒv‚µ‚½ê‡
+                // ãƒ¢ãƒ³ã‚¹ã‚¿ãƒ¼ã‚’ã‚¿ãƒƒãƒ—ã—ãŸå ´åˆ
                 if (!isTouchMonster && targetObj.tag == "Monster")
                 {
                     if (MonsterController.Instance.IsMonsterEvolution)
                     {
-                        // i‰»‚Å‚«‚éê‡‚Íê—p‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+                        // é€²åŒ–ã§ãã‚‹å ´åˆã¯å°‚ç”¨ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
                         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Evolutioin);
                     }
                     else if (isEggHaching)
                     {
-                        // ›z‰»‚Å‚«‚éê‡‚Íê—p‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+                        // å­µåŒ–ã§ãã‚‹å ´åˆã¯å°‚ç”¨ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
                         HachingTimerParent.SetActive(false);
                         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Hatching);
+                        StartCoroutine(NetworkManager.Instance.ChangeState(
+                            2,
+                            result =>
+                            {
+                                if (result) { Debug.Log("å­µåŒ–å®Œäº†"); }
+                                else { Debug.Log("å­µåŒ–å¤±æ•—"); }
+                            }));
                     }
                     else
                     {
@@ -148,7 +165,7 @@ public class TopSceneManager : MonoBehaviour
                         Invoke("ResetTriggerFrag", 1f);
                     }
                 }
-                // poop‚ğƒ^ƒbƒv‚µ‚½ê‡
+                // poopã‚’ã‚¿ãƒƒãƒ—ã—ãŸå ´åˆ
                 else if (targetObj.tag == "Poop")
                 {
                     poopCnt--;
@@ -159,11 +176,11 @@ public class TopSceneManager : MonoBehaviour
     }
 
     /// <summary>
-    /// poop‚ğ¶¬‚·‚é
+    /// poopã‚’ç”Ÿæˆã™ã‚‹
     /// </summary>
     void GeneratePoop()
     {
-        var rndPoint = TEST_monsterState == 1 ? 0 : Random.Range(1, 4); // —‘‚Ìó‘Ô‚Ìê‡‚Í¶¬‚µ‚È‚¢
+        var rndPoint = networkManager.nurtureInfo.State == 1 ? 0 : Random.Range(1, 4); // åµã®çŠ¶æ…‹ã®å ´åˆã¯ç”Ÿæˆã—ãªã„
         if (rndPoint == 1)
         {
             poopCnt = Random.Range(1, 4);
@@ -182,21 +199,21 @@ public class TopSceneManager : MonoBehaviour
 
     bool IsEggHaching()
     {
-        // —‘‚ğ¶¬‚µ‚Ä‚©‚ç‚Ì›z‰»‚·‚éc‚èŠÔ‚ğæ“¾
-        var elapsedTime = DateTime.Now - TEST_createdTime;
-        TimeSpan hachingTime = new TimeSpan(0, 0, Constant.GetEggHachingTimer("SSR"));
+        // åµã‚’ç”Ÿæˆã—ã¦ã‹ã‚‰ã®å­µåŒ–ã™ã‚‹æ®‹ã‚Šæ™‚é–“ã‚’å–å¾—
+        var elapsedTime = DateTime.Now - NetworkManager.Instance.nurtureInfo.CreatedAt;
+        TimeSpan hachingTime = new TimeSpan(0, 0, Constant.GetEggHachingTimer(networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].Rarity));
         int totalSeconds = (int)(hachingTime.TotalSeconds - elapsedTime.TotalSeconds) < 0 ? 0 : (int)(hachingTime.TotalSeconds - elapsedTime.TotalSeconds);
 
         if (totalSeconds == 0)
         {
-            textHachingTimer.text = "00F00";
+            textHachingTimer.text = "00ï¼š00";
             return true;
         }
         else
         {
-            // c‚èŠÔ‚ğXV‚·‚é
+            // æ®‹ã‚Šæ™‚é–“ã‚’æ›´æ–°ã™ã‚‹
             hachingTime = new TimeSpan(0, 0, totalSeconds);
-            textHachingTimer.text = hachingTime.Minutes + "F" + hachingTime.Seconds;
+            textHachingTimer.text = hachingTime.Minutes + "ï¼š" + hachingTime.Seconds;
             return false;
         }
     }
@@ -207,7 +224,7 @@ public class TopSceneManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒgƒbƒv‰æ–Ê‚Ì•\¦E”ñ•\¦
+    /// ãƒˆãƒƒãƒ—ç”»é¢ã®è¡¨ç¤ºãƒ»éè¡¨ç¤º
     /// </summary>
     /// <param name="isVisibility"></param>
     public void ToggleTopVisibility(bool isVisibility)
@@ -220,7 +237,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 1;//Random.Range(1, 4);
+        int rnd = 3;//Random.Range(1, 4);
         switch (rnd)
         {
             case 1:
