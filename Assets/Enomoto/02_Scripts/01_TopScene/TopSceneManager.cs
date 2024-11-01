@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Random = UnityEngine.Random;
-
+using KanKikuchi.AudioManager;
 
 public class TopSceneManager : MonoBehaviour
 {
