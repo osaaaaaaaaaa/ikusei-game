@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using Random = UnityEngine.Random;
+using KanKikuchi.AudioManager;
 
 public class MiniGameManager3 : MonoBehaviour
 {
@@ -94,6 +95,8 @@ public class MiniGameManager3 : MonoBehaviour
         text = text.Length == 2 ? "00" + text : text;
         text = text.Length == 1 ? "000" + text : text;
         textTimer.text = text.Insert(2, ":");
+
+        SEManager.Instance.Play(SEPath.TIMER);
     }
 
     /// <summary>
@@ -159,6 +162,7 @@ public class MiniGameManager3 : MonoBehaviour
     public void SetupNextRound()
     {
         InitMonster();
+        SEManager.Instance.Play(SEPath.CLEAR);
 
         isPause = true;
         roundCnt++;
@@ -308,6 +312,9 @@ public class MiniGameManager3 : MonoBehaviour
             Destroy(bomb.gameObject);
         }
 
+        SEManager.Instance.Play(SEPath.EVOLUTION);
+
+        Invoke("PlayGameoverSE", 4f);
         Invoke("ShowResult", 4f);
     }
 
@@ -316,5 +323,10 @@ public class MiniGameManager3 : MonoBehaviour
         MonsterController.Instance.ChangeCenteredPivotSprite();
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Glad);
         Invoke("ShowResult", 4f);
+    }
+
+    void PlayGameoverSE()
+    {
+        SEManager.Instance.Play(SEPath.FAILURE);
     }
 }

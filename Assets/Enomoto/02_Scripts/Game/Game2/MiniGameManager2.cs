@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Random = UnityEngine.Random;
+using KanKikuchi.AudioManager;
 
 public class MiniGameManager2 : MonoBehaviour
 {
@@ -154,11 +155,15 @@ public class MiniGameManager2 : MonoBehaviour
     {
         if (isGameOver || isInvincible) return;
 
-        monsterHitCnt+= damageAmount;
+        SEManager.Instance.Play(SEPath.DAMAGE);
+
+        monsterHitCnt += damageAmount;
         if(monsterHitCnt >= gameOverCount)
         {
             isGameOver = true;
+            SEManager.Instance.Stop(SEPath.ROCK_ROTATE);
             MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Fall);
+            Invoke("PlayGameoverSE", 2f);
             Invoke("ShowResult", 2f);
         }
         else
@@ -234,5 +239,10 @@ public class MiniGameManager2 : MonoBehaviour
         MonsterController.Instance.ChangeCenteredPivotSprite();
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Glad);
         Invoke("ShowResult", 4f);
+    }
+
+    void PlayGameoverSE()
+    {
+        SEManager.Instance.Play(SEPath.FAILURE);
     }
 }

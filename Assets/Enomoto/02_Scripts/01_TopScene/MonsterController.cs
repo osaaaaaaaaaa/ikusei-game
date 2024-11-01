@@ -185,6 +185,8 @@ public class MonsterController : MonoBehaviour
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         monster.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         monster.GetComponent<Animator>().Play("MonsterGlad");
+
+        SEManager.Instance.Play(SEPath.FANFARE);
     }
 
     /// <summary>

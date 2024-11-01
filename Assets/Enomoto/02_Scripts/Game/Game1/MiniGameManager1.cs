@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using UnityEngine.SceneManagement;
+using KanKikuchi.AudioManager;
 
 public class MiniGameManager1 : MonoBehaviour
 {
@@ -93,6 +94,8 @@ public class MiniGameManager1 : MonoBehaviour
             Invoke("UpdateGameState", 0.5f);
         }
         if (isTap) return;
+
+        SEManager.Instance.Play(SEPath.GAGE_TAP);
 
         // ゲージのアニメーションを開始する
         switch (state)
