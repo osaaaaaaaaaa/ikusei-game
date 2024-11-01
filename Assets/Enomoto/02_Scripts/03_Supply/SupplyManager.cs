@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using KanKikuchi.AudioManager;
 
 public class SupplyManager : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class SupplyManager : MonoBehaviour
         colorGageDefault = feverGage.color;
         textFoodCnt.text = "×" + foodCnt;
         InvokeRepeating("GenerateFood", 1f, 1.5f);
+
+        BGMManager.Instance.Play(BGMPath.SUPPLY_NORMAL, 1);
     }
 
     /// <summary>
@@ -64,12 +67,17 @@ public class SupplyManager : MonoBehaviour
             {
                 isFever = true;
 
+                BGMManager.Instance.Play(BGMPath.SUPPLY_FEVER);
+
                 // フィーバー状態のアニメーション再生
                 CancelInvoke("GenerateFood");
                 InvokeRepeating("GenerateFood", 1f, 1f);
                 feverGage.DOGradientColor(gradientGage, 1f).SetLoops(10, LoopType.Incremental)
                     .OnComplete(() =>
                     {
+                        BGMManager.Instance.FadeOut(BGMPath.SUPPLY_FEVER,1);
+                        BGMManager.Instance.Play(BGMPath.SUPPLY_NORMAL,1);
+
                         isFever = false;
                         feverGage.color = colorGageDefault;
                         feverAmount = 0;

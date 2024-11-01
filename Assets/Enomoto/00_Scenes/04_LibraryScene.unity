@@ -704,6 +704,7 @@ GameObject:
   - component: {fileID: 1350450648}
   - component: {fileID: 1350450647}
   - component: {fileID: 1350450646}
+  - component: {fileID: 1350450650}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -739,9 +740,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
+    y: 0.00024986267
     width: 1
-    height: 1
+    height: 0.9995003
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -843,6 +844,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1350450650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350450644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d9065c7e6244dddaffda63eb37d64b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioClip: {fileID: 8300000, guid: 8139ec46517db0847a63d198c02aad7f, type: 3}
+  _isAutoPlay: 0
+  _volumeRate: 1
+  _delay: 0
+  _pitch: 1
+  _fadeInDuration: 0
+  _fadeOutDuration: 0
+  _isLoop: 1
+  _isAutoStop: 1
 --- !u!1 &1470767814
 GameObject:
   m_ObjectHideFlags: 0
@@ -1387,21 +1409,8 @@ MonoBehaviour:
   imgMonster: {fileID: 1824997845}
   textDescription: {fileID: 93399573}
   spriteMonsters:
-  - {fileID: 21300000, guid: 57179d7c7603f274d91fc9336d6b3f68, type: 3}
-  - {fileID: 21300000, guid: 3b49de7df487ee94381b894905edbe0f, type: 3}
-  - {fileID: 21300000, guid: 0ff3f40a909ad3a4094ec79d03aa7fb4, type: 3}
-  - {fileID: 21300000, guid: a17b136f49e03214bb403acb2df444ac, type: 3}
-  - {fileID: 21300000, guid: 06d81918374507a4ca265a837e9f6d3b, type: 3}
-  - {fileID: 21300000, guid: 3dd833a8e38079743ae193d8acd0c956, type: 3}
-  - {fileID: 21300000, guid: 23292798852c80749896890e0cb7e991, type: 3}
-  - {fileID: 21300000, guid: a29d211c004953542b480bcab12f937f, type: 3}
-  - {fileID: 21300000, guid: 73eae232d3ae83e47a5bdeefe6b14cb3, type: 3}
-  - {fileID: 21300000, guid: d007527040b389e48bdfad66935a96a1, type: 3}
-  - {fileID: 21300000, guid: fe80f43af1ff67a4098aae62def7f126, type: 3}
-  - {fileID: 21300000, guid: 1c9fa2ecd86ad904d9b6ccf039461bd4, type: 3}
-  - {fileID: 21300000, guid: 9153b802747c64b45adedaacc28b0794, type: 3}
-  - {fileID: 21300000, guid: f2e1f69b711bcc341a80ae0a3f3f950e, type: 3}
-  - {fileID: 21300000, guid: 4f0d0492cdc44d14691c07bbc132f7d5, type: 3}
+  - {fileID: 21300000, guid: 284c52f8d3586384d9d2c739bd9f2c55, type: 3}
+  - {fileID: 21300000, guid: 9fe1e62b3e08f0345aff6a09c46f3c99, type: 3}
 --- !u!4 &2103597679
 Transform:
   m_ObjectHideFlags: 0

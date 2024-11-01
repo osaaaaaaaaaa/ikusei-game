@@ -170,6 +170,7 @@ public class MonsterController : MonoBehaviour
     {
         if(!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("MonsterJump");
+        SEManager.Instance.Play(SEPath.GLAD);
     }
 
     /// <summary>
@@ -184,6 +185,8 @@ public class MonsterController : MonoBehaviour
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         monster.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         monster.GetComponent<Animator>().Play("MonsterGlad");
+
+        SEManager.Instance.Play(SEPath.FANFARE);
     }
 
     /// <summary>
@@ -241,6 +244,8 @@ public class MonsterController : MonoBehaviour
             .Append(effect2.transform.DOScale(new Vector3(1f, 1f, 1f), 4f).SetEase(Ease.InBounce))
             .OnComplete(() =>
             {
+                SEManager.Instance.Play(SEPath.EVOLUTION);
+
                 monster.GetComponent<Animator>().enabled = isPlaingAnim;
                 Destroy(areaEffect.gameObject);
                 Destroy(effect1.gameObject);
@@ -261,7 +266,15 @@ public class MonsterController : MonoBehaviour
                     {
                         Debug.Log("êiâªÅI");
                     }));
+
+                Invoke("PlayEvolutionDoneSE",2f);
             });
+    }
+
+    void PlayEvolutionDoneSE()
+    {
+        SEManager.Instance.FadeOut(SEPath.EVOLUTION_DONE,1);
+        SEManager.Instance.Play(SEPath.EVOLUTION_DONE,1,1);
     }
 
     /// <summary>

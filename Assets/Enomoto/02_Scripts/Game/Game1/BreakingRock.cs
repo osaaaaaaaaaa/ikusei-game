@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using KanKikuchi.AudioManager;
 
 public class BreakingRock : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class BreakingRock : MonoBehaviour
                 }
                 else
                 {
+                    Invoke("PlayGameoverSE", 1f);
                     Invoke("CallManagerMethod", 1f);
                 }
             }
@@ -81,6 +83,8 @@ public class BreakingRock : MonoBehaviour
 
     void PlayBreakingAnim()
     {
+        SEManager.Instance.Play(SEPath.BREAK);
+
         effectExplosion.SetActive(true);
         imageCrack.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
@@ -92,5 +96,10 @@ public class BreakingRock : MonoBehaviour
     void CallManagerMethod()
     {
         manager.UpdateGameState();
+    }
+
+    void PlayGameoverSE()
+    {
+        SEManager.Instance.Play(SEPath.FAILURE);
     }
 }

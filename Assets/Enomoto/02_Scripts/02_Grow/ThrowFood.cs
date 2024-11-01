@@ -1,3 +1,4 @@
+using KanKikuchi.AudioManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,8 @@ public class ThrowFood : MonoBehaviour
     [SerializeField] GameObject eatingEffect;
     [SerializeField] string colorString;
     Color createColor;
-    GrowManager mealManager;
-    public GrowManager MealManager { set { mealManager = value; } }
+    GrowManager growManager;
+    public GrowManager GrowManager { set { growManager = value; } }
     bool isThrow;
     const float dragSpeed = 100;
 
@@ -23,7 +24,7 @@ public class ThrowFood : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!mealManager.isDragFood) return;
+        if (!growManager.isDragFood) return;
         if (Input.GetMouseButtonUp(0)) isThrow = true;
         if (isThrow) return;
 
@@ -41,15 +42,14 @@ public class ThrowFood : MonoBehaviour
         if (collision.tag == "DeathZone")
         {
             // 現在の食料値によって判定
-            if (mealManager.nowFoodVol < mealManager.decreaseFoodVol)
+            if (growManager.nowFoodVol < growManager.decreaseFoodVol)
             {   // 食料がなくなった時
-                mealManager.isGrow = false;
+                growManager.isGrow = false;
             }
             else
             {   // ある時
-                mealManager.GenerateFood();
+                growManager.GenerateFood();
             }
-
             Destroy(this.gameObject);
         }
     }
@@ -64,16 +64,17 @@ public class ThrowFood : MonoBehaviour
             effect.transform.position = new Vector3(transform.position.x,transform.position.y,-8f);
             psmain.startColor = createColor;
             effect.GetComponent<ParticleSystem>().Play();
+            SEManager.Instance.Play(SEPath.CHEWING2);
 
-            mealManager.AddHungerAmount();
+            growManager.AddHungerAmount();
 
-            if(mealManager.nowFoodVol < mealManager.decreaseFoodVol)
+            if(growManager.nowFoodVol < growManager.decreaseFoodVol)
             {   // 食料がなくなった時
-                mealManager.isGrow = false;
+                growManager.isGrow = false;
             }
             else
             {   // ある時
-                mealManager.GenerateFood();
+                growManager.GenerateFood();
             }
 
             Destroy(this.gameObject);

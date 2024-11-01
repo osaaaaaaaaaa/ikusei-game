@@ -1,3 +1,4 @@
+using KanKikuchi.AudioManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,7 @@ public class JumpController : MonoBehaviour
 
     public void Jump()
     {
+        SEManager.Instance.Play(SEPath.JUMP);
         rb2D.velocity = new Vector2(rb2D.velocity.x, 0f);
         rb2D.AddForce(Vector2.up * jumpPower,ForceMode2D.Impulse);
         playerObj.transform.localPosition += new Vector3(0.0f, 0.2f);

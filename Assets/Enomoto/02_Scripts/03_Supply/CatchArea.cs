@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using KanKikuchi.AudioManager;
 
 public class CatchArea : MonoBehaviour
 {
@@ -26,16 +27,20 @@ public class CatchArea : MonoBehaviour
     {
         PlayCatchAnim();
 
+        SEManager.Instance.Play(SEPath.SWING);
+
         GameObject target = GetFoodObj();
         if(target != null)
         {
-            if(target.GetComponent<Food>().FoodID == index)
+            if (target.GetComponent<Food>().FoodID == index)
             {
+                SEManager.Instance.Play(SEPath.HIT);
                 manager.AddFoodCnt();
                 Destroy(target);
             }
             else if(target.GetComponent<Food>().FoodID == (int)Food.FOOD_ID.Poop)
             {
+                SEManager.Instance.Play(SEPath.MISS);
                 manager.SubFoodCnt();
                 Destroy(target);
             }
