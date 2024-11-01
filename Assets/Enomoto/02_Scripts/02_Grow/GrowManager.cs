@@ -97,7 +97,7 @@ public class GrowManager : MonoBehaviour
         int rndPoint = Random.Range(0, throwFoodPrefabs.Count);
         var food = Instantiate(throwFoodPrefabs[rndPoint], new Vector3(0f,-2f,0f), Quaternion.identity);
         food.GetComponent<Rigidbody2D>().gravityScale = 0;
-        food.GetComponent<ThrowFood>().MealManager = this;
+        food.GetComponent<ThrowFood>().GrowManager = this;
     }
 
     public void AddHungerAmount()
