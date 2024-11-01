@@ -48,7 +48,7 @@ public class MiniGameManager1 : MonoBehaviour
         state = MINIGAME1_STATE.Opening;
 
         // ÉÇÉìÉXÉ^Å[ê∂ê¨èàóù
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0, -4f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID,new Vector2(0, -4f)).GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 
     // Update is called once per frame

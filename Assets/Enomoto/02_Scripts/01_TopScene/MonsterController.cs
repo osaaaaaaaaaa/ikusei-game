@@ -274,8 +274,24 @@ public class MonsterController : MonoBehaviour
                 Destroy(effect.gameObject);
                 Instantiate(rainFallingParticle);
 
-                IsMonsterDie = false;
-                isSpecialAnim = false;
+                // éÄñSìoò^ÅEèâä˙ÉÇÉìÉXÉ^Å[ìoò^
+                StartCoroutine(NetworkManager.Instance.ChangeState(
+                    4,
+                    result =>
+                    {
+                        Debug.Log("éÄñSìoò^");
+                        StartCoroutine(NetworkManager.Instance.InitMonsterStore(
+                            "name",
+                            result =>
+                            {
+                                Debug.Log("èâä˙ÉÇÉìÉXÉ^Å[ìoò^");
+                                Initiate.Fade("01_TopScene", Color.white, 1.0f);
+
+                                IsMonsterDie = false;
+                                isSpecialAnim = false;
+                            }));
+
+                    }));
             }));
         sequence.Play();
     }
@@ -298,6 +314,24 @@ public class MonsterController : MonoBehaviour
 
         // ÉGÉtÉFÉNÉgê∂ê¨
         Instantiate(mixDoneEffectPrefab, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
+
+        // àÁê¨èÛë‘ÇÅuàÁê¨äÆóπÅvÇ…ïœçX
+        StartCoroutine(NetworkManager.Instance.ChangeState(
+         3,
+         result =>
+         {
+             Debug.Log("àÁê¨äÆóπ");
+             StartCoroutine(NetworkManager.Instance.MixMiracle(
+                result =>
+                {
+                    if (result)
+                    {
+                        Debug.Log("îzçáäÆóπ");
+                        Initiate.Fade("01_TopScene", Color.white, 1.0f);
+                    }
+                }));
+         }));
+
 
         yield return new WaitForSeconds(5f);
         isSpecialAnim = false;

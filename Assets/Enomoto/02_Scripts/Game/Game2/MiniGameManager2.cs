@@ -66,7 +66,7 @@ public class MiniGameManager2 : MonoBehaviour
         baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
 
         // モンスター生成処理
-        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, new Vector2(0, -1.8f));
+        monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, new Vector2(0, -1.8f));
         // ジャンプコントローラーの初期化処理
         jumpController.Init(monster, monster.GetComponent<Rigidbody2D>());
     }
