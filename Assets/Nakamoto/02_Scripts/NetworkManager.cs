@@ -415,7 +415,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 育成状態変更処理
+    /// 育成モンスター変更処理
     /// </summary>
     /// <param name="name">ユーザー名</param>
     /// <param name="result">通信完了辞に呼び出す関数</param>
@@ -576,7 +576,7 @@ public class NetworkManager : MonoBehaviour
     {
         // サーバーに送信するオブジェクトを作成
         MixMiracleRequest repuestData = new MixMiracleRequest();
-        repuestData.NurtureID = nurtureInfo.ID;    // 名前を代入
+        repuestData.NurtureID = nurtureInfo.ID;
 
         // サーバーに送信するオブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(repuestData);

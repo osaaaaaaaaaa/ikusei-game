@@ -145,7 +145,6 @@ public class TopSceneManager : MonoBehaviour
                     isTouchMonster = true;
                     MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Jump);
                     Invoke("ResetTriggerFrag", 1f);
-
                     }
                 }
                 // poop‚ğƒ^ƒbƒv‚µ‚½ê‡
@@ -156,7 +155,6 @@ public class TopSceneManager : MonoBehaviour
                 }
             }
         }
-
     }
 
     /// <summary>

@@ -144,7 +144,6 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayStartAnim()
     {
-        if (isMonsterDie) return;
         if (!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("MonsterIdle");
     }
@@ -154,8 +153,6 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayJumpAnim()
     {
-        if (isMonsterDie) return;
-
         if(!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("MonsterJump");
     }
@@ -177,8 +174,6 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayWaitForEvolutionAnim()
     {
-        if (isMonsterDie) return;
-
         isMonsterEvolution = true;
 
         // モンスターのスプライトの高さを取得
@@ -194,7 +189,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayEvolutionAnim()
     {
-        if (isSpecialAnim || isMonsterDie) return;
+        if (isSpecialAnim) return;
         isSpecialAnim = true;
         bool isPlaingAnim = monster.GetComponent<Animator>().enabled;
         monster.GetComponent<Animator>().Play("MonsterNone");
@@ -279,7 +274,24 @@ public class MonsterController : MonoBehaviour
                 Destroy(effect.gameObject);
                 Instantiate(rainFallingParticle);
 
-                isSpecialAnim = false;
+                // 死亡登録・初期モンスター登録
+                StartCoroutine(NetworkManager.Instance.ChangeState(
+                    4,
+                    result =>
+                    {
+                        Debug.Log("死亡登録");
+                        StartCoroutine(NetworkManager.Instance.InitMonsterStore(
+                            "name",
+                            result =>
+                            {
+                                Debug.Log("初期モンスター登録");
+                                Initiate.Fade("01_TopScene", Color.white, 1.0f);
+
+                                IsMonsterDie = false;
+                                isSpecialAnim = false;
+                            }));
+
+                    }));
             }));
         sequence.Play();
     }
@@ -289,7 +301,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     IEnumerator PlayMixAnim()
     {
-        if (isSpecialAnim || isMonsterDie) yield break;
+        if (isSpecialAnim) yield break;
         isSpecialAnim = true;
 
         // モンスターのスプライトの高さなどを取得
@@ -303,6 +315,24 @@ public class MonsterController : MonoBehaviour
         // エフェクト生成
         Instantiate(mixDoneEffectPrefab, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
 
+        // 育成状態を「育成完了」に変更
+        StartCoroutine(NetworkManager.Instance.ChangeState(
+         3,
+         result =>
+         {
+             Debug.Log("育成完了");
+             StartCoroutine(NetworkManager.Instance.MixMiracle(
+                result =>
+                {
+                    if (result)
+                    {
+                        Debug.Log("配合完了");
+                        Initiate.Fade("01_TopScene", Color.white, 1.0f);
+                    }
+                }));
+         }));
+
+
         yield return new WaitForSeconds(5f);
         isSpecialAnim = false;
     }
@@ -312,7 +342,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     IEnumerator PlayHatchingAnim()
     {
-        if (isSpecialAnim || isMonsterDie) yield break;
+        if (isSpecialAnim) yield break;
         isSpecialAnim = true;
 
         // モンスターのスプライトの高さなどを取得
