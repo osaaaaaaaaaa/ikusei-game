@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using Random = UnityEngine.Random;
+using KanKikuchi.AudioManager;
 
 
 public class TopSceneManager : MonoBehaviour
@@ -47,6 +48,11 @@ public class TopSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
+
+        BGMManager.Instance.Play(BGMPath.TOP1);
+
         networkManager = NetworkManager.Instance;
 
         isTouchMonster = false;
@@ -54,7 +60,15 @@ public class TopSceneManager : MonoBehaviour
         needEvoLevel = networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv - networkManager.nurtureInfo.Level;
 
         // ユーザー設定
-        nextEvoLevelText.text = "進化まで" + needEvoLevel.ToString() + "レベル";
+        if(networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv == 0)
+        {
+            nextEvoLevelText.text = "進化なし";
+        }
+        else
+        {
+            nextEvoLevelText.text = "進化まで" + needEvoLevel.ToString() + "レベル";
+        }
+        
         monsterNameText.text = networkManager.nurtureInfo.Name;
         foodsCurrentText.text = networkManager.userInfo.FoodVol.ToString();
 
@@ -88,7 +102,7 @@ public class TopSceneManager : MonoBehaviour
             GeneratePoop();
         }
 
-        if (needEvoLevel <= 0)
+        if (networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv != 0 && needEvoLevel <= 0)
         {
             // 進化処理
             MonsterController.Instance.IsMonsterEvolution = true;
@@ -237,7 +251,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 3;//Random.Range(1, 4);
+        int rnd = Random.Range(1, 4);
         switch (rnd)
         {
             case 1:

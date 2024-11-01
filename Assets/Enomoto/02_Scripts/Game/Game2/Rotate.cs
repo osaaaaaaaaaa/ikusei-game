@@ -10,7 +10,7 @@ public class Rotate : MonoBehaviour
 
     private void Start()
     {
-        SEManager.Instance.Play(SEPath.ROCK_ROTATE, 1, 0, 1, true);
+        
     }
 
     void Update()

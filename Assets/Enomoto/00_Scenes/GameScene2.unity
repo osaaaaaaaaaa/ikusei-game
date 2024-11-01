@@ -1744,6 +1744,8 @@ MonoBehaviour:
   warningUI: {fileID: 3343893485854188682}
   resultUI: {fileID: 409455020}
   slider: {fileID: 1891067380}
+  expText: {fileID: 566016707}
+  hungerText: {fileID: 944579384}
 --- !u!1 &944190709
 GameObject:
   m_ObjectHideFlags: 0
@@ -2498,9 +2500,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0.00024986267
+    y: 0
     width: 1
-    height: 0.9995003
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

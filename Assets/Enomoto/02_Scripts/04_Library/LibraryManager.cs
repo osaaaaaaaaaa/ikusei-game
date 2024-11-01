@@ -14,6 +14,7 @@ public class LibraryManager : MonoBehaviour
     #region モンスターの詳細画面
     [SerializeField] GameObject details;
     [SerializeField] Image imgMonster;
+    [SerializeField] Text nameText;
     [SerializeField] Text textDescription;
     #endregion
 
@@ -46,8 +47,10 @@ public class LibraryManager : MonoBehaviour
             // ボタンの生成とセットアップ
             var btn = Instantiate(btnIconPrefab, btnIconListParent);
             btn.GetComponent<Image>().sprite = spriteMonsters[i];
-            btn.GetComponent<Button>().onClick.AddListener(() => {
-                SetupMonsterDetailUI(id, "モンスターの説明だよーん");
+            btn.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Debug.Log(id);
+                SetupMonsterDetailUI(id, NetworkManager.Instance.monsterList[id].Name, NetworkManager.Instance.monsterList[id].Text);
             });
         }
     }
@@ -55,11 +58,12 @@ public class LibraryManager : MonoBehaviour
     /// <summary>
     /// モンスターの詳細画面の設定
     /// </summary>
-    void SetupMonsterDetailUI(int monsterID,string description)
+    void SetupMonsterDetailUI(int monsterID,string name,string description)
     {
         menu.SetActive(false);
         details.SetActive(true);
         imgMonster.sprite = spriteMonsters[monsterID];
+        nameText.text = name;
         textDescription.text = description;
     }
 

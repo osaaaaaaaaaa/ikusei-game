@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using KanKikuchi.AudioManager;
 
 public class ResultUIController : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class ResultUIController : MonoBehaviour
 
     public void OnOKButton()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
         Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }

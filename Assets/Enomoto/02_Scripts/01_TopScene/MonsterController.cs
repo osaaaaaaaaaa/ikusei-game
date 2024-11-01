@@ -178,6 +178,9 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     void PlayGladAnim()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
+
         if (isMonsterDie) return;
         if (!monster.GetComponent<Animator>().enabled) monster.GetComponent<Animator>().enabled = true;
 
@@ -313,7 +316,7 @@ public class MonsterController : MonoBehaviour
         sequence.Append(monster.transform.DOShakePosition(5f, 0.1f, 15, 1, false, true).SetEase(Ease.Linear))
             .OnComplete(()=> 
             {
-                SEManager.Instance.Stop(SEPath.DIE1);
+                //SEManager.Instance.Stop(SEPath.DIE1);
             })
             .AppendInterval(0.5f)
             .Append(effect.GetComponent<SpriteRenderer>().DOFade(0.5f, 0.7f).SetEase(Ease.OutCirc))

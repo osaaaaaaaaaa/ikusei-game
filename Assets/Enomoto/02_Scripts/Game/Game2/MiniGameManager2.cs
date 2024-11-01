@@ -47,6 +47,8 @@ public class MiniGameManager2 : MonoBehaviour
     [SerializeField] Flashing warningUI;
     [SerializeField] GameObject resultUI;
     [SerializeField] Slider slider;
+    [SerializeField] Text expText;
+    [SerializeField] Text hungerText;
     #endregion
 
     bool isGameEnd;
@@ -59,6 +61,11 @@ public class MiniGameManager2 : MonoBehaviour
 
     void Start()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
+
+        SEManager.Instance.Play(SEPath.ROCK_ROTATE, 0.6f, 0, 1, true);
+
         monsterHitCnt = 0;
         addSpeed = 0;
         currentTimeObstracle = 0;
@@ -208,6 +215,9 @@ public class MiniGameManager2 : MonoBehaviour
         int exp = (int)(baseExp / gameOverCount);
         if(exp < confExp) {  exp = confExp; }
         exp = exp * (gameOverCount + 2 - monsterHitCnt);
+
+        expText.text = exp.ToString();
+        hungerText.text = NetworkManager.Instance.nurtureInfo.StomachVol.ToString();
 
         // ŒoŒ±’lŽæ“¾
         StartCoroutine(NetworkManager.Instance.ExeExercise(

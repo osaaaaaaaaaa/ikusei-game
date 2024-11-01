@@ -22,6 +22,8 @@ public class MiniGameManager3 : MonoBehaviour
     [SerializeField] List<GameObject> hintList;
     [SerializeField] GameObject hintArrowUI;
     [SerializeField] GameObject resultUI;
+    [SerializeField] Text expText;
+    [SerializeField] Text hungerText;
     Sequence sequenceMonster;
 
     Vector3 wireParentStartPoint;
@@ -40,6 +42,9 @@ public class MiniGameManager3 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
+      
         // モンスターを生成し、モンスター情報を初期化、アニメ再生
         sequenceMonster = DOTween.Sequence();
         monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);
@@ -54,6 +59,8 @@ public class MiniGameManager3 : MonoBehaviour
         isPause = true;
         isGameOver = false;
         baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
+
+        SEManager.Instance.Play(SEPath.TIMER);
 
         Invoke("SetupNextRound", 4f);
     }
@@ -94,9 +101,7 @@ public class MiniGameManager3 : MonoBehaviour
         text = text.Length == 3 ? "0" + text : text;
         text = text.Length == 2 ? "00" + text : text;
         text = text.Length == 1 ? "000" + text : text;
-        textTimer.text = text.Insert(2, ":");
-
-        SEManager.Instance.Play(SEPath.TIMER);
+        textTimer.text = text.Insert(2, ":"); 
     }
 
     /// <summary>
@@ -278,6 +283,9 @@ public class MiniGameManager3 : MonoBehaviour
         if (baseExp >= roundMaxCnt) { exp = baseExp / roundMaxCnt; }
         exp = exp * roundCnt;
 
+        expText.text = exp.ToString();
+        hungerText.text = NetworkManager.Instance.nurtureInfo.StomachVol.ToString();
+
         // 経験値取得
         StartCoroutine(NetworkManager.Instance.ExeExercise(
             NetworkManager.Instance.nurtureInfo.StomachVol - Constant.baseHungerDecrease,
@@ -301,6 +309,9 @@ public class MiniGameManager3 : MonoBehaviour
 
     public void GameOver()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
+
         wiresParent.SetActive(false);
         Instantiate(particleExplosionPrefab);
         InitMonster();
@@ -312,7 +323,7 @@ public class MiniGameManager3 : MonoBehaviour
             Destroy(bomb.gameObject);
         }
 
-        SEManager.Instance.Play(SEPath.EVOLUTION);
+        SEManager.Instance.Play(SEPath.EXPLOSION);
 
         Invoke("PlayGameoverSE", 4f);
         Invoke("ShowResult", 4f);

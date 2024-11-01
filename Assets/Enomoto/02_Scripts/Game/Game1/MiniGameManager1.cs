@@ -54,6 +54,9 @@ public class MiniGameManager1 : MonoBehaviour
 
     private void Awake()
     {
+        BGMManager.Instance.Stop();
+        SEManager.Instance.Stop();
+
         isTap = false;
         isPlayTween = false;
         isGameStart = false;
@@ -95,7 +98,7 @@ public class MiniGameManager1 : MonoBehaviour
         }
         if (isTap) return;
 
-        SEManager.Instance.Play(SEPath.GAGE_TAP);
+        //SEManager.Instance.Play(SEPath.GAGE_TAP);
 
         // ゲージのアニメーションを開始する
         switch (state)
@@ -250,6 +253,9 @@ public class MiniGameManager1 : MonoBehaviour
             bonusExp = (int)(bonusExp * results[i]);
         }
         int exp = baseExp + bonusExp;
+
+        expText.text = exp.ToString();
+        hungerText.text = NetworkManager.Instance.nurtureInfo.StomachVol.ToString();
 
         StartCoroutine(NetworkManager.Instance.ExeExercise(
             NetworkManager.Instance.nurtureInfo.StomachVol - Constant.baseHungerDecrease,
