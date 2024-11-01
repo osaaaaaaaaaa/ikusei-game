@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class MixSceneManager : MonoBehaviour
 {
+    #region UIŠÖŒW
+    [SerializeField] GameObject btnMix;
+    [SerializeField] GameObject btnBack;
+    [SerializeField] GameObject btnTips;
+    #endregion
+
     [SerializeField] Transform monsterPoint;
     [SerializeField] GameObject eggPrefab;
     GameObject monster;
@@ -17,16 +23,25 @@ public class MixSceneManager : MonoBehaviour
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
     }
 
-    void GenarateEgg()
+    IEnumerator GenarateEgg()
     {
+        yield return new WaitForSeconds(2f);
+
         Instantiate(eggPrefab, monster.transform.position, Quaternion.identity);
         Destroy(monster);
+
+        yield return new WaitForSeconds(2f);
+        btnBack.SetActive(true);
+        btnTips.SetActive(true);
     }
 
     public void OnMixButton()
     {
+        btnMix.SetActive(false);
+        btnBack.SetActive(false);
+        btnTips.SetActive(false);
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Mix);
-        Invoke("GenarateEgg", 2f);
+        StartCoroutine(GenarateEgg());
     }
 
     public void OnBackButton()

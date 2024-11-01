@@ -11,6 +11,11 @@ public class ResultUIController : MonoBehaviour
 
     private void OnEnable()
     {
+        transform.DOScale(new Vector3(1f, 1f, 1f), 1f);
+    }
+
+    void SetupText()
+    {
         // 100‚ÉŒ‹‰Ê‚Ì’l‚ğ‘ã“ü‚·‚é,‘ã“ü‚µ‚½‚ç‚±‚ÌƒRƒƒ“ƒgÁ‚µ‚Æ‚¢‚Ä
         textExp.DOCounter(0, 100, 1f).SetEase(Ease.Linear);
         textHunger.DOCounter(0, 100, 1f).SetEase(Ease.Linear);
