@@ -46,7 +46,7 @@ public class TopSceneManager : MonoBehaviour
 #if UNITY_EDITOR
     DateTime TEST_createdTime;
     int testParam_Huger = 40;
-    int TEST_monsterState = 1;   // [1:—‘]
+    int TEST_monsterState = 0;   // [1:—‘]
 #endif
 
     private void Awake()
@@ -220,7 +220,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 3;//Random.Range(1, 4);
+        int rnd = 1;//Random.Range(1, 4);
         switch (rnd)
         {
             case 1:

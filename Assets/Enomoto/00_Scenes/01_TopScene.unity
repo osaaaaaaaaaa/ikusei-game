@@ -289,7 +289,7 @@ MonoBehaviour:
   - {fileID: 5493538824990395926, guid: 65fcb9a6936c675469e7b5d302bb5797, type: 3}
   - {fileID: 4787518916409336280, guid: 4507ed5d1ef298b4985cf2e94ea7b2bd, type: 3}
   - {fileID: 5900281116963884763, guid: 6f35722eb4852584aa7cef6162b74aa9, type: 3}
-  TEST_monsterID: 0
+  TEST_monsterID: 1
 --- !u!4 &1149896779
 Transform:
   m_ObjectHideFlags: 0
