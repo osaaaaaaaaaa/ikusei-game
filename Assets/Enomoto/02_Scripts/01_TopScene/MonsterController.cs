@@ -327,6 +327,7 @@ public class MonsterController : MonoBehaviour
                     if (result)
                     {
                         Debug.Log("îzçáäÆóπ");
+                        Initiate.DoneFading();
                         Initiate.Fade("01_TopScene", Color.white, 1.0f);
                     }
                 }));

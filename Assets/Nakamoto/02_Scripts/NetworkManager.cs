@@ -22,9 +22,7 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// APIベースURL
     /// </summary>
-    //const string API_BASE_URL = "https://api-shot.japaneast.cloudapp.azure.com/api/";
-    const string API_BASE_URL = "http://localhost:8000/api/";
-
+    const string API_BASE_URL = "https://ikusei.japaneast.cloudapp.azure.com/api/";
 
     /// <summary>
     /// getプロパティを呼び出した初回時にインスタンス生成してstaticで保持
