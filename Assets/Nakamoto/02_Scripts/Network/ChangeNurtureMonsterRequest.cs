@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 //
-// 育成モンスターID変更リクエスト [ ChangeNurtureMonsterRequest.cs ]
+// 進化リクエスト [ EvolutionMonsterRequest.cs ]
 // Author:Kenta Nakamoto
 // Data:2024/10/30
 // Update:2024/10/30
@@ -11,7 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeNurtureMonsterRequest
+public class EvolutionMonsterRequest
 {
     /// 育成ID
     [JsonProperty("id")]
@@ -20,5 +20,9 @@ public class ChangeNurtureMonsterRequest
     /// 育成中のモンスターID
     [JsonProperty("monster_id")]
     public int MonsterID { get; set; }
+
+    /// 名前
+    [JsonProperty("name")]
+    public string Name { get; set; }
 }
 

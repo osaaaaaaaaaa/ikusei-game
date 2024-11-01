@@ -63,10 +63,6 @@ public class MonsterController : MonoBehaviour
         Hatching,       // 卵から孵化(Animator)
     }
 
-#if UNITY_EDITOR
-    public int TEST_monsterID;
-#endif
-
     private void Awake()
     {
         isSpecialAnim = false;
@@ -112,7 +108,7 @@ public class MonsterController : MonoBehaviour
     /// </summary>
     public void ChangeCenteredPivotSprite()
     {
-        monster.GetComponent<SpriteRenderer>().sprite = spriteCenteredPivot[TEST_monsterID];
+        monster.GetComponent<SpriteRenderer>().sprite = spriteCenteredPivot[NetworkManager.Instance.nurtureInfo.MonsterID];
 
         // モンスターのポイントの位置を更新する
         float monsterSizeY = monster.GetComponent<SpriteRenderer>().bounds.size.y;
@@ -251,12 +247,15 @@ public class MonsterController : MonoBehaviour
                 isMonsterEvolution = false;
                 isSpecialAnim = false;
 
-                GenerateMonster(NetworkManager.Instance.monsterList[NetworkManager.Instance.nurtureInfo.MonsterID - 1].EvoID, monsterPoint);
+                int evoID = NetworkManager.Instance.monsterList[NetworkManager.Instance.nurtureInfo.MonsterID - 1].EvoID;
+
+                GenerateMonster(evoID, monsterPoint);
                 monster.GetComponent<Rigidbody2D>().gravityScale = 0;
 
                 // 進化処理
-                StartCoroutine(NetworkManager.Instance.ChangeNurtureMonster(
-                    NetworkManager.Instance.monsterList[NetworkManager.Instance.nurtureInfo.MonsterID - 1].EvoID,
+                StartCoroutine(NetworkManager.Instance.EvolutionMonster(
+                    evoID,
+                    NetworkManager.Instance.monsterList[evoID-1].Name,
                     result =>
                     {
                         Debug.Log("進化！");
@@ -407,7 +406,7 @@ public class MonsterController : MonoBehaviour
 
         yield return new WaitForSeconds(3.2f);
         // 孵化するモンスターを新しく生成する
-        GenerateMonster(1, monsterPoint);
+        GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         // 孵化したときのアニメーション再生
         monster.GetComponent<Animator>().enabled = true;

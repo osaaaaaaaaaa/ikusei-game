@@ -41,7 +41,7 @@ public class MiniGameManager3 : MonoBehaviour
     {
         // モンスターを生成し、モンスター情報を初期化、アニメ再生
         sequenceMonster = DOTween.Sequence();
-        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, monsterPoint);
+        monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         InitMonster();
 

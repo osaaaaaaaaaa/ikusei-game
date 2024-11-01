@@ -345,7 +345,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 名前変更処理
+    /// ユーザー名変更処理
     /// </summary>
     /// <param name="name">ユーザー名</param>
     /// <param name="result">通信完了辞に呼び出す関数</param>
@@ -418,12 +418,13 @@ public class NetworkManager : MonoBehaviour
     /// <param name="name">ユーザー名</param>
     /// <param name="result">通信完了辞に呼び出す関数</param>
     /// <returns></returns>
-    public IEnumerator ChangeNurtureMonster(int id, Action<bool> result)
+    public IEnumerator EvolutionMonster(int id,string name, Action<bool> result)
     {
         // サーバーに送信するオブジェクトを作成
-        ChangeNurtureMonsterRequest repuestData = new ChangeNurtureMonsterRequest();
+        EvolutionMonsterRequest repuestData = new EvolutionMonsterRequest();
         repuestData.ID = nurtureInfo.ID;
         repuestData.MonsterID = id;
+        repuestData.Name = name;
 
         // サーバーに送信するオブジェクトをJSONに変換
         string json = JsonConvert.SerializeObject(repuestData);
@@ -441,6 +442,7 @@ public class NetworkManager : MonoBehaviour
             // 通信成功
             isSuccess = true;
             nurtureInfo.MonsterID = id;
+            nurtureInfo.Name = name;
         }
 
         // 呼び出し元のresult処理を呼び出す
