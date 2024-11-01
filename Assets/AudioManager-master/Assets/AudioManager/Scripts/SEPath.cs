@@ -6,7 +6,6 @@
 public static class SEPath{
 
 	public const string HIT             = "SE/トレーニング/２/Hit";
-	public const string TAP             = "SE/トレーニング/１/Tap";
 
 }
 
