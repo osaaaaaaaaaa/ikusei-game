@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.Rendering;
+using KanKikuchi.AudioManager;
 
 public class MonsterController : MonoBehaviour
 {
@@ -293,11 +294,18 @@ public class MonsterController : MonoBehaviour
         effect.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0f);
         effect.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 
+        SEManager.Instance.Play(SEPath.DIE1);
+
         // アニメーション再生
         var sequence = DOTween.Sequence();
         sequence.Append(monster.transform.DOShakePosition(5f, 0.1f, 15, 1, false, true).SetEase(Ease.Linear))
+            .OnComplete(()=> 
+            {
+                SEManager.Instance.Stop(SEPath.DIE1);
+            })
             .AppendInterval(0.5f)
             .Append(effect.GetComponent<SpriteRenderer>().DOFade(0.5f, 0.7f).SetEase(Ease.OutCirc))
+            .OnComplete(()=> { SEManager.Instance.Play(SEPath.DIE2); })
             .Append(effect.transform.DOMoveY(1.5f, 3f).SetEase(Ease.OutCirc))
             .Join(effect.GetComponent<SpriteRenderer>().DOFade(0f, 3f).SetEase(Ease.OutCirc)
             .OnComplete(() =>
