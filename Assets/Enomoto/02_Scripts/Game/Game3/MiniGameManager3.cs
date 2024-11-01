@@ -8,6 +8,9 @@ using Random = UnityEngine.Random;
 
 public class MiniGameManager3 : MonoBehaviour
 {
+    [SerializeField] Transform monsterPoint;
+    GameObject monster;
+
     [SerializeField] WireController wireController;
 
     [SerializeField] GameObject particleExplosionPrefab;
@@ -19,7 +22,6 @@ public class MiniGameManager3 : MonoBehaviour
     [SerializeField] GameObject hintArrowUI;
     [SerializeField] GameObject resultUI;
     Sequence sequenceMonster;
-    GameObject monster;
 
     Vector3 wireParentStartPoint;
     public List<int> colorIndexOrders { get; private set; }  // ワイヤーの色を基準とした、正しい切る順番
@@ -30,6 +32,7 @@ public class MiniGameManager3 : MonoBehaviour
     int roundMaxCnt;
     public bool isPause { get; private set; }
     public bool isGameEnd { get; private set; }
+    public bool isGameOver { get; private set; }
 
     const float defultTimer = 11;
 
@@ -38,7 +41,7 @@ public class MiniGameManager3 : MonoBehaviour
     {
         // モンスターを生成し、モンスター情報を初期化、アニメ再生
         sequenceMonster = DOTween.Sequence();
-        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, Vector2.zero);
+        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, monsterPoint);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         InitMonster();
 
@@ -48,7 +51,7 @@ public class MiniGameManager3 : MonoBehaviour
         roundCnt = 0;
         roundMaxCnt = 5;
         isPause = true;
-        isGameEnd = false;
+        isGameOver = false;
         baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
 
         Invoke("SetupNextRound", 4f);
@@ -57,8 +60,15 @@ public class MiniGameManager3 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isPause) return;
-        if (isGameEnd)
+        if (Input.GetMouseButtonDown(0) && isGameEnd && !resultUI.activeSelf)
+        {
+            // ゲームクリア時のアニメーションスキップ用
+            ShowResult();
+            return;
+        }
+
+        if (isPause || isGameEnd) return;
+        if (isGameOver)
         {
             monster.transform.Rotate(new Vector3(0f, 0f, -300f) * Time.deltaTime);
             return;
@@ -68,11 +78,10 @@ public class MiniGameManager3 : MonoBehaviour
         if(timer <= 0)
         {
             timer = 0;
-            isGameEnd = true;
+            isGameOver = true;
+            GameOver();
         }
         UpdateTextTimer();
-
-        if (isGameEnd) GameOver();
     }
 
     /// <summary>
@@ -155,8 +164,10 @@ public class MiniGameManager3 : MonoBehaviour
         roundCnt++;
         if(roundCnt > roundMaxCnt)
         {
-            Debug.Log("ゲームクリア");
-            ShowResult();
+            // ゲームクリア処理
+            PlayDestroyBombAnim();
+            isGameEnd = true;
+            Invoke("CallMonsterControllerMethod",1f);  // 余韻のためのInvoke
         }
         else
         {
@@ -242,6 +253,7 @@ public class MiniGameManager3 : MonoBehaviour
     /// </summary>
     void PlayDestroyBombAnim()
     {
+        if (bombObjs.Count == 0) return;
         var sequence = DOTween.Sequence();
         sequence.Append(bombObjs[0].GetComponent<SpriteRenderer>().DOFade(0f, 0.5f).SetEase(Ease.Linear)
             .OnComplete(() => {
@@ -254,6 +266,7 @@ public class MiniGameManager3 : MonoBehaviour
 
     void ShowResult()
     {
+        if (resultUI.activeSelf) return;  // 2回以上処理されるのを防ぐ
         sequenceMonster.Kill();
         resultUI.SetActive(true);
 
@@ -284,7 +297,6 @@ public class MiniGameManager3 : MonoBehaviour
 
     public void GameOver()
     {
-        isGameEnd = true;
         wiresParent.SetActive(false);
         Instantiate(particleExplosionPrefab);
         InitMonster();
@@ -296,6 +308,13 @@ public class MiniGameManager3 : MonoBehaviour
             Destroy(bomb.gameObject);
         }
 
+        Invoke("ShowResult", 4f);
+    }
+
+    void CallMonsterControllerMethod()
+    {
+        MonsterController.Instance.ChangeCenteredPivotSprite();
+        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Glad);
         Invoke("ShowResult", 4f);
     }
 }

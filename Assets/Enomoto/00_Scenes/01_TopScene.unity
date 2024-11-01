@@ -122,6 +122,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &305632125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 305632126}
+  m_Layer: 0
+  m_Name: MonsterPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &305632126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305632125}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &551597249
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +261,20 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 76a55b545aadfe24780fc99424bb88c6, type: 3}
   - {fileID: 21300000, guid: 335f02262ea94b74790418e5b9b3cbca, type: 3}
   typeMonsterImagePrefab: {fileID: 3606109508912590639, guid: b0bfdf10fbbbf394cb017d9789a66739, type: 3}
+  spriteCenteredPivot:
+  - {fileID: 21300000, guid: 3767ce15330a14b47b0572490fd2cd26, type: 3}
+  - {fileID: 21300000, guid: 9e113b44d599f824587f0daf2d93af5a, type: 3}
+  - {fileID: 21300000, guid: c171e4041458c6d4695e4df9024e75cc, type: 3}
+  - {fileID: 21300000, guid: d6aa3110b3aa877429b7d07b1f4361ed, type: 3}
+  - {fileID: 21300000, guid: 215342c8ef83239489d9da12cf88f1a3, type: 3}
+  - {fileID: 21300000, guid: b76a025e5cf56374fa75cc9f59795dbd, type: 3}
+  - {fileID: 21300000, guid: b28eedbdd46e16144bb49ac36dfbc889, type: 3}
+  - {fileID: 21300000, guid: 69a21661e92eb7e4b8911a01d505cfef, type: 3}
+  - {fileID: 21300000, guid: 7544396640dc6904688538291ea1e45a, type: 3}
+  - {fileID: 21300000, guid: 6f4e84ba7f90edf448f6cd44c5ddf5e1, type: 3}
+  - {fileID: 21300000, guid: d9dcdee5ffd89ee4b9ed48fcfbdc887c, type: 3}
+  - {fileID: 21300000, guid: 4287e37687b1c334cbbc8776b04c7e5f, type: 3}
+  - {fileID: 21300000, guid: 938c9d1dc60b5b44f9315d8628237bca, type: 3}
   monsterPrefabs:
   - {fileID: 1722214021813872350, guid: ccd3c2ace6bda964aa81e6a8d5256d1f, type: 3}
   - {fileID: 6612340512205329779, guid: e420bfd18b4333c47bd748f72307dd14, type: 3}
@@ -244,7 +289,7 @@ MonoBehaviour:
   - {fileID: 5493538824990395926, guid: 65fcb9a6936c675469e7b5d302bb5797, type: 3}
   - {fileID: 4787518916409336280, guid: 4507ed5d1ef298b4985cf2e94ea7b2bd, type: 3}
   - {fileID: 5900281116963884763, guid: 6f35722eb4852584aa7cef6162b74aa9, type: 3}
-  TEST_monsterID: 3
+  TEST_monsterID: 0
 --- !u!4 &1149896779
 Transform:
   m_ObjectHideFlags: 0
@@ -527,6 +572,7 @@ MonoBehaviour:
   HachingTimerParent: {fileID: 1659735198}
   textHachingTimer: {fileID: 1616239249}
   poop: {fileID: 1332214326017147595, guid: 7d65a025f6bebf042945e9425ec09ef8, type: 3}
+  monsterPoint: {fileID: 305632126}
   animatorMenuBtn: {fileID: 5531586279276398764}
 --- !u!4 &1554837374
 Transform:
@@ -537,7 +583,7 @@ Transform:
   m_GameObject: {fileID: 1554837372}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 466.59286, y: 635.6018, z: -6.0826273}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5093,3 +5139,4 @@ SceneRoots:
   - {fileID: 551597252}
   - {fileID: 1554837374}
   - {fileID: 1149896779}
+  - {fileID: 305632126}

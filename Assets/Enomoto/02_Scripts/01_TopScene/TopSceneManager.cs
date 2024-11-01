@@ -39,13 +39,14 @@ public class TopSceneManager : MonoBehaviour
     NetworkManager networkManager;
     #endregion
 
+    [SerializeField] Transform monsterPoint;
     [SerializeField] Animator animatorMenuBtn;
     bool isTouchMonster;
 
 #if UNITY_EDITOR
     DateTime TEST_createdTime;
     int testParam_Huger = 40;
-    int TEST_monsterState = 0;   // [1:卵]
+    int TEST_monsterState = 1;   // [1:卵]
 #endif
 
     private void Awake()
@@ -73,7 +74,7 @@ public class TopSceneManager : MonoBehaviour
                                                    NetworkManager.Instance.nurtureInfo.Level);
 
         // モンスター生成処理
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0f, -1.5f)).GetComponent<Rigidbody2D>().gravityScale = 0;
+        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,monsterPoint).GetComponent<Rigidbody2D>().gravityScale = 0;
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
 
         // モンスターの死亡チェック
@@ -142,10 +143,9 @@ public class TopSceneManager : MonoBehaviour
                     }
                     else
                     {
-                    isTouchMonster = true;
-                    MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Jump);
-                    Invoke("ResetTriggerFrag", 1f);
-
+                        isTouchMonster = true;
+                        MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Jump);
+                        Invoke("ResetTriggerFrag", 1f);
                     }
                 }
                 // poopをタップした場合
@@ -221,7 +221,7 @@ public class TopSceneManager : MonoBehaviour
     {
         if (MonsterController.Instance.isSpecialAnim) return;
 
-        int rnd = 1;//Random.Range(1, 4);
+        int rnd = 3;//Random.Range(1, 4);
         switch (rnd)
         {
             case 1:

@@ -14,6 +14,9 @@ public class MiniGameManager1 : MonoBehaviour
     [SerializeField] Text hungerText;
     #endregion
 
+    [SerializeField] Transform monsterPoint;
+    [SerializeField] BreakingRock rock;
+
     [SerializeField] CountDown countDown;
 
     [SerializeField] GameObject gage1;
@@ -43,6 +46,7 @@ public class MiniGameManager1 : MonoBehaviour
         Gage2,
         Gage3,
         BreakAnim,
+        GladAnim,
         Result
     }
     public MINIGAME1_STATE state { get; private set; }
@@ -57,7 +61,7 @@ public class MiniGameManager1 : MonoBehaviour
         state = MINIGAME1_STATE.Opening;
 
         // モンスター生成処理
-        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,new Vector2(0, -1f));
+        MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID,monsterPoint);
     }
 
     // Update is called once per frame
@@ -205,6 +209,20 @@ public class MiniGameManager1 : MonoBehaviour
 
             Invoke("JumpMonster", 1f);
         }
+        else if(state == MINIGAME1_STATE.GladAnim)
+        {
+            if (rock.isBreaking)
+            {
+                // 岩を破壊できた場合
+                MonsterController.Instance.ChangeCenteredPivotSprite();
+                MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Glad);
+                Invoke("ShowResult", 4f);
+            }
+            else
+            {
+                state = MINIGAME1_STATE.Result;
+            }
+        }
     }
 
     void JumpMonster()
@@ -215,8 +233,12 @@ public class MiniGameManager1 : MonoBehaviour
 
     void ShowResult()
     {
-        isGameEnd = true;
+        if (resultUI.activeSelf) return;  // 2回以上処理されるのを防ぐ
         resultUI.SetActive(true);
+
+        state = MINIGAME1_STATE.Result;
+        isTap = false;
+        isPlayTween = false;
 
         // 経験値取得
         int bonusExp = baseExp;

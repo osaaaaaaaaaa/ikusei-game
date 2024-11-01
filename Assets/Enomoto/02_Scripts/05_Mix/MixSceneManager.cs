@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MixSceneManager : MonoBehaviour
 {
+    [SerializeField] Transform monsterPoint;
     [SerializeField] GameObject eggPrefab;
     GameObject monster;
 
@@ -11,7 +12,7 @@ public class MixSceneManager : MonoBehaviour
     void Start()
     {
         // ÉÇÉìÉXÉ^Å[ê∂ê¨èàóù
-        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, new Vector2(0f, -2f));
+        monster = MonsterController.Instance.GenerateMonster(MonsterController.Instance.TEST_monsterID, monsterPoint);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
     }

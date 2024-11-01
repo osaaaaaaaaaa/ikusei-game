@@ -77,7 +77,7 @@ public class WireController : MonoBehaviour
     /// </summary>
     public void OnToggleWirebutton(int i)
     {
-        if (gameManager.isGameEnd || gameManager.isPause) return;
+        if (gameManager.isGameOver || gameManager.isGameEnd || gameManager.isPause) return;
 
         aliveWires[i].SetActive(false);
         deathWires[i].SetActive(true);

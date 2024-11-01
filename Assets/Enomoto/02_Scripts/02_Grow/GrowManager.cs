@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class GrowManager : MonoBehaviour
 {
+    [SerializeField] Transform monsterPoint;
+
     [SerializeField] GameObject effect;
     const float effectMaxPos_X = 1.5f;
     const float effectMaxPos_Y = 2f;
@@ -50,7 +52,7 @@ public class GrowManager : MonoBehaviour
         foodVolText.text = nowFoodVol.ToString();
 
         // ÉÇÉìÉXÉ^Å[ê∂ê¨èàóù
-        var monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, new Vector2(0f, -1f));
+        var monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);
         spriteRendererMonster = monster.GetComponent<SpriteRenderer>();
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         MonsterController.Instance.PlayMonsterAnim(MonsterController.ANIM_ID.Idle);
