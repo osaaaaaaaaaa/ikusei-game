@@ -18,10 +18,12 @@ public class LibraryManager : MonoBehaviour
     #endregion
 
     [SerializeField] List<Sprite> spriteMonsters;
+    NetworkManager networkManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        networkManager = NetworkManager.Instance;
         GenerateIconButtons();
     }
 
@@ -36,7 +38,7 @@ public class LibraryManager : MonoBehaviour
     /// </summary>
     void GenerateIconButtons()
     {
-        for(int i = 0; i< spriteMonsters.Count; i++)
+        for(int i = 0; i < networkManager.monsterList.Count; i++)
         {
             int id = new int();
             id = i;
