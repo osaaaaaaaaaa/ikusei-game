@@ -263,18 +263,21 @@ MonoBehaviour:
   typeMonsterImagePrefab: {fileID: 3606109508912590639, guid: b0bfdf10fbbbf394cb017d9789a66739, type: 3}
   spriteCenteredPivot:
   - {fileID: 21300000, guid: 3767ce15330a14b47b0572490fd2cd26, type: 3}
-  - {fileID: 21300000, guid: 9e113b44d599f824587f0daf2d93af5a, type: 3}
-  - {fileID: 21300000, guid: c171e4041458c6d4695e4df9024e75cc, type: 3}
-  - {fileID: 21300000, guid: d6aa3110b3aa877429b7d07b1f4361ed, type: 3}
-  - {fileID: 21300000, guid: 215342c8ef83239489d9da12cf88f1a3, type: 3}
-  - {fileID: 21300000, guid: b76a025e5cf56374fa75cc9f59795dbd, type: 3}
-  - {fileID: 21300000, guid: b28eedbdd46e16144bb49ac36dfbc889, type: 3}
-  - {fileID: 21300000, guid: 69a21661e92eb7e4b8911a01d505cfef, type: 3}
-  - {fileID: 21300000, guid: 7544396640dc6904688538291ea1e45a, type: 3}
-  - {fileID: 21300000, guid: 6f4e84ba7f90edf448f6cd44c5ddf5e1, type: 3}
-  - {fileID: 21300000, guid: d9dcdee5ffd89ee4b9ed48fcfbdc887c, type: 3}
-  - {fileID: 21300000, guid: 4287e37687b1c334cbbc8776b04c7e5f, type: 3}
-  - {fileID: 21300000, guid: 938c9d1dc60b5b44f9315d8628237bca, type: 3}
+  - {fileID: 21300000, guid: 1b36169c7d636e94c85c4afd6e5830c8, type: 3}
+  - {fileID: 21300000, guid: be41c22942a238848907a14cf3009e0e, type: 3}
+  - {fileID: 21300000, guid: 21884409d0ba9184fa29f7ae818db322, type: 3}
+  - {fileID: 21300000, guid: 66a71656468b2944d8215bfebca0ef66, type: 3}
+  - {fileID: 21300000, guid: 6ec7648f27881d24eb3cd7a83982a2ed, type: 3}
+  - {fileID: 21300000, guid: b3545d496b396374b9f42ec4eeaeed56, type: 3}
+  - {fileID: 21300000, guid: 8ef566f7a64df9e41b3ebcdb738885c1, type: 3}
+  - {fileID: 21300000, guid: 61777685cfc442f469df9faa5fcac6c7, type: 3}
+  - {fileID: 21300000, guid: f6e4abc9ce295f74fb62399ccfc310dc, type: 3}
+  - {fileID: 21300000, guid: 9e0e4472b9b09c8468f1b05fc6063961, type: 3}
+  - {fileID: 21300000, guid: f0ec86be65da82246a36b3559cd59b43, type: 3}
+  - {fileID: 21300000, guid: ede7a59ca2dcfb2429c2eb73567b9c14, type: 3}
+  - {fileID: 21300000, guid: e56f9f190547aed4ea3d3c91456318d4, type: 3}
+  - {fileID: 21300000, guid: 2ed770007c9e31c449040ecd0ac516e1, type: 3}
+  - {fileID: 21300000, guid: 2076d7d3e95d3ee47b887b40f5365620, type: 3}
   monsterPrefabs:
   - {fileID: 1722214021813872350, guid: ccd3c2ace6bda964aa81e6a8d5256d1f, type: 3}
   - {fileID: 7588736321683117593, guid: 3ba0848cee5314147911af26552ae292, type: 3}
@@ -429,10 +432,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.125
-    y: 0
-    width: 0.75
-    height: 1
+    x: 0
+    y: 0.08949098
+    width: 1
+    height: 0.82101804
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
