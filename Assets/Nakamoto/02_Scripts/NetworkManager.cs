@@ -265,6 +265,39 @@ public class NetworkManager : MonoBehaviour
         result?.Invoke(response);
     }
 
+    /// <summary>
+    /// モンスターの育成状況情報取得
+    /// </summary>
+    /// <param name="result"></param>
+    /// <returns></returns>
+    public IEnumerator GetNurturedInfo(Action<List<MonsterListResponse>> result)
+    {
+        // リクエスト送信処理
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "monsters");
+        request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        yield return request.SendWebRequest();  // 結果を受信するまで待機
+
+        // 受信情報格納用
+        List<MonsterListResponse> response = new List<MonsterListResponse>();
+
+        if (request.result == UnityWebRequest.Result.Success
+            && request.responseCode == 200)
+        {   // 通信が成功した時
+
+            string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
+            response = JsonConvert.DeserializeObject<List<MonsterListResponse>>(resultJson);  // JSONデシリアライズ
+
+            monsterList = response;
+        }
+        else
+        {   // 通信失敗時はnull
+            response = null;
+        }
+
+        // 呼び出し元のresult処理を呼び出す
+        result?.Invoke(response);
+    }
+
     //=============================
     // POST処理
 
