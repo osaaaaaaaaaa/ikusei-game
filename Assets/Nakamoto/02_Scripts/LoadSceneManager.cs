@@ -10,14 +10,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoadSceneManager : MonoBehaviour
 {
+    [SerializeField] Button startButton;
     private NetworkManager networkManager;
 
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    private void TransTopScene()
+    {
+        Initiate.Fade("01_TopScene", Color.white, 1.0f);
+    }
+
+    public void PushStart()
+    {
+        startButton.interactable = false;
+
         networkManager = NetworkManager.Instance;
 
         // ユーザーデータの読込処理・結果を取得
@@ -65,7 +79,7 @@ public class LoadSceneManager : MonoBehaviour
             StartCoroutine(NetworkManager.Instance.GetPlayData(
                 result =>
                 {
-                    if(result == null)
+                    if (result == null)
                     {
                         Debug.Log("プレイデータ取得失敗");
                     }
@@ -76,10 +90,5 @@ public class LoadSceneManager : MonoBehaviour
                     }
                 }));
         }
-    }
-
-    private void TransTopScene()
-    {
-        Initiate.Fade("01_TopScene", Color.white, 1.0f);
     }
 }
