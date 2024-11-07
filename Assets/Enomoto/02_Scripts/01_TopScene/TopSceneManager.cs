@@ -329,14 +329,14 @@ public class TopSceneManager : MonoBehaviour
     public void OnLeftButton()
     {
         tutorialCnt = tutorialCnt - 1;
-        if(tutorialCnt < 0) { tutorialCnt = 0; }
+        if(tutorialCnt < 0) { tutorialCnt = 2; }
         tutorialImage.sprite = tutorialSprits[tutorialCnt];
     }
 
     public void OnRightButton()
     {
         tutorialCnt = tutorialCnt+1;
-        if (tutorialCnt > 2) { tutorialCnt = 2; }
+        if (tutorialCnt > 2) { tutorialCnt = 0; }
         tutorialImage.sprite = tutorialSprits[tutorialCnt];
     }
 }

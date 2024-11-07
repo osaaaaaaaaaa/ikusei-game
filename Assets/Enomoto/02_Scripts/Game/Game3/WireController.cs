@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using KanKikuchi.AudioManager;
 
 public class WireController : MonoBehaviour
 {
@@ -77,6 +78,8 @@ public class WireController : MonoBehaviour
     /// </summary>
     public void OnToggleWirebutton(int i)
     {
+        SEManager.Instance.Play(SEPath.WIREKILL);
+        
         if (gameManager.isGameOver || gameManager.isGameEnd || gameManager.isPause) return;
 
         aliveWires[i].SetActive(false);

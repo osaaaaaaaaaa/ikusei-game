@@ -60,7 +60,7 @@ public class MiniGameManager3 : MonoBehaviour
         roundMaxCnt = 5;
         isPause = true;
         isGameOver = false;
-        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
+        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 2;
 
         SEManager.Instance.Play(SEPath.TIMER);
 

@@ -64,6 +64,7 @@ public class BreakingRock : MonoBehaviour
 
             if (manager.totalPower > breakingPower / 2)
             {
+                SEManager.Instance.Play(SEPath.ROCK_BREAK);
                 // Šç·•ª‚É“ü‚ê‘Ö‚¦‚é
                 GetComponent<SpriteRenderer>().sprite = spriteRock;
             }

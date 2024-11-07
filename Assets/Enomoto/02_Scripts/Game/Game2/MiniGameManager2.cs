@@ -76,7 +76,7 @@ public class MiniGameManager2 : MonoBehaviour
         isGameEnd = false;
         isGameOver = false;
         isGameClear = false;
-        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
+        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 2;
 
         // ƒ‚ƒ“ƒXƒ^[¶¬ˆ—
         monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);

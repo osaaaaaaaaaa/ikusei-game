@@ -30,11 +30,13 @@ public static class SEPath{
 	public const string HIT            = "SE/Supply/hit";
 	public const string JUMP           = "SE/Training/２/jump";
 	public const string MISS           = "SE/Supply/miss";
+	public const string ROCK_BREAK     = "SE/Training/２/rock_break";
 	public const string ROCK_ROTATE    = "SE/Training/２/rock_rotate";
 	public const string SUCCESS        = "SE/Training/success";
 	public const string SWING          = "SE/Supply/swing";
 	public const string TAP            = "SE/tap";
 	public const string TIMER          = "SE/Training/３/timer";
+	public const string WIREKILL       = "SE/Training/３/wirekill";
 
 }
 
