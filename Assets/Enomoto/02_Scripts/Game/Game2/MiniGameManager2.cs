@@ -57,14 +57,16 @@ public class MiniGameManager2 : MonoBehaviour
 
     // ÉQÅ[ÉÄéûä‘
     float currentTime;
-    const float timeMax = 2;
+    const float timeMax = 20;
 
     void Start()
     {
         BGMManager.Instance.Stop();
         SEManager.Instance.Stop();
 
-        SEManager.Instance.Play(SEPath.ROCK_ROTATE, 0.6f, 0, 1, true);
+        BGMManager.Instance.Play(BGMPath.TRAINING, 0.75f);
+
+        SEManager.Instance.Play(SEPath.ROCK_ROTATE, 0.5f, 0, 1, true);
 
         monsterHitCnt = 0;
         addSpeed = 0;

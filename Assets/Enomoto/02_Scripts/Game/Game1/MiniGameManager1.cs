@@ -57,6 +57,8 @@ public class MiniGameManager1 : MonoBehaviour
         BGMManager.Instance.Stop();
         SEManager.Instance.Stop();
 
+        BGMManager.Instance.Play(BGMPath.TRAINING, 0.75f);
+
         isTap = false;
         isPlayTween = false;
         isGameStart = false;
@@ -85,6 +87,7 @@ public class MiniGameManager1 : MonoBehaviour
         if (state != MINIGAME1_STATE.BreakAnim && isGameStart && !isTap && Input.GetMouseButtonDown(0))
         {
             isTap = true;
+            SEManager.Instance.Play(SEPath.BTN);
             if (state == MINIGAME1_STATE.Gage2)
             {
                 for (int i = 0; i < gage2List.Count; i++)

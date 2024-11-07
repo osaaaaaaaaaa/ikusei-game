@@ -414,6 +414,7 @@ public class MonsterController : MonoBehaviour
             // スプライトを変更して揺らす
             monster.GetComponent<SpriteRenderer>().sprite = eggSprites[i];
             monster.GetComponent<Animator>().Play("EggShake");
+            SEManager.Instance.Play(SEPath.EGGBREAK);
             Instantiate(hachingHitEffect, new Vector3(monsterPos.x, monsterPos.y + monsterSizeY / 4, -1f), Quaternion.identity);
         }
 
@@ -435,6 +436,8 @@ public class MonsterController : MonoBehaviour
         // 孵化したときのアニメーション再生
         monster.GetComponent<Animator>().enabled = true;
         monster.GetComponent<Animator>().Play("EggHaching");
+        // 誕生SE
+        SEManager.Instance.Play(SEPath.EGGHACHING);
 
         yield return new WaitForSeconds(1f);
         PlayMonsterAnim(ANIM_ID.Idle);

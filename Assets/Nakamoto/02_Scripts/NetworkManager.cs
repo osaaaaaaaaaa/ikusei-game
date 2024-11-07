@@ -266,28 +266,26 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// モンスターの育成状況情報取得
+    /// モンスターの育成中・完了情報取得
     /// </summary>
     /// <param name="result"></param>
     /// <returns></returns>
-    public IEnumerator GetNurturedInfo(Action<List<MonsterListResponse>> result)
+    public IEnumerator GetNurturedInfo(Action<int[]> result)
     {
         // リクエスト送信処理
-        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "monsters");
+        UnityWebRequest request = UnityWebRequest.Get(API_BASE_URL + "monsters/nurtured");
         request.SetRequestHeader("Authorization", "Bearer " + authToken);
         yield return request.SendWebRequest();  // 結果を受信するまで待機
 
         // 受信情報格納用
-        List<MonsterListResponse> response = new List<MonsterListResponse>();
+        int[] response;
 
         if (request.result == UnityWebRequest.Result.Success
             && request.responseCode == 200)
         {   // 通信が成功した時
 
             string resultJson = request.downloadHandler.text;   // レスポンスボディ(json)の文字列を取得
-            response = JsonConvert.DeserializeObject<List<MonsterListResponse>>(resultJson);  // JSONデシリアライズ
-
-            monsterList = response;
+            response = JsonConvert.DeserializeObject<int[]>(resultJson);  // JSONデシリアライズ
         }
         else
         {   // 通信失敗時はnull
@@ -446,7 +444,7 @@ public class NetworkManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 育成モンスター変更処理
+    /// 進化処理
     /// </summary>
     /// <param name="name">ユーザー名</param>
     /// <param name="result">通信完了辞に呼び出す関数</param>

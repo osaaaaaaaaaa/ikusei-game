@@ -1,3 +1,4 @@
+using KanKikuchi.AudioManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class LibraryManager : MonoBehaviour
     #endregion
 
     [SerializeField] List<Sprite> spriteMonsters;
+    int[] nurturedID;
     NetworkManager networkManager;
 
     // Start is called before the first frame update
@@ -39,20 +41,45 @@ public class LibraryManager : MonoBehaviour
     /// </summary>
     void GenerateIconButtons()
     {
-        for(int i = 0; i < networkManager.monsterList.Count; i++)
-        {
-            int id = new int();
-            id = i;
-
-            // ボタンの生成とセットアップ
-            var btn = Instantiate(btnIconPrefab, btnIconListParent);
-            btn.GetComponent<Image>().sprite = spriteMonsters[i];
-            btn.GetComponent<Button>().onClick.AddListener(() =>
+        // 育成中・完了したモンスターIDを取得
+        StartCoroutine(NetworkManager.Instance.GetNurturedInfo(
+            result =>
             {
-                Debug.Log(id);
-                SetupMonsterDetailUI(id, NetworkManager.Instance.monsterList[id].Name, NetworkManager.Instance.monsterList[id].Text);
-            });
-        }
+                nurturedID = result;
+
+                for (int i = 0; i < networkManager.monsterList.Count; i++)
+                {
+                    int id = i;
+                    bool isCheck = false;
+
+                    for(int j = 0; j < nurturedID.Length; j++)
+                    {
+                        if(i+1 == nurturedID[j]) { isCheck = true; }
+                    }
+
+                    // ボタンの生成とセットアップ
+                    if (isCheck)
+                    {   // 育成中・完了したモンスターの場合
+                        var btn = Instantiate(btnIconPrefab, btnIconListParent);
+                        btn.GetComponent<Image>().sprite = spriteMonsters[i + 1];
+                        btn.GetComponent<Button>().onClick.AddListener(() =>
+                        {
+                            Debug.Log(id);
+                            SetupMonsterDetailUI(id + 1, NetworkManager.Instance.monsterList[id].Name, NetworkManager.Instance.monsterList[id].Text);
+                        });
+                    }
+                    else
+                    {   // 未育成の場合
+                        var btn = Instantiate(btnIconPrefab, btnIconListParent);
+                        btn.GetComponent<Image>().sprite = spriteMonsters[0];
+                        btn.GetComponent<Button>().onClick.AddListener(() =>
+                        {
+                            Debug.Log(id);
+                            SetupMonsterDetailUI(0, "???", "不明");
+                        });
+                    }
+                }
+            }));
     }
 
     /// <summary>
@@ -75,6 +102,7 @@ public class LibraryManager : MonoBehaviour
 
     public void OnBackButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
         Initiate.Fade("01_TopScene", Color.black, 1.0f);
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using KanKikuchi.AudioManager;
 
 public class GrowManager : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class GrowManager : MonoBehaviour
 
     private void Start()
     {
+        BGMManager.Instance.Play(BGMPath.GROW);
+
         // ÉJÉâÅ[çÏê¨
         string colorString = "#6967FF";
         ColorUtility.TryParseHtmlString(colorString, out colorCreate);
@@ -127,6 +130,7 @@ public class GrowManager : MonoBehaviour
 
     void GenerateEffects()
     {
+        SEManager.Instance.Play(SEPath.FLASH);
         for(int i = 0;i < 3; i++)
         {
             float rndX = (float)Random.Range(-effectMaxPos_X, effectMaxPos_X);
@@ -137,6 +141,8 @@ public class GrowManager : MonoBehaviour
 
     public void OnCancelButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
+
         // ñûï†ílÇÃè„å¿í¥âﬂéûèàóù
         if (hungerAmount >= Constant.hungerMaxAmount) { hungerAmount = Constant.hungerMaxAmount; }
         gageHunger.UpdateGage(hungerAmount);

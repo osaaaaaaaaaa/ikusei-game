@@ -6,6 +6,7 @@
 // Update:2024/10/28
 //
 //---------------------------------------------------------------
+using KanKikuchi.AudioManager;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ public class LoadSceneManager : MonoBehaviour
 
     public void PushStart()
     {
+        SEManager.Instance.Play(SEPath.BTN_SELECT);
+
         startButton.interactable = false;
 
         networkManager = NetworkManager.Instance;

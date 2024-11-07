@@ -20,6 +20,10 @@ public class TopSceneManager : MonoBehaviour
     [SerializeField] Text nextEvoLevelText;
     [SerializeField] Text monsterNameText;
     [SerializeField] Text foodsCurrentText;
+    [SerializeField] GameObject tutorialPanel;
+    [SerializeField] Image tutorialImage;
+    [SerializeField] Sprite[] tutorialSprits;
+    int tutorialCnt;
     #endregion
 
     #region 卵の孵化する時間UI
@@ -47,17 +51,18 @@ public class TopSceneManager : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    { 
         BGMManager.Instance.Stop();
         SEManager.Instance.Stop();
-
         BGMManager.Instance.Play(BGMPath.TOP1);
 
         networkManager = NetworkManager.Instance;
 
         isTouchMonster = false;
+        tutorialCnt = 0;
 
         needEvoLevel = networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv - networkManager.nurtureInfo.Level;
+        if(needEvoLevel <= 0) { needEvoLevel = 0; }
 
         // ユーザー設定
         if(networkManager.monsterList[networkManager.nurtureInfo.MonsterID - 1].EvoLv == 0)
@@ -144,6 +149,7 @@ public class TopSceneManager : MonoBehaviour
 
         if (!isTouchMonster && Input.GetMouseButtonDown(0))
         {
+            SEManager.Instance.Play(SEPath.TAP);
             Vector2 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit2d = Physics2D.Raycast(worldPos, Vector2.zero);
 
@@ -198,6 +204,7 @@ public class TopSceneManager : MonoBehaviour
         if (rndPoint == 1)
         {
             poopCnt = Random.Range(1, 4);
+            Debug.Log(poopCnt);
             for (int i = 0; i < poopCnt; i++)
             {
                 float x = (float)Random.Range(poopMinPos_X, poopMaxPos_X);
@@ -208,6 +215,7 @@ public class TopSceneManager : MonoBehaviour
         else
         {
             poopCnt = 0;
+            Debug.Log("なし");
         }
     }
 
@@ -249,6 +257,8 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnTrainingButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
+
         if (MonsterController.Instance.isSpecialAnim) return;
 
         int rnd = Random.Range(1, 4);
@@ -268,6 +278,7 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnGrowButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         Initiate.Fade("02_GrowScene", Color.white, 1.0f);
@@ -275,6 +286,7 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnSupplyButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("03_SupplyScene");
@@ -282,6 +294,7 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnLibraryButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("04_LibraryScene");
@@ -289,6 +302,7 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnMixButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("05_MixScene");
@@ -296,8 +310,33 @@ public class TopSceneManager : MonoBehaviour
 
     public void OnInventoryButton()
     {
+        SEManager.Instance.Play(SEPath.BTN_MENU);
         if (MonsterController.Instance.isSpecialAnim) return;
         if (poopCnt > 0) MonsterController.Instance.IsMonsterDie = true;
         SceneManager.LoadScene("05_Inventory");
+    }
+
+    public void OnTutorialButton()
+    {
+        tutorialPanel.SetActive(true);
+    }
+
+    public void OnCloseButton()
+    {
+        tutorialPanel.SetActive(false);
+    }
+
+    public void OnLeftButton()
+    {
+        tutorialCnt = tutorialCnt - 1;
+        if(tutorialCnt < 0) { tutorialCnt = 0; }
+        tutorialImage.sprite = tutorialSprits[tutorialCnt];
+    }
+
+    public void OnRightButton()
+    {
+        tutorialCnt = tutorialCnt+1;
+        if (tutorialCnt > 2) { tutorialCnt = 2; }
+        tutorialImage.sprite = tutorialSprits[tutorialCnt];
     }
 }

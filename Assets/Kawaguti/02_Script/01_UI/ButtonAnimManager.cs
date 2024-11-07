@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;  //DOTween‚ðŽg‚¤‚Æ‚«‚Í‚±‚Ìusing‚ð“ü‚ê‚é
+using KanKikuchi.AudioManager;
 
 public class ButtonAnimManager : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class ButtonAnimManager : MonoBehaviour
     //------------------------------------------------
     public void StartMenuAnim()
     {
+        SEManager.Instance.Play(SEPath.BTN);
         //menu.SetActive(true);
         animator.SetBool("OnClickButton", true);
         CloseButton.SetActive(true);
@@ -59,6 +61,7 @@ public class ButtonAnimManager : MonoBehaviour
 
     public void CloseMenuAnim()
     {
+        SEManager.Instance.Play(SEPath.BTN);
         animator.SetBool("OnClickButton", false);
         CloseButton.SetActive(false);
         Invoke("SetOnActiveButton", 0.5f);

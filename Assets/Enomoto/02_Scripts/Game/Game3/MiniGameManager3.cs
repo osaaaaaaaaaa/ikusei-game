@@ -44,7 +44,9 @@ public class MiniGameManager3 : MonoBehaviour
     {
         BGMManager.Instance.Stop();
         SEManager.Instance.Stop();
-      
+
+        BGMManager.Instance.Play(BGMPath.TRAINING, 0.75f);
+
         // モンスターを生成し、モンスター情報を初期化、アニメ再生
         sequenceMonster = DOTween.Sequence();
         monster = MonsterController.Instance.GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);
