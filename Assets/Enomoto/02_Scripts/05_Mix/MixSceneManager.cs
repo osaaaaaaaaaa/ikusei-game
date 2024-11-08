@@ -15,7 +15,7 @@ public class MixSceneManager : MonoBehaviour
     [SerializeField] Transform monsterPoint;
     [SerializeField] GameObject eggPrefab;
     GameObject monster;
-    const int mixLimitNum = 8;
+    const int mixLimitNum = 5;
 
     // Start is called before the first frame update
     void Start()
