@@ -29,6 +29,7 @@ public static class SEPath{
 	public const string GLAD           = "SE/Top/glad";
 	public const string HIT            = "SE/Supply/hit";
 	public const string JUMP           = "SE/Training/２/jump";
+	public const string METAMORPHOSIS  = "SE/Supply/metamorphosis";
 	public const string MISS           = "SE/Supply/miss";
 	public const string ROCK_BREAK     = "SE/Training/２/rock_break";
 	public const string ROCK_ROTATE    = "SE/Training/２/rock_rotate";

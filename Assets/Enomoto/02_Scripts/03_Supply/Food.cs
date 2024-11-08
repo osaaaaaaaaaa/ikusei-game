@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using KanKikuchi.AudioManager;
 
 public class Food : MonoBehaviour
 {
@@ -53,6 +54,7 @@ public class Food : MonoBehaviour
     /// </summary>
     void ObjectToPoop()
     {
+        SEManager.Instance.Play(SEPath.METAMORPHOSIS);
         // パーティクルを生成する
         var particle = Instantiate(changeParticle,this.transform);
         particle.transform.position = this.transform.position;
