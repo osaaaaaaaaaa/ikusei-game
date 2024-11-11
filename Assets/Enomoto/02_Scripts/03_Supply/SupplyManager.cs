@@ -56,7 +56,7 @@ public class SupplyManager : MonoBehaviour
             if(isFever) { foodCnt = foodCnt + feverGetVol; }
             else { foodCnt = foodCnt + normalGetVol; }
 
-            textFoodCnt.text = "Å~" + foodCnt;
+            textFoodCnt.text = foodCnt.ToString();
         }
 
         if (!isFever)
@@ -98,7 +98,7 @@ public class SupplyManager : MonoBehaviour
         {
             var tmp1 = foodCnt - 5;
             foodCnt = tmp1 <= 0 ? 0 : tmp1;
-            textFoodCnt.text = "Å~" + foodCnt;
+            textFoodCnt.text = foodCnt.ToString();
 
             var tmp2 = feverAmount - feverAddAmount * 5;
             feverAmount = tmp2 <= 0 ? 0 : tmp2;
