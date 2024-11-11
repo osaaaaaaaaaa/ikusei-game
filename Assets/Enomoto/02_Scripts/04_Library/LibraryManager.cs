@@ -75,7 +75,7 @@ public class LibraryManager : MonoBehaviour
                         btn.GetComponent<Button>().onClick.AddListener(() =>
                         {
                             Debug.Log(id);
-                            SetupMonsterDetailUI(0, "???", "•s–¾");
+                            SetupMonsterDetailUI(0, "???", "?????");
                         });
                     }
                 }
