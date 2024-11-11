@@ -31,7 +31,7 @@ public class SupplyManager : MonoBehaviour
         isFever = false;
 
         colorGageDefault = feverGage.color;
-        textFoodCnt.text = "x" + foodCnt;
+        textFoodCnt.text = foodCnt.ToString();
         InvokeRepeating("GenerateFood", 1f, 1.5f);
 
         BGMManager.Instance.Play(BGMPath.SUPPLY_NORMAL, 1);
