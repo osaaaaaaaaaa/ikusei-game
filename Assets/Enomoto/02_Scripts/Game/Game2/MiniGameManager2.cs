@@ -126,7 +126,7 @@ public class MiniGameManager2 : MonoBehaviour
                 MoveGrounds();
             }
         }
-        else if (currentTimeObstracle >= triggerTimeObstracle)
+        else if (currentTimeObstracle >= triggerTimeObstracle && currentTime < timeMax - 2.5f)
         {
             // ˆê’èŠÔŠu‚ÅáŠQ•¨‚ð¶¬‚·‚é
             currentTimeObstracle = 0;

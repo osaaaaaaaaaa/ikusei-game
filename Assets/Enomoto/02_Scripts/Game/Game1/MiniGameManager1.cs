@@ -63,7 +63,7 @@ public class MiniGameManager1 : MonoBehaviour
         isPlayTween = false;
         isGameStart = false;
         isGameEnd = false;
-        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 3;
+        baseExp = (int)(Math.Pow(NetworkManager.Instance.nurtureInfo.Level + 1, 3) - Math.Pow(NetworkManager.Instance.nurtureInfo.Level, 3)) / 2;
         state = MINIGAME1_STATE.Opening;
 
         // ƒ‚ƒ“ƒXƒ^[¶¬ˆ—

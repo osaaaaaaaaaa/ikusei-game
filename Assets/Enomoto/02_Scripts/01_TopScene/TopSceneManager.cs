@@ -74,7 +74,15 @@ public class TopSceneManager : MonoBehaviour
             nextEvoLevelText.text = "進化まで" + needEvoLevel.ToString() + "レベル";
         }
         
-        monsterNameText.text = networkManager.nurtureInfo.Name;
+        if(networkManager.nurtureInfo.State == 1)
+        {
+            monsterNameText.text = "???";
+        }
+        else
+        {
+            monsterNameText.text = networkManager.nurtureInfo.Name;
+        }
+
         foodsCurrentText.text = networkManager.userInfo.FoodVol.ToString();
 
         // ゲージ関係のパラメータ設定
@@ -329,14 +337,14 @@ public class TopSceneManager : MonoBehaviour
     public void OnLeftButton()
     {
         tutorialCnt = tutorialCnt - 1;
-        if(tutorialCnt < 0) { tutorialCnt = 2; }
+        if(tutorialCnt < 0) { tutorialCnt = 3; }
         tutorialImage.sprite = tutorialSprits[tutorialCnt];
     }
 
     public void OnRightButton()
     {
         tutorialCnt = tutorialCnt+1;
-        if (tutorialCnt > 2) { tutorialCnt = 0; }
+        if (tutorialCnt > 3) { tutorialCnt = 0; }
         tutorialImage.sprite = tutorialSprits[tutorialCnt];
     }
 }

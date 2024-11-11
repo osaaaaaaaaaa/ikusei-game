@@ -431,6 +431,8 @@ public class MonsterController : MonoBehaviour
 
         yield return new WaitForSeconds(3.2f);
         // 孵化するモンスターを新しく生成する
+        Text nameText = GameObject.Find("MonsterNameText").GetComponent<Text>();
+        nameText.text = NetworkManager.Instance.nurtureInfo.Name;
         GenerateMonster(NetworkManager.Instance.nurtureInfo.MonsterID, monsterPoint);
         monster.GetComponent<Rigidbody2D>().gravityScale = 0;
         // 孵化したときのアニメーション再生

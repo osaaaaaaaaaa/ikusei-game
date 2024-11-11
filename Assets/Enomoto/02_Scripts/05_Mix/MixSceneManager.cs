@@ -47,7 +47,7 @@ public class MixSceneManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         btnBack.SetActive(true);
-        btnTips.SetActive(true);
+        //btnTips.SetActive(true);
     }
 
     public void OnMixButton()
